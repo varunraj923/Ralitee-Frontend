@@ -61,7 +61,7 @@ const ChangePasswordPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+      if (loading) return;
     const { oldPassword, newPassword, confirmPassword } = passwordData;
 
     if (!oldPassword || !newPassword || !confirmPassword) {

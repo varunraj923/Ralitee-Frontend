@@ -9,5 +9,6 @@ export const loginApi = async (loginData) => {
 };
 
 export const changePasswordApi = async (forgotData) => {
+  console.log(forgotData)
   return api.post("/auth/change-password", forgotData);
 };

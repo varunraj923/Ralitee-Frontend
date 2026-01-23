@@ -55,6 +55,9 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    //this prevent from multiple api calls
+    if (loading) return;
     setLoading(true);
 
     try {
@@ -70,8 +73,15 @@ const LoginPage = () => {
         });
         // Store token or handle successful login
         localStorage.setItem("token", response.data.token);
-        // Redirect to home page
-        window.location.href = "/";
+        const role = response.data.user.role;
+
+        setTimeout(() => {
+          if (role === "admin") {
+            navigate("/admin/dashboard", { replace: true });
+          } else {
+            navigate("/user/dashboard", { replace: true });
+          }
+        }, 500);
       } else {
         // Register API call
         const response = await registerApi({
@@ -349,8 +359,7 @@ const LoginPage = () => {
                 <div className="text-2xl font-bold text-primary mb-1">100%</div>
                 <div className="text-xs text-muted-foreground">Organic</div>
               </div>
-                {/* Stats */}
-
+              {/* Stats */}
             </div>
           </div>
         </div>
