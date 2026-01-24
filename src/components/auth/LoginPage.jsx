@@ -1,55 +1,87 @@
-import { useState } from "react"
-import { Eye, EyeOff, Mail, Lock, User } from "lucide-react"
-import { ThemeProvider } from "@mui/material/styles"
-import CssBaseline from "@mui/material/CssBaseline"
-import Toast from "../Toast"
-import { createAppTheme } from "../../constants/theme"
-import { loginApi, registerApi } from "../../api/auth"
+import { useState } from "react";
+import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import Toast from "../Toast";
+import { createAppTheme } from "../../constants/theme";
+import { loginApi, registerApi } from "../../api/auth";
+import { useNavigate } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
+
+//Const Styling for all Inputs
+
+const InputStyling =
+  "w-full pl-11 pr-12 py-3 border border-border rounded-xl bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all duration-300";
+
+// Reuseable Repeated label component for all input field
+const RequiredLabel = ({ text }) => {
+  return (
+    <label className="block text-sm font-semibold text-foreground mb-2.5">
+      {text}
+      <span className="text-red-500"> *</span>
+    </label>
+  );
+};
 
 const LoginPage = () => {
-  const [isLogin, setIsLogin] = useState(true)
-  const [showPassword, setShowPassword] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [toast, setToast] = useState({ open: false, message: "", severity: "success" })
+  const [isLogin, setIsLogin] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
   const [formData, setFormData] = useState({
     username: "",
     name: "",
     email: "",
     password: "",
-  })
+  });
 
-  const theme = createAppTheme("light")
+  const navigate = useNavigate();
+  const theme = createAppTheme("light");
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
-    })
-  }
+    });
+  };
 
   const handleToastClose = () => {
-    setToast({ ...toast, open: false })
-  }
+    setToast({ ...toast, open: false });
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
+    e.preventDefault();
+
+    //this prevent from multiple api calls
+    if (loading) return;
+    setLoading(true);
 
     try {
       if (isLogin) {
         const response = await loginApi({
           email: formData.email,
           password: formData.password,
-        })
+        });
         setToast({
           open: true,
           message: "Login successful!",
           severity: "success",
-        })
+        });
         // Store token or handle successful login
-        localStorage.setItem("token", response.data.token)
-        // Redirect to home page
-        window.location.href = "/"
+        localStorage.setItem("token", response.data.token);
+        const role = response.data.user.role;
+
+        setTimeout(() => {
+          if (role === "admin") {
+            navigate("/admin/dashboard", { replace: true });
+          } else {
+            navigate("/user/dashboard", { replace: true });
+          }
+        }, 500);
       } else {
         // Register API call
         const response = await registerApi({
@@ -57,34 +89,34 @@ const LoginPage = () => {
           name: formData.name,
           email: formData.email,
           password: formData.password,
-        })
+        });
         setToast({
           open: true,
           message: "Account created successfully! Please sign in.",
           severity: "success",
-        })
+        });
         // Switch to login after successful registration
-        setIsLogin(true)
+        setIsLogin(true);
         setFormData({
           username: "",
           name: "",
           email: "",
           password: "",
-        })
+        });
       }
     } catch (error) {
       const errorMessage =
-        error.response?.data?.message || error.message || "An error occurred"
+        error.response?.data?.message || error.message || "An error occurred";
       setToast({
         open: true,
         message: errorMessage,
         severity: "error",
-      })
-      console.error("Auth error:", error)
+      });
+      console.error("Auth error:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -103,31 +135,40 @@ const LoginPage = () => {
                   Relitee
                 </h1>
               </div>
-              <p className="text-sm text-muted-foreground mt-2">Welcome back to your fresh produce store</p>
+              <p className="text-sm text-muted-foreground mt-2">
+                Welcome back to your fresh produce store
+              </p>
             </div>
+            {/* Logo */}
 
             {/* Heading with gradient */}
             <div className="mb-8 sm:mb-10">
               <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-2">
                 {isLogin ? "Sign in" : "Create account"}
               </h2>
-              <p className="text-sm text-muted-foreground">{isLogin ? "Access your account" : "Join our community"}</p>
+              <p className="text-sm text-muted-foreground">
+                {isLogin ? "Access your account" : "Join our community"}
+              </p>
             </div>
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
               {!isLogin && (
-                <div className="animate-in fade-in slide-in-from-top-2 duration-500" style={{ animationDelay: "0.1s" }}>
-                  <label className="block text-sm font-semibold text-foreground mb-2.5">Username</label>
+                <div
+                  className="animate-in fade-in slide-in-from-top-2 duration-500"
+                  style={{ animationDelay: "0.1s" }}
+                >
+                  <RequiredLabel text="Username" />
                   <div className="relative">
                     <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                     <input
                       type="text"
                       name="username"
+                      required
                       value={formData.username}
                       onChange={handleChange}
                       placeholder="johndoe123"
-                      className="w-full pl-10 pr-4 py-3 border border-border rounded-xl bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all duration-300"
+                      className={InputStyling}
                     />
                   </div>
                 </div>
@@ -136,16 +177,17 @@ const LoginPage = () => {
               {/* Name field (Sign Up only) */}
               {!isLogin && (
                 <div className="animate-in fade-in slide-in-from-top-2 duration-500">
-                  <label className="block text-sm font-semibold text-foreground mb-2.5">Full Name</label>
+                  <RequiredLabel text="Full Name" />
                   <div className="relative">
                     <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                     <input
                       type="text"
                       name="name"
+                      required
                       value={formData.name}
                       onChange={handleChange}
                       placeholder="John Doe"
-                      className="w-full pl-10 pr-4 py-3 border border-border rounded-xl bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all duration-300"
+                      className={InputStyling}
                     />
                   </div>
                 </div>
@@ -156,7 +198,7 @@ const LoginPage = () => {
                 className="animate-in fade-in slide-in-from-top-2 duration-500"
                 style={{ animationDelay: isLogin ? "0s" : "0.2s" }}
               >
-                <label className="block text-sm font-semibold text-foreground mb-2.5">Email Address</label>
+                <RequiredLabel text="Email Address" />
                 <div className="relative">
                   <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <input
@@ -166,7 +208,7 @@ const LoginPage = () => {
                     onChange={handleChange}
                     placeholder="you@example.com"
                     required
-                    className="w-full pl-10 pr-4 py-3 border border-border rounded-xl bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all duration-300"
+                    className={InputStyling}
                   />
                 </div>
               </div>
@@ -176,7 +218,7 @@ const LoginPage = () => {
                 className="animate-in fade-in slide-in-from-top-2 duration-500"
                 style={{ animationDelay: isLogin ? "0.1s" : "0.3s" }}
               >
-                <label className="block text-sm font-semibold text-foreground mb-2.5">Password</label>
+                <RequiredLabel text=" Password" />
                 <div className="relative">
                   <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <input
@@ -186,14 +228,18 @@ const LoginPage = () => {
                     onChange={handleChange}
                     placeholder="••••••••"
                     required
-                    className="w-full pl-10 pr-11 py-3 border border-border rounded-xl bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all duration-300"
+                    className={InputStyling}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                   >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -203,6 +249,7 @@ const LoginPage = () => {
                 <div className="flex justify-end pt-2">
                   <button
                     type="button"
+                    onClick={() => navigate("/forgot")}
                     className="text-sm font-medium text-primary hover:text-primary/80 transition-colors duration-200"
                   >
                     Forgot password?
@@ -216,13 +263,21 @@ const LoginPage = () => {
                 disabled={loading}
                 className="w-full bg-blue-600 text-white font-semibold py-3.5 px-4 rounded-xl hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-600/30 transition-all duration-300 transform hover:scale-[1.02] active:scale-95 mt-8 sm:mt-10 text-base disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                {loading ? (isLogin ? "Signing in..." : "Creating account...") : (isLogin ? "Sign in" : "Create account")}
+                {loading ? (
+                  <CircularProgress size={24} sx={{ color: "white" }} />
+                ) : isLogin ? (
+                  "Sign in"
+                ) : (
+                  "Create account"
+                )}
               </button>
             </form>
 
             {/* Toggle Auth Mode */}
             <p className="text-center text-sm text-muted-foreground mt-8 pt-6 border-t border-border">
-              {isLogin ? "Don't have an account? " : "Already have an account? "}
+              {isLogin
+                ? "Don't have an account? "
+                : "Already have an account? "}
               <button
                 onClick={() => setIsLogin(!isLogin)}
                 className="font-semibold text-blue-600 hover:text-blue-700 transition-colors duration-200"
@@ -254,7 +309,12 @@ const LoginPage = () => {
             <div className="mb-8 relative">
               <div className="w-40 h-40 rounded-3xl bg-white/50 dark:bg-slate-800/50 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-2xl animate-float">
                 {/* Shopping cart with gradient */}
-                <svg className="w-28 h-28 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="w-28 h-28 text-primary"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -271,26 +331,35 @@ const LoginPage = () => {
             </div>
 
             {/* Text content */}
-            <h3 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">Fresh & Organic</h3>
+            <h3 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
+              Fresh & Organic
+            </h3>
             <p className="text-muted-foreground max-w-sm text-base leading-relaxed mb-8">
-              Quality produce delivered fresh to your doorstep. Shop from trusted farms and support sustainable
-              agriculture.
+              Quality produce delivered fresh to your doorstep. Shop from
+              trusted farms and support sustainable agriculture.
             </p>
 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-4 w-full mt-8 pt-8 border-t border-white/20">
               <div className="text-center">
-                <div className="text-2xl font-bold text-primary mb-1">500k+</div>
-                <div className="text-xs text-muted-foreground">Happy Customers</div>
+                <div className="text-2xl font-bold text-primary mb-1">
+                  500k+
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  Happy Customers
+                </div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-primary mb-1">24/7</div>
-                <div className="text-xs text-muted-foreground">Fast Delivery</div>
+                <div className="text-xs text-muted-foreground">
+                  Fast Delivery
+                </div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-primary mb-1">100%</div>
                 <div className="text-xs text-muted-foreground">Organic</div>
               </div>
+              {/* Stats */}
             </div>
           </div>
         </div>
@@ -303,7 +372,7 @@ const LoginPage = () => {
         onClose={handleToastClose}
       />
     </ThemeProvider>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;
