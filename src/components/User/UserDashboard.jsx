@@ -1,9 +1,14 @@
 import React from 'react'
+import FlashSalesSection from './FlashSaleFeature/FlashSalesSection'
+import BestSelling from './BestSellingProductFeature/BestSelling'
+import ExploreProduct from './ExploreFeature/ExploreProduct'
 
 const UserDashboard = () => {
   return (
     <div>
-    <p className='text-3xl'>  This is Homepage for LoggedIn user </p>
+    <FlashSalesSection/>
+    <BestSelling/>
+    <ExploreProduct/>
     </div>
   )
 }
