@@ -1,8 +1,23 @@
 'use client';
 
+import { useNavigate } from 'react-router-dom';
 import { Bell, Settings, LogOut, User, Search } from 'lucide-react';
+import { logout } from '../../../api/adminApi';
 
 const Topbar = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login'); // Redirect to login page
+    } catch (error) {
+      console.error("Logout failed:", error);
+      // Fallback redirect even if API fails
+      navigate('/login');
+    }
+  };
+
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 shadow-sm">
       <div className="flex h-16 items-center justify-between px-8">
@@ -46,7 +61,11 @@ const Topbar = () => {
           </div>
 
           {/* Logout */}
-          <button className="p-2 text-slate-600 hover:text-red-600 transition-colors hover:bg-red-50 rounded-lg">
+          <button
+            onClick={handleLogout}
+            className="p-2 text-slate-600 hover:text-red-600 transition-colors hover:bg-red-50 rounded-lg"
+            title="Logout"
+          >
             <LogOut className="h-5 w-5" />
           </button>
         </div>

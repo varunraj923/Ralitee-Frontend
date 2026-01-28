@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Edit2, Trash2, Tag } from "lucide-react";
 import AdminLayout from "../layout/adminlayout";
+import { fetchCategories, deleteCategory } from "../../../api/adminApi";
 
 const Categories = () => {
   const navigate = useNavigate();
@@ -11,20 +12,9 @@ const Categories = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const loadCategories = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:5000/api/categories",
-          {
-            credentials: "include", // if using cookie-based auth
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch categories");
-        }
-
-        const data = await response.json();
+        const { data } = await fetchCategories();
         setCategories(data);
       } catch (err) {
         console.error("Error fetching categories:", err);
@@ -34,7 +24,7 @@ const Categories = () => {
       }
     };
 
-    fetchCategories();
+    loadCategories();
   }, []);
 
   const handleEdit = (categoryId) => {
@@ -46,17 +36,7 @@ const Categories = () => {
       return;
 
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/categories/${categoryId}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to delete category");
-      }
+      await deleteCategory(categoryId);
 
       setCategories((prev) =>
         prev.filter((c) => c._id !== categoryId)

@@ -8,20 +8,7 @@ import { loginApi, registerApi } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 
-//Const Styling for all Inputs
 
-const InputStyling =
-  "w-full pl-11 pr-12 py-3 border border-border rounded-xl bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all duration-300";
-
-// Reuseable Repeated label component for all input field
-const RequiredLabel = ({ text }) => {
-  return (
-    <label className="block text-sm font-semibold text-foreground mb-2.5">
-      {text}
-      <span className="text-red-500"> *</span>
-    </label>
-  );
-};
 
 /* -------------------- Shared Styling -------------------- */
 const InputStyling =
@@ -183,9 +170,10 @@ const LoginPage = () => {
                       value={formData.username}
                       onChange={handleChange}
                       placeholder="johndoe123"
-                      className={InputStyling}
                     />
                   </div>
+                </div>
+              )}
 
               {/* Name field (Sign Up only) */}
               {!isLogin && (
@@ -203,7 +191,7 @@ const LoginPage = () => {
                       className={InputStyling}
                     />
                   </div>
-                </>
+                </div>
               )}
 
               {/* Email field */}
@@ -221,7 +209,6 @@ const LoginPage = () => {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="you@example.com"
-                    required
                     className={InputStyling}
                   />
                 </div>
@@ -242,7 +229,6 @@ const LoginPage = () => {
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="••••••••"
-                    required
                     className={InputStyling}
                   />
                   <button

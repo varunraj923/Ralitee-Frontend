@@ -23,14 +23,10 @@ export const uploadImage = (formData) =>
     headers: { "Content-Type": "multipart/form-data" },
   });
 
-  /* DASHBOARD */
+/* DASHBOARD */
 export const getDashboardData = () => {
   return API.get("/admin/dashboard");
 };
 
-export const getProducts = () => API.get("/products");
-export const deleteProductById = (id) =>
-  API.delete(`/products/${id}`);
-
-export const updateProductById = (id, data) =>
-  API.put(`/products/${id}`, data);
+/* AUTH */
+export const logout = () => API.post("/auth/logout");

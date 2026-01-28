@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import { Upload, X } from 'lucide-react';
 
-const CategoryForm = ({ category, setCategory, onSubmit, btnText }) => {
+const CategoryForm = ({ category, setCategory, setFile, onSubmit, btnText }) => {
   return (
     <form onSubmit={onSubmit} className="space-y-6">
       <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
@@ -38,21 +39,49 @@ const CategoryForm = ({ category, setCategory, onSubmit, btnText }) => {
             className="w-full px-4 py-2 rounded-lg border border-slate-200 bg-white outline-none transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 resize-none"
           />
         </div>
+      </div>
 
-        {/* Icon/Image URL */}
-        <div>
-          <label htmlFor="icon" className="block text-sm font-semibold text-slate-900 mb-2">
-            Icon/Image URL
+      {/* Icon/Image Upload */}
+      <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+        <h2 className="text-lg font-semibold text-slate-900 mb-6">Category Icon</h2>
+
+        {!category.icon ? (
+          <label className="flex flex-col items-center justify-center w-full p-8 border-2 border-dashed border-slate-300 rounded-xl cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-all bg-slate-50">
+            <Upload className="h-8 w-8 text-slate-400 mb-2" />
+            <span className="text-sm font-medium text-slate-900">Click to upload icon</span>
+            <span className="text-xs text-slate-500 mt-1">PNG, JPG, GIF up to 2MB</span>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (file) {
+                  setFile(file);
+                  setCategory({ ...category, icon: URL.createObjectURL(file) });
+                }
+              }}
+              className="hidden"
+            />
           </label>
-          <input
-            id="icon"
-            type="url"
-            value={category.icon || ''}
-            onChange={(e) => setCategory({ ...category, icon: e.target.value })}
-            placeholder="https://example.com/icon.png"
-            className="w-full px-4 py-2 rounded-lg border border-slate-200 bg-white outline-none transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
-          />
-        </div>
+        ) : (
+          <div className="relative w-32 h-32 group">
+            <img
+              src={category.icon}
+              alt="Preview"
+              className="w-full h-full object-cover rounded-lg border border-slate-200"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                setFile(null);
+                setCategory({ ...category, icon: "" });
+              }}
+              className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Submit Buttons */}
