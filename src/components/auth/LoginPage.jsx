@@ -23,6 +23,17 @@ const RequiredLabel = ({ text }) => {
   );
 };
 
+/* -------------------- Shared Styling -------------------- */
+const InputStyling =
+  "w-full pl-11 pr-12 py-3 border border-border rounded-xl bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all duration-300";
+
+const RequiredLabel = ({ text }) => (
+  <label className="block text-sm font-semibold text-foreground mb-2.5">
+    {text} <span className="text-red-500">*</span>
+  </label>
+);
+
+/* -------------------- Component -------------------- */
 const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -60,6 +71,7 @@ const LoginPage = () => {
     if (loading) return;
     setLoading(true);
 
+    setLoading(true);
     try {
       if (isLogin) {
         const response = await loginApi({
@@ -83,8 +95,7 @@ const LoginPage = () => {
           }
         }, 500);
       } else {
-        // Register API call
-        const response = await registerApi({
+        await registerApi({
           username: formData.username,
           name: formData.name,
           email: formData.email,
@@ -109,7 +120,10 @@ const LoginPage = () => {
         error.response?.data?.message || error.message || "An error occurred";
       setToast({
         open: true,
-        message: errorMessage,
+        message:
+          error.response?.data?.message ||
+          error.message ||
+          "Something went wrong",
         severity: "error",
       });
       console.error("Auth error:", error);
@@ -121,9 +135,10 @@ const LoginPage = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+
       <div className="min-h-screen flex bg-background overflow-hidden">
-        {/* Left Side - Form Section */}
-        <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-4 sm:p-8 lg:p-12 relative z-10">
+        {/* LEFT SIDE */}
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-6">
           <div className="w-full max-w-md">
             {/* Logo */}
             <div className="mb-8 sm:mb-12 animate-fade-in">
@@ -152,7 +167,7 @@ const LoginPage = () => {
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-5">
               {!isLogin && (
                 <div
                   className="animate-in fade-in slide-in-from-top-2 duration-500"
@@ -171,8 +186,6 @@ const LoginPage = () => {
                       className={InputStyling}
                     />
                   </div>
-                </div>
-              )}
 
               {/* Name field (Sign Up only) */}
               {!isLogin && (
@@ -190,7 +203,7 @@ const LoginPage = () => {
                       className={InputStyling}
                     />
                   </div>
-                </div>
+                </>
               )}
 
               {/* Email field */}
@@ -200,10 +213,11 @@ const LoginPage = () => {
               >
                 <RequiredLabel text="Email Address" />
                 <div className="relative">
-                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <input
                     type="email"
                     name="email"
+                    required
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="you@example.com"
@@ -220,10 +234,11 @@ const LoginPage = () => {
               >
                 <RequiredLabel text=" Password" />
                 <div className="relative">
-                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <input
                     type={showPassword ? "text" : "password"}
                     name="password"
+                    required
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="••••••••"
@@ -233,7 +248,7 @@ const LoginPage = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground"
                   >
                     {showPassword ? (
                       <EyeOff className="w-5 h-5" />
@@ -244,9 +259,8 @@ const LoginPage = () => {
                 </div>
               </div>
 
-              {/* Forgot Password (Login only) */}
               {isLogin && (
-                <div className="flex justify-end pt-2">
+                <div className="flex justify-end">
                   <button
                     type="button"
                     onClick={() => navigate("/forgot")}
@@ -257,11 +271,10 @@ const LoginPage = () => {
                 </div>
               )}
 
-              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-blue-600 text-white font-semibold py-3.5 px-4 rounded-xl hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-600/30 transition-all duration-300 transform hover:scale-[1.02] active:scale-95 mt-8 sm:mt-10 text-base disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full bg-blue-600 text-white font-semibold py-3.5 rounded-xl hover:bg-blue-700 transition-all"
               >
                 {loading ? (
                   <CircularProgress size={24} sx={{ color: "white" }} />
@@ -280,7 +293,7 @@ const LoginPage = () => {
                 : "Already have an account? "}
               <button
                 onClick={() => setIsLogin(!isLogin)}
-                className="font-semibold text-blue-600 hover:text-blue-700 transition-colors duration-200"
+                className="ml-2 text-blue-600 font-semibold"
               >
                 {isLogin ? "Sign up" : "Sign in"}
               </button>
