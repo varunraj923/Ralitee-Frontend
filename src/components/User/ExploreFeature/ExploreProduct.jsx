@@ -1,5 +1,5 @@
 import { ProductCard } from "../FlashSaleFeature/ProductCard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const exploreProducts = [
@@ -35,6 +35,7 @@ const exploreProducts = [
     discount: 22,
     rating: 4.6,
     reviews: 180,
+    isNew:true,
   },
   {
     id: 404,
@@ -46,6 +47,7 @@ const exploreProducts = [
     discount: 25,
     rating: 4.5,
     reviews: 210,
+    isNew:true,
   },
   {
     id: 405,
@@ -181,66 +183,76 @@ const exploreProducts = [
   },
 ];
 
-
-
-
-
 const ExploreProduct = () => {
   const [page, setPage] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
   const productsPerPage = 8;
 
-  const startIndex = page * productsPerPage;
-  const visibleProducts = exploreProducts.slice(
-    startIndex,
-    startIndex + productsPerPage
-  );
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const totalPages = Math.ceil(exploreProducts.length / productsPerPage);
+
+  const visibleProducts = isMobile
+    ? exploreProducts
+    : exploreProducts.slice(
+        page * productsPerPage,
+        page * productsPerPage + productsPerPage
+      );
 
   return (
     <section className="max-w-[1170px] mx-auto px-4 py-16 font-sans">
       {/* HEADER */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-6 md:gap-0">
-        <div className="flex flex-col md:flex-row md:items-end gap-10 md:gap-20">
-          {/* Title */}
-          <div>
-            <div className="flex items-center gap-4 mb-5">
-              <div className="w-5 h-10 bg-[#DB4444] rounded-[4px]" />
-              <span className="text-[#DB4444] font-semibold">
-                Our Products
-              </span>
-            </div>
-            <h2 className="text-4xl font-semibold tracking-[0.04em]">
-              Explore our Products
-            </h2>
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-6">
+        <div>
+          <div className="flex items-center gap-4 mb-5">
+            <div className="w-5 h-10 bg-[#DB4444] rounded-[4px]" />
+            <span className="text-[#DB4444] font-semibold">
+              Our Products
+            </span>
           </div>
+          <h2 className="text-4xl font-semibold tracking-[0.04em]">
+            Explore our Products
+          </h2>
         </div>
 
-        {/* ARROWS */}
+        {/* ARROWS (Desktop only) */}
         <div className="hidden md:flex gap-2">
           <button
-            onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+            onClick={() => setPage((p) => Math.max(p - 1, 0))}
             disabled={page === 0}
-            className="bg-gray-100 p-3 rounded-full hover:bg-gray-200 transition disabled:opacity-50"
+            className="bg-gray-100 p-3 rounded-full hover:bg-gray-200 disabled:opacity-50"
           >
             <ArrowLeft size={24} />
           </button>
           <button
             onClick={() =>
-              setPage((prev) => Math.min(prev + 1, totalPages - 1))
+              setPage((p) => Math.min(p + 1, totalPages - 1))
             }
             disabled={page === totalPages - 1}
-            className="bg-gray-100 p-3 rounded-full hover:bg-gray-200 transition disabled:opacity-50"
+            className="bg-gray-100 p-3 rounded-full hover:bg-gray-200 disabled:opacity-50"
           >
             <ArrowRight size={24} />
           </button>
         </div>
       </div>
 
-      {/* PRODUCTS GRID */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+      {/* PRODUCTS */}
+      <div
+        className="
+          flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide
+          md:grid md:grid-cols-4 md:gap-8 md:overflow-visible
+        "
+      >
         {visibleProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <div key={product.id} className="snap-start">
+            <ProductCard product={product}  showAddToCart={false} showDiscount={false} showOriginalPrice={false}/>
+          </div>
         ))}
       </div>
 

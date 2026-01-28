@@ -170,6 +170,7 @@ const LoginPage = () => {
                       value={formData.username}
                       onChange={handleChange}
                       placeholder="johndoe123"
+                      className={InputStyling}
                     />
                   </div>
                 </div>
