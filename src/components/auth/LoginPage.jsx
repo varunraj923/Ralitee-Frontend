@@ -5,8 +5,17 @@ import CssBaseline from "@mui/material/CssBaseline"
 import Toast from "../Toast"
 import { createAppTheme } from "../../constants/theme"
 import { loginApi, registerApi } from "../../api/auth"
+import { useDispatch } from "react-redux";
+import { setAuthData } from "../../redux/slices/authSlice"
+import { useNavigate } from "react-router-dom";
+
+
+
+
 
 const LoginPage = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -17,7 +26,6 @@ const LoginPage = () => {
     email: "",
     password: "",
   })
-
   const theme = createAppTheme("light")
 
   const handleChange = (e) => {
@@ -36,20 +44,30 @@ const LoginPage = () => {
     setLoading(true)
 
     try {
-      if (isLogin) {
-        const response = await loginApi({
-          email: formData.email,
-          password: formData.password,
-        })
-        setToast({
-          open: true,
-          message: "Login successful!",
-          severity: "success",
-        })
-        // Store token or handle successful login
-        localStorage.setItem("token", response.data.token)
-        // Redirect to home page
-        window.location.href = "/"
+     if (isLogin) {
+  const response = await loginApi({
+    email: formData.email,
+    password: formData.password,
+  });
+
+const role = response.data.user.role;
+
+dispatch(
+  setAuthData({
+    token: response.data.token,
+    role,
+    user: response.data.user,
+  })
+);
+
+// ✅ redirect based on role
+if (role === "admin") {
+  navigate("/admin/dashboard");
+} else {
+  navigate("/");
+}
+
+
       } else {
         // Register API call
         const response = await registerApi({
@@ -85,6 +103,7 @@ const LoginPage = () => {
       setLoading(false)
     }
   }
+
 
   return (
     <ThemeProvider theme={theme}>
