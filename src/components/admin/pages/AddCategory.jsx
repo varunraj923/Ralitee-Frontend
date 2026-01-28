@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminLayout from "../layout/adminlayout";
 import CategoryForm from "../components/CategoryForm";
+import { createCategory, uploadImage } from "../../../api/adminApi";
 
 const AddCategory = () => {
   const navigate = useNavigate();
@@ -21,27 +22,26 @@ const AddCategory = () => {
     setError(null);
 
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/categories", // ✅ BACKEND URL
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include", // ✅ if using cookies/JWT
-          body: JSON.stringify(category),
-        }
-      );
+      let imageUrl = category.icon;
 
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message || "Failed to add category");
+      if (category.imageFile) {
+        const formData = new FormData();
+        formData.append("image", category.imageFile);
+        const res = await uploadImage(formData);
+        imageUrl = res.data.imageUrl;
       }
 
-      navigate("/admin/categories"); // ✅ VITE ROUTING
+      // Create category with the image URL (and remove the file object)
+      const { imageFile, ...categoryData } = category;
+      await createCategory({ ...categoryData, icon: imageUrl });
+
+      navigate("/admin/categories");
     } catch (err) {
       console.error("Error adding category:", err);
-      setError(err.message || "Failed to add category. Please try again.");
+      setError(
+        err.response?.data?.message ||
+        "Failed to add category. Please try again."
+      );
     } finally {
       setLoading(false);
     }

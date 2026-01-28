@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminLayout from "../layout/adminlayout";
 import ProductForm from "../components/ProductForm";
+import { createProduct, fetchCategories, uploadImage } from "../../../api/adminApi";
 
 const AddProduct = () => {
   const navigate = useNavigate();
@@ -24,18 +25,9 @@ const AddProduct = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const loadCategories = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:5000/api/categories",
-          { credentials: "include" }
-        );
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch categories");
-        }
-
-        const data = await response.json();
+        const { data } = await fetchCategories();
         setCategories(data);
       } catch (err) {
         console.error("Error fetching categories:", err);
@@ -43,7 +35,7 @@ const AddProduct = () => {
       }
     };
 
-    fetchCategories();
+    loadCategories();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -52,34 +44,36 @@ const AddProduct = () => {
     setError(null);
 
     try {
-      const formData = new FormData();
-
-      Object.entries(product).forEach(([key, value]) => {
-        formData.append(key, value);
-      });
-
-      images.forEach((image) => {
-        formData.append("images", image);
-      });
-
-      const response = await fetch(
-        "http://localhost:5000/api/products",
-        {
-          method: "POST",
-          credentials: "include",
-          body: formData,
-        }
+      // 1. Upload Images first
+      const uploadedImageUrls = await Promise.all(
+        images.map(async (image) => {
+          const formData = new FormData();
+          formData.append("image", image);
+          const res = await uploadImage(formData);
+          return res.data.imageUrl;
+        })
       );
 
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message || "Failed to add product");
-      }
+      // 2. Prepare Product Data (JSON)
+      const productData = {
+        ...product,
+        images: uploadedImageUrls,
+        // Ensure numbers are numbers
+        price: Number(product.price),
+        stock: Number(product.stock),
+        weight: Number(product.weight),
+      };
+
+      // 3. Create Product
+      await createProduct(productData);
 
       navigate("/admin/products");
     } catch (err) {
       console.error("Error adding product:", err);
-      setError(err.message || "Failed to add product. Please try again.");
+      setError(
+        err.response?.data?.message ||
+        "Failed to add product. Please try again."
+      );
     } finally {
       setLoading(false);
     }

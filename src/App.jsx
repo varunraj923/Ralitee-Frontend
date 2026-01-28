@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 
 import HomePage from "./components/homepage/HomePage";
@@ -18,25 +18,25 @@ import AdminRoute from "./routes/AdminRoute";
 const App = () => {
   return (
     <Provider store={store}>
-      <BrowserRouter>
-        <Routes>
-          {/* PUBLIC ROUTES */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/homepage" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/user/dashboard" element={<UserDashboard />} />
-          <Route path="/forgot" element={<ForgotPasswordPage />} />
 
-          {/* 🔐 PROTECTED ADMIN ROUTES */}
-          <Route element={<AdminRoute />}>
-            <Route path="/admin/dashboard" element={<Dashboard />} />
-            <Route path="/admin/products" element={<Products />} />
-            <Route path="/admin/add-product" element={<AddProduct />} />
-            <Route path="/admin/categories" element={<Categories />} />
-            <Route path="/admin/add-category" element={<AddCategory />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <Routes>
+        {/* PUBLIC ROUTES */}
+        <Route path="/" element={<HomePage />} />
+        <Route path="/homepage" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/user/dashboard" element={<UserDashboard />} />
+        <Route path="/forgot" element={<ForgotPasswordPage />} />
+
+        {/* 🔐 PROTECTED ADMIN ROUTES */}
+        <Route element={<AdminRoute />}>
+          <Route path="/admin/dashboard" element={<Dashboard />} />
+          <Route path="/admin/products" element={<Products />} />
+          <Route path="/admin/add-product" element={<AddProduct />} />
+          <Route path="/admin/categories" element={<Categories />} />
+          <Route path="/admin/add-category" element={<AddCategory />} />
+        </Route>
+      </Routes>
+
     </Provider>
   );
 };

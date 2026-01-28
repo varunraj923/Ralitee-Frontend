@@ -5,9 +5,9 @@ import AdminLayout from "../layout/adminlayout";
 import ProductTable from "../components/ProductTable";
 import EditProductDialog from "../components/EditProductDilog";
 import {
-  getProducts,
-  deleteProductById,
-  updateProductById,
+  fetchProducts,
+  deleteProduct,
+  updateProduct,
 } from "../../../api/adminApi";
 
 const Products = () => {
@@ -25,15 +25,14 @@ const Products = () => {
 
   /* ================= FETCH PRODUCTS ================= */
   useEffect(() => {
-    const fetchProducts = async () => {
+    const loadProducts = async () => {
       try {
-        const res = await getProducts();
-        const data = Array.isArray(res.data)
-          ? res.data
-          : res.data.products;
+        const { data } = await fetchProducts();
+        // Handle both array and object response formats
+        const productsData = Array.isArray(data) ? data : data.products;
 
-        setProducts(data);
-        setFilteredProducts(data);
+        setProducts(productsData);
+        setFilteredProducts(productsData);
       } catch (err) {
         console.error("Error fetching products:", err);
         setError("Failed to load products");
@@ -42,7 +41,7 @@ const Products = () => {
       }
     };
 
-    fetchProducts();
+    loadProducts();
   }, []);
 
   /* ================= SEARCH FILTER ================= */
@@ -66,7 +65,7 @@ const Products = () => {
 
   const handleUpdateProduct = async (id, data) => {
     try {
-      const res = await updateProductById(id, data);
+      const res = await updateProduct(id, data);
 
       setProducts((prev) =>
         prev.map((p) => (p._id === id ? res.data.product : p))
@@ -92,7 +91,7 @@ const Products = () => {
       return;
 
     try {
-      await deleteProductById(productId);
+      await deleteProduct(productId);
       setProducts((prev) => prev.filter((p) => p._id !== productId));
     } catch (err) {
       alert("Failed to delete product");

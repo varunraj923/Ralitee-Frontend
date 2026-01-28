@@ -47,80 +47,87 @@ const ProductTable = ({ products, onEdit, onDelete, onView }) => {
                 </td>
               </tr>
             ) : (
-              products.map((product) => (
-                <tr
-                  key={product._id || product.id}
-                  className="border-b border-slate-200 hover:bg-slate-50 transition-colors"
-                >
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      {product.image && (
+              products.map((product) => {
+                const imageUrl =
+                  product.image?.url ||
+                  product.image ||
+                  product.images?.[0] ||
+                  "/placeholder.svg";
+
+                return (
+                  <tr
+                    key={product._id || product.id}
+                    className="border-b border-slate-200 hover:bg-slate-50 transition-colors"
+                  >
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
                         <img
-                          src={product.image || "/placeholder.svg"}
+                          src={imageUrl}
                           alt={product.name}
-                          className="h-10 w-10 rounded-lg object-cover"
+                          className="h-10 w-10 rounded-lg object-cover border"
+                          onError={(e) => {
+                            e.currentTarget.src = "/placeholder.svg";
+                          }}
                         />
-                      )}
-                      <span className="text-sm font-medium text-slate-900">
-                        {product.name}
+                        <span className="text-sm font-medium text-slate-900">
+                          {product.name}
+                        </span>
+                      </div>
+                    </td>
+
+                    <td className="px-6 py-4 text-sm text-slate-600">
+                      {product.sku || 'N/A'}
+                    </td>
+
+                    <td className="px-6 py-4 text-sm font-semibold text-slate-900">
+                      ₹{Number(product.price).toFixed(2)}
+                    </td>
+
+                    <td className="px-6 py-4 text-sm">
+                      <span
+                        className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${(product.stock || 0) > 10
+                            ? 'bg-green-100 text-green-800'
+                            : (product.stock || 0) > 0
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : 'bg-red-100 text-red-800'
+                          }`}
+                      >
+                        {product.stock || 0}
                       </span>
-                    </div>
-                  </td>
+                    </td>
 
-                  <td className="px-6 py-4 text-sm text-slate-600">
-                    {product.sku || 'N/A'}
-                  </td>
+                    <td className="px-6 py-4 text-sm text-slate-600">
+                      {product.category?.name || 'Uncategorized'}
+                    </td>
 
-                  <td className="px-6 py-4 text-sm font-semibold text-slate-900">
-                    ₹{Number(product.price).toFixed(2)}
-                  </td>
-
-                  <td className="px-6 py-4 text-sm">
-                    <span
-                      className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
-                        (product.stock || 0) > 10
-                          ? 'bg-green-100 text-green-800'
-                          : (product.stock || 0) > 0
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : 'bg-red-100 text-red-800'
-                      }`}
-                    >
-                      {product.stock || 0}
-                    </span>
-                  </td>
-
-                  {/* 🔥 FIXED LINE */}
-                  <td className="px-6 py-4 text-sm text-slate-600">
-                    {product.category?.name || 'Uncategorized'}
-                  </td>
-
-                  <td className="px-6 py-4 text-sm">
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => onView(product._id || product.id)}
-                        className="p-2 hover:bg-blue-100 text-blue-600 rounded-lg transition-colors"
-                        title="View"
-                      >
-                        <Eye className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => onEdit(product._id || product.id)}
-                        className="p-2 hover:bg-yellow-100 text-yellow-600 rounded-lg transition-colors"
-                        title="Edit"
-                      >
-                        <Edit2 className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => onDelete(product._id || product.id)}
-                        className="p-2 hover:bg-red-100 text-red-600 rounded-lg transition-colors"
-                        title="Delete"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
+                    <td className="px-6 py-4 text-sm">
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => onView(product._id || product.id)}
+                          className="p-2 hover:bg-blue-100 text-blue-600 rounded-lg transition-colors"
+                          title="View"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => onEdit(product._id || product.id)}
+                          className="p-2 hover:bg-yellow-100 text-yellow-600 rounded-lg transition-colors"
+                          title="Edit"
+                        >
+                          <Edit2 className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => onDelete(product._id || product.id)}
+                          className="p-2 hover:bg-red-100 text-red-600 rounded-lg transition-colors"
+                          title="Delete"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>
