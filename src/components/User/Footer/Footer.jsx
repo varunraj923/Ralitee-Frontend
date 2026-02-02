@@ -19,7 +19,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link to="/login" className="hover:text-white">
-                  Login / Register
+                  Login / Signup
                 </Link>
               </li>
               <li>
@@ -137,10 +137,10 @@ const Footer = () => {
               <a href="https://twitter.com" target="_blank" rel="noreferrer">
                 <Twitter className="w-5 h-5 hover:text-blue-400 transition" />
               </a>
-              <a href="https://instagram.com" target="_blank" rel="noreferrer">
+              <a href="https://www.instagram.com/raliteeofficial/" target="_blank" rel="noreferrer">
                 <Instagram className="w-5 h-5 hover:text-pink-500 transition" />
               </a>
-              <a href="https://linkedin.com" target="_blank" rel="noreferrer">
+              <a href="https://www.linkedin.com/company/ralitee-official/posts/?feedView=all" target="_blank" rel="noreferrer">
                 <Linkedin className="w-5 h-5 hover:text-blue-600 transition" />
               </a>
             </div>

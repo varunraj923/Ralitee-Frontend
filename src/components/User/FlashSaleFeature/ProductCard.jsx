@@ -1,12 +1,24 @@
 import { RenderStars } from "./RenderStars";
 import { Heart, Eye } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const ProductCard = ({ product, showAddToCart = true ,showDiscount=true,showOriginalPrice=true}) => {
+
+  const navigate = useNavigate();
+    const handleProduct = (e)=>{
+      navigate('/product')
+      console.log(product)
+      
+    }
+
+
+
+
   return (
     <div className="w-[261px] flex-shrink-0 group cursor-pointer">
       <div
         className="relative h-[250px] bg-[#F5F5F5] rounded-[4px] p-4 flex items-center justify-center overflow-hidden mb-4 transition-all duration-300 ease-in-out
-        hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg"
+        hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg"  onClick={(e)=>handleProduct(e)}
       >
         {/* Discount Badge */}
         {showDiscount && (<div className="absolute z-50 top-3 left-3 bg-[#DB4444] text-white text-xs px-3 py-1 rounded-[4px]">
