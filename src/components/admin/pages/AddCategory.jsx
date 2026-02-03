@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminLayout from "../layout/adminlayout";
 import CategoryForm from "../components/CategoryForm";
-import { createCategory, uploadImage } from "../../../api/adminApi";
+import { createCategory } from "../../../api/adminApi";
 
 const AddCategory = () => {
   const navigate = useNavigate();
@@ -22,18 +22,15 @@ const AddCategory = () => {
     setError(null);
 
     try {
-      let imageUrl = category.icon;
+      const formData = new FormData();
+      formData.append("name", category.name);
+      formData.append("description", category.description || "");
 
       if (category.imageFile) {
-        const formData = new FormData();
         formData.append("image", category.imageFile);
-        const res = await uploadImage(formData);
-        imageUrl = res.data.imageUrl;
       }
 
-      // Create category with the image URL (and remove the file object)
-      const { imageFile, ...categoryData } = category;
-      await createCategory({ ...categoryData, icon: imageUrl });
+      await createCategory(formData);
 
       navigate("/admin/categories");
     } catch (err) {

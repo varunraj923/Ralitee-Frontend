@@ -1,20 +1,29 @@
 'use client';
 
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { Bell, Settings, LogOut, User, Search } from 'lucide-react';
 import { logout } from '../../../api/adminApi';
+import { clearAuthData } from '../../../redux/slices/authSlice';
 
 const Topbar = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogout = async () => {
     try {
+      // Clear Redux state immediately
+      dispatch(clearAuthData());
+
+      // Call logout API (clears backend session/cookie)
       await logout();
-      navigate('/login'); // Redirect to login page
+
+      // Redirect to login page
+      navigate('/login', { replace: true });
     } catch (error) {
       console.error("Logout failed:", error);
-      // Fallback redirect even if API fails
-      navigate('/login');
+      // Even if API fails, state is cleared, so redirect anyway
+      navigate('/login', { replace: true });
     }
   };
 

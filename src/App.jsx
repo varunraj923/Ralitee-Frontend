@@ -14,6 +14,7 @@ import ForgotPasswordPage from "./components/auth/ForgotPasswordPage";
 import UserDashboard from "./components/User/UserDashboard";
 
 import AdminRoute from "./routes/AdminRoute";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 const App = () => {
   return (
@@ -24,8 +25,12 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/homepage" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/user/dashboard" element={<UserDashboard />} />
         <Route path="/forgot" element={<ForgotPasswordPage />} />
+
+        {/* 🔐 PROTECTED USER ROUTES */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/user/dashboard" element={<UserDashboard />} />
+        </Route>
 
         {/* 🔐 PROTECTED ADMIN ROUTES */}
         <Route element={<AdminRoute />}>

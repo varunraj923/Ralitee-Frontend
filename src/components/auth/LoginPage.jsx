@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setAuthData } from "../../redux/slices/authSlice";
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -38,6 +40,19 @@ const LoginPage = () => {
   });
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { token, role, user } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    // Only redirect if we have a complete auth state (token, role, AND user)
+    if (token && role && user) {
+      if (role === "admin") {
+        navigate("/admin/dashboard", { replace: true });
+      } else {
+        navigate("/user/dashboard", { replace: true });
+      }
+    }
+  }, [token, role, user, navigate]);
   const theme = createAppTheme("light");
 
   const handleChange = (e) => {
@@ -65,22 +80,20 @@ const LoginPage = () => {
           email: formData.email,
           password: formData.password,
         });
+
+        const { token, user } = response.data;
+        const role = user.role;
+
+        dispatch(setAuthData({ token, role, user }));
+
         setToast({
           open: true,
           message: "Login successful!",
           severity: "success",
         });
-        // Store token or handle successful login
-        localStorage.setItem("token", response.data.token);
-        const role = response.data.user.role;
 
-        setTimeout(() => {
-          if (role === "admin") {
-            navigate("/admin/dashboard", { replace: true });
-          } else {
-            navigate("/user/dashboard", { replace: true });
-          }
-        }, 500);
+        // Navigation is handled by the useEffect above when token/role updates
+
       } else {
         await registerApi({
           username: formData.username,
