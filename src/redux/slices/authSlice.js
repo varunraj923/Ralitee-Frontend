@@ -1,8 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const getLocalStorageItem = (key) => {
+  const item = localStorage.getItem(key);
+  return item === "undefined" || item === undefined ? null : item;
+};
+
 const initialState = {
-  token: localStorage.getItem("token"),
-  role: localStorage.getItem("role"),
+  token: getLocalStorageItem("token"),
+  role: getLocalStorageItem("role"),
   user: null,
   authChecked: false,
 };

@@ -1,32 +1,31 @@
-import axios from "axios";
+import api from "./index.js";
 
-const API = axios.create({
-  baseURL: "http://localhost:3000/api",
-  withCredentials: true,
-});
+// Use the main API instance which has the auth interceptor
+
 
 /* PRODUCTS */
-export const fetchProducts = () => API.get("/products");
-export const createProduct = (data) => API.post("/products", data);
-export const updateProduct = (id, data) => API.put(`/products/${id}`, data);
-export const deleteProduct = (id) => API.delete(`/products/${id}`);
+export const fetchProducts = () => api.get("/products");
+export const createProduct = (data) => api.post("/products", data);
+export const updateProduct = (id, data) => api.put(`/products/${id}`, data);
+export const deleteProduct = (id) => api.delete(`/products/${id}`);
 
 /* CATEGORIES */
-export const fetchCategories = () => API.get("/categories");
-export const createCategory = (data) => API.post("/categories", data);
-export const updateCategory = (id, data) => API.put(`/categories/${id}`, data);
-export const deleteCategory = (id) => API.delete(`/categories/${id}`);
+export const fetchCategories = () => api.get("/categories");
+export const createCategory = (data) => api.post("/categories", data);
+export const updateCategory = (id, data) => api.put(`/categories/${id}`, data);
+export const deleteCategory = (id) => api.delete(`/categories/${id}`);
 
 /* IMAGE UPLOAD */
 export const uploadImage = (formData) =>
-  API.post("/upload", formData, {
+  api.post("/upload", formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
 
 /* DASHBOARD */
 export const getDashboardData = () => {
-  return API.get("/admin/dashboard");
+  return api.get("/admin/dashboard");
 };
 
 /* AUTH */
-export const logout = () => API.post("/auth/logout");
+export const logout = () => api.post("/auth/logout");
+
