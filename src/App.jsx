@@ -15,6 +15,7 @@ import UserDashboard from "./components/User/UserDashboard";
 
 import AdminRoute from "./routes/AdminRoute";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import ProductPage from "./features/product/ProductPage";
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
         <Route path="/homepage" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forgot" element={<ForgotPasswordPage />} />
+        <Route path="/product" element={< ProductPage/>} />
 
         {/* 🔐 PROTECTED USER ROUTES */}
         <Route element={<ProtectedRoute />}>
