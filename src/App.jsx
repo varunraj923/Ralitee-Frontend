@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
+import Navbar from "./components/homepage/Navbar";
 
 import HomePage from "./components/homepage/HomePage";
 import LoginPage from "./components/auth/LoginPage";
@@ -20,6 +21,7 @@ import ProductPage from "./features/product/ProductPage";
 const App = () => {
   return (
     <Provider store={store}>
+        <Navbar />
 
       <Routes>
         {/* PUBLIC ROUTES */}
