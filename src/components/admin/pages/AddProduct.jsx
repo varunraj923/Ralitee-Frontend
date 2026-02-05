@@ -1,11 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminLayout from "../layout/adminlayout";
 import ProductForm from "../components/ProductForm";
-import { createProduct, fetchCategories, uploadImage } from "../../../api/adminApi";
+import {
+  createProduct,
+  fetchCategories,
+  uploadImage,
+} from "../../../api/adminApi";
 
 const AddProduct = () => {
   const navigate = useNavigate();
+  const isSubmittingRef = useRef(false); // 🔒 hard lock
 
   const [product, setProduct] = useState({
     name: "",
@@ -24,6 +29,7 @@ const AddProduct = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Load categories once
   useEffect(() => {
     const loadCategories = async () => {
       try {
@@ -40,31 +46,36 @@ const AddProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // 🔒 Prevent multiple submits
+    if (isSubmittingRef.current) return;
+    isSubmittingRef.current = true;
+
     setLoading(true);
     setError(null);
 
     try {
-      // 1. Upload Images first
+      // 1️⃣ Upload images (only once)
       const uploadedImageUrls = await Promise.all(
-        images.map(async (image) => {
+        images.map((image) => {
           const formData = new FormData();
           formData.append("image", image);
-          const res = await uploadImage(formData);
-          return res.data.imageUrl;
+          return uploadImage(formData).then(
+            (res) => res.data.imageUrl
+          );
         })
       );
 
-      // 2. Prepare Product Data (JSON)
+      // 2️⃣ Prepare product payload
       const productData = {
         ...product,
         images: uploadedImageUrls,
-        // Ensure numbers are numbers
         price: Number(product.price),
         stock: Number(product.stock),
         weight: Number(product.weight),
       };
 
-      // 3. Create Product
+      // 3️⃣ Create product
       await createProduct(productData);
 
       navigate("/admin/products");
@@ -72,10 +83,11 @@ const AddProduct = () => {
       console.error("Error adding product:", err);
       setError(
         err.response?.data?.message ||
-        "Failed to add product. Please try again."
+          "Failed to add product. Please try again."
       );
     } finally {
       setLoading(false);
+      isSubmittingRef.current = false; // 🔓 unlock
     }
   };
 
@@ -105,6 +117,7 @@ const AddProduct = () => {
           categories={categories}
           onSubmit={handleSubmit}
           btnText={loading ? "Adding Product..." : "Add Product"}
+          loading={loading} // 🔒 UI lock
         />
       </div>
     </AdminLayout>

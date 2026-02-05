@@ -2,13 +2,23 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const getLocalStorageItem = (key) => {
   const item = localStorage.getItem(key);
-  return item === "undefined" || item === undefined ? null : item;
+  if (item === "undefined" || item === undefined || item === null) {
+    return null;
+  }
+
+  // Try to parse JSON for objects (like user)
+  try {
+    return JSON.parse(item);
+  } catch {
+    // Return as string for simple values (like token, role)
+    return item;
+  }
 };
 
 const initialState = {
   token: getLocalStorageItem("token"),
   role: getLocalStorageItem("role"),
-  user: null,
+  user: getLocalStorageItem("user"),
   authChecked: false,
 };
 
@@ -24,6 +34,7 @@ const authSlice = createSlice({
 
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
+      localStorage.setItem("user", JSON.stringify(user));
     },
 
     clearAuthData: (state) => {
