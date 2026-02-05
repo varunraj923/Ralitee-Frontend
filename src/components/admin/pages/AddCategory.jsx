@@ -10,39 +10,42 @@ const AddCategory = () => {
   const [category, setCategory] = useState({
     name: "",
     description: "",
-    icon: "",
+    imageFile: null, // ✅ explicit
   });
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      const formData = new FormData();
-      formData.append("name", category.name);
-      formData.append("description", category.description || "");
+  // 🔴 HARD BLOCK
+  if (!category.imageFile) {
+    setError("Category image is required");
+    return;
+  }
 
-      if (category.imageFile) {
-        formData.append("image", category.imageFile);
-      }
+  setLoading(true);
+  setError(null);
 
-      await createCategory(formData);
+  try {
+    const formData = new FormData();
+    formData.append("name", category.name.trim());
+    formData.append("image", category.imageFile); // 🔴 REQUIRED
 
-      navigate("/admin/categories");
-    } catch (err) {
-      console.error("Error adding category:", err);
-      setError(
-        err.response?.data?.message ||
-        "Failed to add category. Please try again."
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+    await createCategory(formData);
+
+    navigate("/admin/categories");
+  } catch (err) {
+    setError(
+      err.response?.data?.error ||
+      "Failed to add category"
+    );
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <AdminLayout>
@@ -67,6 +70,7 @@ const AddCategory = () => {
           setCategory={setCategory}
           onSubmit={handleSubmit}
           btnText={loading ? "Adding Category..." : "Add Category"}
+          loading={loading}
         />
       </div>
     </AdminLayout>
