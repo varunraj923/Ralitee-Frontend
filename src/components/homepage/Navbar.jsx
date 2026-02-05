@@ -1,4 +1,5 @@
 // NavBar.jsx
+
 import React, { useState } from "react";
 import {
   AppBar,
@@ -20,17 +21,36 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+// import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SearchIcon from "@mui/icons-material/Search";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { useNavigate } from "react-router-dom";
+import UserMenu from "../common/UserMenu";
+import { useDispatch, useSelector } from "react-redux";
+import { clearAuthData } from "../../redux/slices/authSlice";
+import { logoutApi } from "../../api/auth";
+
 
 const NavBar = ({ cartCount = 0, mode, toggleColorMode }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [open, setOpen] = useState(false);
+  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
+  
+const handleLogout = async () => {
+  try {
+    await logoutApi();
+  } catch (err) {
+    console.log(err);
+  } finally {
+    dispatch(clearAuthData());
+    navigate("/login");
+  }
+};
+
 
   return (
     <>
@@ -46,7 +66,7 @@ const NavBar = ({ cartCount = 0, mode, toggleColorMode }) => {
         <Container maxWidth="lg">
           <Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
             {/* Logo + Name */}
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {/* <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <img
                 src="/favicon-transparent.png"
                 alt="Ralitee"
@@ -60,7 +80,28 @@ const NavBar = ({ cartCount = 0, mode, toggleColorMode }) => {
               >
                 Ralitee
               </Typography>
-            </Box>
+            </Box> */}
+            <Box
+  sx={{ display: "flex", alignItems: "center", gap: 1, cursor: "pointer" }}
+  onClick={() => navigate("/")}
+>
+  <img
+    src="/favicon-transparent.png"
+    alt="Ralitee"
+    style={{ height: 36, width: 36 }}
+  />
+  <Typography
+    sx={{
+      fontWeight: 700,
+      color:
+        theme.palette.homePage?.buttonPrimaryHover ||
+        theme.palette.primary.main,
+    }}
+  >
+    Ralitee
+  </Typography>
+</Box>
+
 
             {isMobile ? (
               // Mobile menu
@@ -79,15 +120,15 @@ const NavBar = ({ cartCount = 0, mode, toggleColorMode }) => {
             ) : (
               // Desktop menu
               <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                <Button onClick={() => navigate("/shop")} sx={{ color: theme.palette.text.primary }}>
+                <Button onClick={() => navigate("/user/dashboard")} sx={{ color: theme.palette.text.primary }}>
                   Shop
                 </Button>
-                <Button
+                {/* <Button
                   onClick={() => (window.location.hash = "#categories")}
                   sx={{ color: theme.palette.text.primary }}
                 >
                   Categories
-                </Button>
+                </Button> */}
                 <Button onClick={() => navigate("/offers")} sx={{ color: theme.palette.text.primary }}>
                   Offers
                 </Button>
@@ -107,7 +148,7 @@ const NavBar = ({ cartCount = 0, mode, toggleColorMode }) => {
                     </Badge>
                   </IconButton>
 
-                  <Button
+                  {/* <Button
                     variant="contained"
                     onClick={() => navigate("/login")}
                     sx={{
@@ -117,7 +158,18 @@ const NavBar = ({ cartCount = 0, mode, toggleColorMode }) => {
                     startIcon={<AccountCircleIcon />}
                   >
                     Sign in
-                  </Button>
+                  </Button> */}
+ <UserMenu
+  theme={theme}
+  isLoggedIn={!!user}
+  username={user?.name}
+  onLogin={() => navigate("/login")}
+  onLogout={handleLogout}
+/>
+
+
+
+
                 </Box>
               </Box>
             )}
@@ -145,12 +197,12 @@ const NavBar = ({ cartCount = 0, mode, toggleColorMode }) => {
           </Box>
           <Divider />
           <List>
-            <ListItemButton onClick={() => { navigate("/shop"); setOpen(false); }}>
+            <ListItemButton onClick={() => { navigate("/user/dashboard"); setOpen(false); }}>
               <ListItemText primary="Shop" />
             </ListItemButton>
-            <ListItemButton onClick={() => { window.location.hash = "#categories"; setOpen(false); }}>
+            {/* <ListItemButton onClick={() => { window.location.hash = "#categories"; setOpen(false); }}>
               <ListItemText primary="Categories" />
-            </ListItemButton>
+            </ListItemButton> */}
             <ListItemButton onClick={() => { navigate("/offers"); setOpen(false); }}>
               <ListItemText primary="Offers" />
             </ListItemButton>
@@ -158,9 +210,22 @@ const NavBar = ({ cartCount = 0, mode, toggleColorMode }) => {
             <ListItemButton onClick={() => { navigate("/cart"); setOpen(false); }}>
               <ListItemText primary={`Cart (${cartCount})`} />
             </ListItemButton>
-            <ListItemButton onClick={() => { navigate("/login"); setOpen(false); }}>
-              <ListItemText primary="Sign in" />
-            </ListItemButton>
+        <Box sx={{ mt: 1 }}>
+  <UserMenu
+    theme={theme}
+    isLoggedIn={!!user}
+    username={user?.name}
+    onLogin={() => {
+      navigate("/login");
+      setOpen(false);
+    }}
+    onLogout={() => {
+      handleLogout();
+      setOpen(false);
+    }}
+  />
+</Box>
+
           </List>
         </Box>
       </Drawer>

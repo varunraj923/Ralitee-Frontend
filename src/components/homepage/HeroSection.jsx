@@ -198,11 +198,11 @@ const HeroSection = () => {
 
   const handleShopClick = () => {
     try {
-      navigate("/shop");
+      navigate("/user/dashboard");
     } catch (error) {
       console.warn("Navigation not available:", error);
       // Fallback for when router is not available
-      window.location.href = "/shop";
+      window.location.href = "/user/dashboard";
     }
   };
 
