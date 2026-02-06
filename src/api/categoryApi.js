@@ -1,4 +1,5 @@
-export const categoryApi = async () => {
-    return API.get("/api/category");
-}
+import api from "./index.js";
 
+export const categoryApi = async () => {
+  return api.get("/categories");
+};

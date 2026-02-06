@@ -1,146 +1,100 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { categoryApi } from "../../../api/categoryApi";
 
-/**
- * API-ready category structure
- * You can replace this with API data later
- */
-const initialCategories = [
-  {
-    id: 1,
-    name: "Fruits",
-    image:
-      "https://images.unsplash.com/photo-1619566636858-adf3ef46400b?auto=format&fit=crop&w=300&q=80",
-  },
-  {
-    id: 2,
-    name: "Vegetables",
-    image:
-      "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=300&q=80",
-  },
-  {
-    id: 3,
-    name: "Dairy",
-    image:
-      "https://images.unsplash.com/photo-1585238342028-4b61c2b7b84f?auto=format&fit=crop&w=300&q=80",
-  },
-  {
-    id: 4,
-    name: "Bakery",
-    image:
-      "https://images.unsplash.com/photo-1608198093002-5d6a7b0b4d4b?auto=format&fit=crop&w=300&q=80",
-  },
-  {
-    id: 5,
-    name: "Snacks",
-    image:
-      "https://images.unsplash.com/photo-1599490659213-e2b9527bd087?auto=format&fit=crop&w=300&q=80",
-  },
-  {
-    id: 6,
-    name: "Beverages",
-    image:
-      "https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=300&q=80",
-  },
-  {
-    id: 7,
-    name: "Meat",
-    image:
-      "https://images.unsplash.com/photo-1527515637466-8f0e3f2c0b70?auto=format&fit=crop&w=300&q=80",
-  },
-  {
-    id: 8,
-    name: "Organic",
-    image:
-      "https://images.unsplash.com/photo-1580910051070-9cdb0f1c4a30?auto=format&fit=crop&w=300&q=80",
-  },
-];
-
-const CategorySection = ({ categories = initialCategories, onCategoryClick }) => {
-  const [page, setPage] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
-
-  const categoriesPerPage = 8;
+const CategorySection = () => {
+  const [categories, setCategories] = useState([]);
+  const scrollContainerRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    const fetchCategories = async () => {
+      try {
+        const response = await categoryApi();
+        setCategories(response.data); 
+      } catch (error) {
+        console.error("Category API error:", error);
+      }
+    };
+
+    fetchCategories();
   }, []);
 
-  const totalPages = Math.ceil(categories.length / categoriesPerPage);
+  const scroll = (direction) => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
 
-  const visibleCategories = isMobile
-    ? categories
-    : categories.slice(
-      page * categoriesPerPage,
-      page * categoriesPerPage + categoriesPerPage
-    );
+    const scrollAmount = direction === "left" ? -300 : 300;
+    container.scrollBy({ left: scrollAmount, behavior: "smooth" });
+  };
+
+  const handleCategoryClick = (category) => {
+    navigate(`/category/${category._id}`);
+  };
 
   return (
-    <section className="max-w-[1170px] mx-auto px-4 py-16 font-sans">
-      {/* HEADER */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-6">
+    <section className="w-full max-w-[1200px] mx-auto px-4 py-12 font-sans border-b border-gray-200">
+    
+      <div className="flex items-end justify-between mb-8">
         <div>
-          <div className="flex items-center gap-4 mb-5">
-            <div className="w-5 h-10 bg-[#DB4444] rounded-[4px]" />
-            <span className="text-[#DB4444] font-semibold">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-4 h-8 bg-[#DB4444] rounded-sm" />
+            <span className="text-[#DB4444] font-bold text-sm tracking-wide">
               Categories
             </span>
           </div>
-          <h2 className="text-4xl font-semibold tracking-[0.04em]">
+          <h2 className="text-3xl md:text-4xl font-semibold text-gray-900">
             Browse by Category
           </h2>
         </div>
 
-        {/* ARROWS (Desktop only) */}
-        <div className="hidden md:flex gap-2">
+ 
+        <div className="hidden md:flex gap-3">
           <button
-            onClick={() => setPage((p) => Math.max(p - 1, 0))}
-            disabled={page === 0}
-            className="bg-gray-100 p-3 rounded-full hover:bg-gray-200 disabled:opacity-50"
+            onClick={() => scroll("left")}
+            className="w-11 h-11 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
           >
-            <ArrowLeft size={24} />
+            <ArrowLeft className="w-5 h-5 text-gray-700" />
           </button>
           <button
-            onClick={() =>
-              setPage((p) => Math.min(p + 1, totalPages - 1))
-            }
-            disabled={page === totalPages - 1}
-            className="bg-gray-100 p-3 rounded-full hover:bg-gray-200 disabled:opacity-50"
+            onClick={() => scroll("right")}
+            className="w-11 h-11 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
           >
-            <ArrowRight size={24} />
+            <ArrowRight className="w-5 h-5 text-gray-700" />
           </button>
         </div>
       </div>
 
-      {/* CATEGORIES */}
       <div
-        className="
-          flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide
-          md:grid md:grid-cols-4 md:gap-8 md:overflow-visible
-        "
+        ref={scrollContainerRef}
+        className="flex overflow-x-auto gap-6 pb-8 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide snap-x snap-mandatory"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
-        {visibleCategories.map((category) => (
+        {categories.map((category) => (
           <div
-            key={category.id}
-            onClick={() => onCategoryClick?.(category)}
-            className="
-              snap-start cursor-pointer
-              flex flex-col items-center justify-center
-              border border-gray-200 rounded-xl
-              p-6 hover:shadow-md transition
-            "
+            key={category._id}
+            onClick={() => handleCategoryClick(category)}
+            className="flex-none w-[160px] md:w-[180px] snap-start group cursor-pointer"
           >
-            <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-100 mb-4">
+            <div
+              className={`
+                h-[180px] w-full rounded-lg mb-4 
+                flex items-center justify-center p-4 
+                transition-all duration-300 
+                group-hover:-translate-y-1 group-hover:shadow-lg
+                border border-transparent group-hover:border-gray-100
+                ${category?.color || ""}
+              `}
+            >
               <img
                 src={category.image}
                 alt={category.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover rounded-lg shadow-sm transition-all duration-500 ease-out group-hover:scale-105 group-hover:shadow-md"
               />
             </div>
-            <p className="text-base font-medium text-center">
+
+            <p className="text-center font-medium text-gray-800 text-base group-hover:text-[#DB4444] transition-colors">
               {category.name}
             </p>
           </div>

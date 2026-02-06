@@ -129,7 +129,7 @@ const endDate = new Date(Date.now() + 60 * 60 * 1000);
   };
 
   return (
-    <section className="max-w-[1170px] mx-auto px-4 py-16 font-sans">
+    <section className="max-w-[1170px] mx-auto px-4 py-16 font-sans ">
       {/* HEADER */}
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-6 md:gap-0">
         <div className="flex flex-col md:flex-row md:items-end gap-10 md:gap-20">
