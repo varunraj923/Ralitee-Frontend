@@ -4,7 +4,7 @@ const ProductGallery = ({ images }) => {
   const [activeImg, setActiveImg] = useState(0);
 
   return (
-    <div className="flex flex-col-reverse md:flex-row gap-4 h-full ">
+    <div className="flex flex-col-reverse md:flex-row gap-4 ">
       {/* Thumbnails */}
       <div className="flex md:flex-col gap-4 overflow-x-auto md:overflow-visible">
         {images.map((img, idx) => (
@@ -21,7 +21,7 @@ const ProductGallery = ({ images }) => {
         ))}
       </div>
 
-      <div className="flex-1 bg-gray-100 rounded flex items-center justify-center p-8 min-h-[400px] md:min-h-[600px] relative">
+      <div className="flex-1 bg-gray-200 rounded flex items-center justify-center p-8 min-h-[400px] md:min-h-[600px] relative">
          <img 
             src={images[activeImg]} 
             alt="Product Main" 

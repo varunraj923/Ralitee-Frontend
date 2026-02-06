@@ -1,6 +1,5 @@
 import { Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
-import Navbar from "./components/homepage/Navbar";
 
 import HomePage from "./components/homepage/HomePage";
 import LoginPage from "./components/auth/LoginPage";
@@ -17,11 +16,11 @@ import UserDashboard from "./components/User/UserDashboard";
 import AdminRoute from "./routes/AdminRoute";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import ProductPage from "./features/product/ProductPage";
+import BrowsebyCategory from "./features/Browsecategories/BrowsebyCategory";
 
 const App = () => {
   return (
     <Provider store={store}>
-        <Navbar />
 
       <Routes>
         {/* PUBLIC ROUTES */}
@@ -29,11 +28,13 @@ const App = () => {
         <Route path="/homepage" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forgot" element={<ForgotPasswordPage />} />
-        <Route path="/product" element={< ProductPage/>} />
+        {/* <Route path="/product" element={< ProductPage />} /> */}
 
         {/* 🔐 PROTECTED USER ROUTES */}
         <Route element={<ProtectedRoute />}>
           <Route path="/user/dashboard" element={<UserDashboard />} />
+          <Route path="/product/:id" element={< ProductPage />} />
+          <Route path="/category/:id" element={< BrowsebyCategory/>} />
         </Route>
 
         {/* 🔐 PROTECTED ADMIN ROUTES */}
