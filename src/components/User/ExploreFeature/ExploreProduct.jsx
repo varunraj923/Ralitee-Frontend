@@ -1,209 +1,36 @@
 import { ProductCard } from "../FlashSaleFeature/ProductCard";
 import { useState, useEffect } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchExploreProducts } from "../../../redux/slices/exploreSlice";
 
-const exploreProducts = [
-  {
-    id: 401,
-    name: "Organic Avocado",
-    image:
-      "https://images.unsplash.com/photo-1580915411957-1d8a6e9f0d7a?auto=format&fit=crop&w=500&q=80",
-    price: 3,
-    originalPrice: 5,
-    discount: 40,
-    rating: 4.7,
-    reviews: 120,
-  },
-  {
-    id: 402,
-    name: "Fresh Strawberries",
-    image:
-      "https://images.unsplash.com/photo-1528825871115-3581a5387919?auto=format&fit=crop&w=500&q=80",
-    price: 4,
-    originalPrice: 6,
-    discount: 33,
-    rating: 4.8,
-    reviews: 220,
-  },
-  {
-    id: 403,
-    name: "Healthy Salad Bowl",
-    image:
-      "https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=500&q=80",
-    price: 7,
-    originalPrice: 9,
-    discount: 22,
-    rating: 4.6,
-    reviews: 180,
-    isNew:true,
-  },
-  {
-    id: 404,
-    name: "Organic Almonds",
-    image:
-      "https://images.unsplash.com/photo-1580910051070-9cdb0f1c4a30?auto=format&fit=crop&w=500&q=80",
-    price: 12,
-    originalPrice: 16,
-    discount: 25,
-    rating: 4.5,
-    reviews: 210,
-    isNew:true,
-  },
-  {
-    id: 405,
-    name: "Fresh Blueberries",
-    image:
-      "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=500&q=80",
-    price: 5,
-    originalPrice: 7,
-    discount: 28,
-    rating: 4.7,
-    reviews: 140,
-  },
-  {
-    id: 406,
-    name: "Granola Cereal",
-    image:
-      "https://images.unsplash.com/photo-1580910051070-9cdb0f1c4a30?auto=format&fit=crop&w=500&q=80",
-    price: 8,
-    originalPrice: 11,
-    discount: 27,
-    rating: 4.4,
-    reviews: 160,
-  },
-  {
-    id: 407,
-    name: "Fresh Bananas",
-    image:
-      "https://images.unsplash.com/photo-1574226516831-e1dff420e8f8?auto=format&fit=crop&w=500&q=80",
-    price: 2,
-    originalPrice: 3,
-    discount: 33,
-    rating: 4.6,
-    reviews: 180,
-  },
-  {
-    id: 408,
-    name: "Organic Eggs",
-    image:
-      "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=500&q=80",
-    price: 4,
-    originalPrice: 6,
-    discount: 33,
-    rating: 4.5,
-    reviews: 300,
-  },
-  {
-    id: 409,
-    name: "Fresh Salmon",
-    image:
-      "https://images.unsplash.com/photo-1527515637466-8f0e3f2c0b70?auto=format&fit=crop&w=500&q=80",
-    price: 15,
-    originalPrice: 20,
-    discount: 25,
-    rating: 4.8,
-    reviews: 110,
-  },
-  {
-    id: 410,
-    name: "Greek Yogurt",
-    image:
-      "https://images.unsplash.com/photo-1580915411957-1d8a6e9f0d7a?auto=format&fit=crop&w=500&q=80",
-    price: 3,
-    originalPrice: 5,
-    discount: 40,
-    rating: 4.7,
-    reviews: 260,
-  },
-  {
-    id: 411,
-    name: "Chocolate Cake",
-    image:
-      "https://images.unsplash.com/photo-1608198093002-5d6a7b0b4d4b?auto=format&fit=crop&w=500&q=80",
-    price: 20,
-    originalPrice: 25,
-    discount: 20,
-    rating: 4.9,
-    reviews: 90,
-  },
-  {
-    id: 412,
-    name: "Pasta Pack",
-    image:
-      "https://images.unsplash.com/photo-1580915411957-1d8a6e9f0d7a?auto=format&fit=crop&w=500&q=80",
-    price: 6,
-    originalPrice: 8,
-    discount: 25,
-    rating: 4.4,
-    reviews: 150,
-  },
-  {
-    id: 413,
-    name: "Fresh Bread Loaf",
-    image:
-      "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=500&q=80",
-    price: 4,
-    originalPrice: 6,
-    discount: 33,
-    rating: 4.6,
-    reviews: 210,
-  },
-  {
-    id: 414,
-    name: "Cheese Pack",
-    image:
-      "https://images.unsplash.com/photo-1523986371872-9d3ba2e2f0b0?auto=format&fit=crop&w=500&q=80",
-    price: 8,
-    originalPrice: 11,
-    discount: 27,
-    rating: 4.5,
-    reviews: 190,
-  },
-  {
-    id: 415,
-    name: "Fresh Orange Juice",
-    image:
-      "https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=500&q=80",
-    price: 5,
-    originalPrice: 7,
-    discount: 28,
-    rating: 4.7,
-    reviews: 220,
-  },
-  {
-    id: 416,
-    name: "Healthy Smoothie",
-    image:
-      "https://images.unsplash.com/photo-1514996937319-344454492b37?auto=format&fit=crop&w=500&q=80",
-    price: 7,
-    originalPrice: 10,
-    discount: 30,
-    rating: 4.8,
-    reviews: 140,
-  },
-];
+const productsPerPage = 8;
 
 const ExploreProduct = () => {
+  const dispatch = useDispatch();
+
+  const { exploreProducts, loading, error } = useSelector(
+    (state) => state.explore
+  );
+
   const [page, setPage] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
 
-  const productsPerPage = 8;
-
+   
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    if(exploreProducts.length === 0){
+      dispatch(fetchExploreProducts());
+    }
+  }, [dispatch,exploreProducts.length]);
 
   const totalPages = Math.ceil(exploreProducts.length / productsPerPage);
 
-  const visibleProducts = isMobile
-    ? exploreProducts
-    : exploreProducts.slice(
-        page * productsPerPage,
-        page * productsPerPage + productsPerPage
-      );
+  const paginatedProducts = exploreProducts.slice(
+    page * productsPerPage,
+    page * productsPerPage + productsPerPage
+  );
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <section className="max-w-[1170px] mx-auto px-4 py-16 font-sans">
@@ -231,9 +58,7 @@ const ExploreProduct = () => {
             <ArrowLeft size={24} />
           </button>
           <button
-            onClick={() =>
-              setPage((p) => Math.min(p + 1, totalPages - 1))
-            }
+            onClick={() => setPage((p) => Math.min(p + 1, totalPages - 1))}
             disabled={page === totalPages - 1}
             className="bg-gray-100 p-3 rounded-full hover:bg-gray-200 disabled:opacity-50"
           >
@@ -249,9 +74,29 @@ const ExploreProduct = () => {
           md:grid md:grid-cols-4 md:gap-8 md:overflow-visible
         "
       >
-        {visibleProducts.map((product) => (
-          <div key={product.id} className="snap-start">
-            <ProductCard product={product}  showAddToCart={false} showDiscount={false} showOriginalPrice={false}/>
+        {/* MOBILE: show ALL products */}
+        <div className="flex md:hidden gap-6">
+          {exploreProducts.map((product) => (
+            <div key={product._id} className="snap-start">
+              <ProductCard
+                product={product}
+                showAddToCart={false}
+                showDiscount={false}
+                showOriginalPrice={false}
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* DESKTOP: show PAGINATED products */}
+        {paginatedProducts.map((product) => (
+          <div key={product._id} className="hidden md:block">
+            <ProductCard
+              product={product}
+              showAddToCart={false}
+              showDiscount={false}
+              showOriginalPrice={false}
+            />
           </div>
         ))}
       </div>
