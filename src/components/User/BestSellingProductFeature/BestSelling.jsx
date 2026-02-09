@@ -1,84 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProductCard } from "../FlashSaleFeature/ProductCard";
-
-
- const bestProducts = [
-  {
-    id: 101,
-    name: "Logitech G Pro Wireless Mouse",
-    image:
-      "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3",
-    price: 129,
-    originalPrice: 179,
-    discount: 28,
-    rating: 4.8,
-    reviews: 245,
-  },
-  {
-    id: 102,
-    name: "Razer BlackWidow V3 Keyboard",
-    image:
-      "https://images.unsplash.com/photo-1593642532400-2682810df593?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3",
-    price: 199,
-    originalPrice: 249,
-    discount: 20,
-    rating: 4.6,
-    reviews: 180,
-  },
-  {
-    id: 103,
-    name: "SteelSeries Arctis 7 Headset",
-    image:
-      "https://images.unsplash.com/photo-1599669454699-248893623440?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3",
-    price: 249,
-    originalPrice: 299,
-    discount: 17,
-    rating: 4.7,
-    reviews: 310,
-  },
-  {
-    id: 104,
-    name: "ASUS TUF 27” Gaming Monitor",
-    image:
-      "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3",
-    price: 399,
-    originalPrice: 449,
-    discount: 11,
-    rating: 4.9,
-    reviews: 520,
-  },
-  {
-    id: 105,
-    name: "Secretlab Titan EVO Gaming Chair",
-    image:
-      "https://images.unsplash.com/photo-1616627981283-4b8a6c9b9e9e?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3",
-    price: 499,
-    originalPrice: 599,
-    discount: 17,
-    rating: 4.8,
-    reviews: 410,
-  },
-  {
-    id: 106,
-    name: "Elgato Stream Deck MK.2",
-    image:
-      "https://images.unsplash.com/photo-1625842268584-8f3296236761?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3",
-    price: 149,
-    originalPrice: 199,
-    discount: 25,
-    rating: 4.7,
-    reviews: 275,
-  },
-];
-
-
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBestSelling } from "../../../redux/slices/bestSellingSlice";
 
 const BestSelling = () => {
   const [showAll, setShowAll] = useState(false);
 
-  const visibleProducts = showAll
-    ? bestProducts
-    : bestProducts.slice(0, 4);
+  const {
+    bestSellingProducts = [],
+    loading,
+    error,
+  } = useSelector((state) => state.bestSelling);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (bestSellingProducts.length === 0) {
+      dispatch(fetchBestSelling());
+    }
+  }, [dispatch, bestSellingProducts.length]);
 
   return (
     <section className="max-w-[1170px] mx-auto px-4 py-16 font-sans border-b border-gray-200">
@@ -98,29 +38,61 @@ const BestSelling = () => {
           </div>
         </div>
 
-       <button
-  onClick={() => setShowAll(!showAll)}
-  className="
-    bg-[#DB4444] text-white
-    px-6 py-3 text-sm
-    md:px-12 md:py-4 md:text-base
-    rounded-[4px] font-medium
-    hover:bg-red-600 transition
-  "
->
-  {showAll ? "Show Less" : "View All"}
-</button>
+        <button
+          onClick={() => setShowAll(!showAll)}
+          className="
+            bg-[#DB4444] text-white
+            px-6 py-3 text-sm
+            md:px-12 md:py-4 md:text-base
+            rounded-[4px] font-medium
+            hover:bg-red-600 transition
+          "
+        >
+          {showAll ? "Show Less" : "View All"}
+        </button>
       </div>
 
+      {/* LOADING */}
+      {loading && (
+        <p className="text-center py-10 text-gray-500">
+          Loading best selling products...
+        </p>
+      )}
+
       {/* PRODUCTS */}
-      <div
-        className="flex gap-8 overflow-x-auto scroll-smooth pb-8 no-scrollbar"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-      >
-        {visibleProducts.map((product) => (
-          <ProductCard key={product.id} product={product}  showAddToCart={false} showDiscount={false}/>
-        ))}
-      </div>
+      {!loading && (
+        <>
+          <div
+            className="flex gap-8 overflow-x-auto scroll-smooth pb-8 no-scrollbar"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            {bestSellingProducts.slice(0, 4).map((product) => (
+              <ProductCard
+                key={product._id}
+                product={product}
+                showAddToCart={false}
+                showDiscount={false}
+              />
+            ))}
+          </div>
+
+          {showAll && (
+            <div
+              className="flex gap-8 overflow-x-auto scroll-smooth pb-8 no-scrollbar"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
+              {bestSellingProducts.slice(4, 8).map((product) => (
+                <ProductCard
+                  key={product._id}
+                  product={product}
+                  showAddToCart={false}
+                  showDiscount={false}
+                />
+              ))}
+            </div>
+          )}
+        </>
+      )}
     </section>
   );
 };
