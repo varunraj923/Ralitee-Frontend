@@ -44,9 +44,8 @@ const Sidebar = () => {
 
   return (
     <aside
-      className={`fixed left-0 top-0 h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 border-r border-slate-700 transition-all duration-300 ${
-        isCollapsed ? "w-20" : "w-64"
-      }`}
+      className={`fixed left-0 top-0 h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 border-r border-slate-700 transition-all duration-300 ${isCollapsed ? "w-20" : "w-64"
+        }`}
     >
       {/* Logo */}
       <div className="flex items-center justify-between h-16 px-4 border-b border-slate-700">
