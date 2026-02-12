@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
+import { SnackbarProvider } from "notistack";
 
 import HomePage from "./components/homepage/HomePage";
 import LoginPage from "./components/auth/LoginPage";
@@ -19,36 +20,43 @@ import ProductPage from "./features/product/ProductPage";
 import BrowsebyCategory from "./features/Browsecategories/BrowsebyCategory";
 import Navbar from "./components/homepage/Navbar";
 import AllProducts from "./features/allProducts/AllProducts";
+import CartPage from "./features/cart/CartPage";
+import CheckoutPage from "./features/checkout/CheckoutPage";
+import OrderSuccessPage from "./features/checkout/OrderSuccessPage";
 
 const App = () => {
   return (
     <Provider store={store}>
-      <Navbar />
-      <Routes>
-        {/* PUBLIC ROUTES */}
-        <Route path="/" element={<HomePage />} />
-        <Route path="/homepage" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/forgot" element={<ForgotPasswordPage />} />
+      <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+        <Navbar />
+        <Routes>
+          {/* PUBLIC ROUTES */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/homepage" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/forgot" element={<ForgotPasswordPage />} />
 
-        {/* 🔐 PROTECTED USER ROUTES */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/products" element={< AllProducts />} />
-          <Route path="/user/dashboard" element={<UserDashboard />} />
-          <Route path="/product/:id" element={< ProductPage />} />
-          <Route path="/category/:id" element={< BrowsebyCategory />} />
-        </Route>
+          {/* 🔐 PROTECTED USER ROUTES */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/products" element={< AllProducts />} />
+            <Route path="/user/dashboard" element={<UserDashboard />} />
+            <Route path="/product/:id" element={< ProductPage />} />
+            <Route path="/category/:id" element={< BrowsebyCategory />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/order-success" element={<OrderSuccessPage />} />
+          </Route>
 
-        {/* 🔐 PROTECTED ADMIN ROUTES */}
-        <Route element={<AdminRoute />}>
-          <Route path="/admin/dashboard" element={<Dashboard />} />
-          <Route path="/admin/products" element={<Products />} />
-          <Route path="/admin/add-product" element={<AddProduct />} />
-          <Route path="/admin/categories" element={<Categories />} />
-          <Route path="/admin/add-category" element={<AddCategory />} />
-        </Route>
-      </Routes>
-
+          {/* 🔐 PROTECTED ADMIN ROUTES */}
+          <Route element={<AdminRoute />}>
+            <Route path="/admin/dashboard" element={<Dashboard />} />
+            <Route path="/admin/products" element={<Products />} />
+            <Route path="/admin/add-product" element={<AddProduct />} />
+            <Route path="/admin/categories" element={<Categories />} />
+            <Route path="/admin/add-category" element={<AddCategory />} />
+          </Route>
+        </Routes>
+      </SnackbarProvider>
     </Provider>
   );
 };

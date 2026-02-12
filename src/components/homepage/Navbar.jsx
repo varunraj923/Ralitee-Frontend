@@ -38,18 +38,23 @@ const NavBar = ({ cartCount = 0, mode, toggleColorMode }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [open, setOpen] = useState(false);
   const user = useSelector((state) => state.auth.user);
+  const { cart } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
-  
-const handleLogout = async () => {
-  try {
-    await logoutApi();
-  } catch (err) {
-    console.log(err);
-  } finally {
-    dispatch(clearAuthData());
-    navigate("/login");
-  }
-};
+
+  // Calculate cart count from Redux store if not passed as prop (or prefer Redux)
+  // Assuming cart.items is the array of items
+  const displayCartCount = cart?.items?.length || 0;
+
+  const handleLogout = async () => {
+    try {
+      await logoutApi();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      dispatch(clearAuthData());
+      navigate("/login");
+    }
+  };
 
 
   return (
@@ -82,25 +87,25 @@ const handleLogout = async () => {
               </Typography>
             </Box> */}
             <Box
-  sx={{ display: "flex", alignItems: "center", gap: 1, cursor: "pointer" }}
-  onClick={() => navigate("/")}
->
-  <img
-    src="/favicon-transparent.png"
-    alt="Ralitee"
-    style={{ height: 36, width: 36 }}
-  />
-  <Typography
-    sx={{
-      fontWeight: 700,
-      color:
-        theme.palette.homePage?.buttonPrimaryHover ||
-        theme.palette.primary.main,
-    }}
-  >
-    Ralitee
-  </Typography>
-</Box>
+              sx={{ display: "flex", alignItems: "center", gap: 1, cursor: "pointer" }}
+              onClick={() => navigate("/")}
+            >
+              <img
+                src="/favicon-transparent.png"
+                alt="Ralitee"
+                style={{ height: 36, width: 36 }}
+              />
+              <Typography
+                sx={{
+                  fontWeight: 700,
+                  color:
+                    theme.palette.homePage?.buttonPrimaryHover ||
+                    theme.palette.primary.main,
+                }}
+              >
+                Ralitee
+              </Typography>
+            </Box>
 
 
             {isMobile ? (
@@ -143,7 +148,7 @@ const handleLogout = async () => {
                   </IconButton>
 
                   <IconButton onClick={() => navigate("/cart")} sx={{ color: theme.palette.text.primary }}>
-                    <Badge badgeContent={cartCount} color="primary">
+                    <Badge badgeContent={displayCartCount} color="primary">
                       <ShoppingCartIcon />
                     </Badge>
                   </IconButton>
@@ -159,13 +164,13 @@ const handleLogout = async () => {
                   >
                     Sign in
                   </Button> */}
- <UserMenu
-  theme={theme}
-  isLoggedIn={!!user}
-  username={user?.name}
-  onLogin={() => navigate("/login")}
-  onLogout={handleLogout}
-/>
+                  <UserMenu
+                    theme={theme}
+                    isLoggedIn={!!user}
+                    username={user?.name}
+                    onLogin={() => navigate("/login")}
+                    onLogout={handleLogout}
+                  />
 
 
 
@@ -208,23 +213,23 @@ const handleLogout = async () => {
             </ListItemButton>
             <Divider sx={{ my: 1 }} />
             <ListItemButton onClick={() => { navigate("/cart"); setOpen(false); }}>
-              <ListItemText primary={`Cart (${cartCount})`} />
+              <ListItemText primary={`Cart (${displayCartCount})`} />
             </ListItemButton>
-        <Box sx={{ mt: 1 }}>
-  <UserMenu
-    theme={theme}
-    isLoggedIn={!!user}
-    username={user?.name}
-    onLogin={() => {
-      navigate("/login");
-      setOpen(false);
-    }}
-    onLogout={() => {
-      handleLogout();
-      setOpen(false);
-    }}
-  />
-</Box>
+            <Box sx={{ mt: 1 }}>
+              <UserMenu
+                theme={theme}
+                isLoggedIn={!!user}
+                username={user?.name}
+                onLogin={() => {
+                  navigate("/login");
+                  setOpen(false);
+                }}
+                onLogout={() => {
+                  handleLogout();
+                  setOpen(false);
+                }}
+              />
+            </Box>
 
           </List>
         </Box>

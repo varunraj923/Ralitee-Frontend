@@ -1,11 +1,32 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../../redux/slices/cartSlice";
 import { RenderStars } from "../../../components/User/FlashSaleFeature/RenderStars";
 import { Heart, Minus, Plus, Truck, RotateCcw } from "lucide-react";
+import { Alert, Snackbar } from "@mui/material";
 
 const ProductDetails = ({ product }) => {
+  const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState(product.colors?.[0]?.name);
-  const [selectedSize, setSelectedSize] = useState(product.sizes?.[2]);
+  const [selectedSize, setSelectedSize] = useState(product.sizes?.[0]); // Default to first size if available
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
+  const handleAddToCart = () => {
+    dispatch(addToCart({
+      productId: product._id,
+      quantity,
+      size: selectedSize,
+      color: selectedColor
+    })).unwrap()
+      .then(() => {
+        setOpenSnackbar(true);
+      })
+      .catch((err) => {
+        console.error("Failed to add to cart:", err);
+        alert("Failed to add to cart. Please try again.");
+      });
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -17,14 +38,14 @@ const ProductDetails = ({ product }) => {
           <span className="text-gray-500">({product.reviewCount} Reviews)</span>
           <span className="text-gray-300">|</span>
           <span className="text-green-500 font-medium">
-            {product.stock}
+            {product.stock > 0 ? "In Stock" : "Out of Stock"}
           </span>
         </div>
       </div>
 
       {/* Price */}
       <div className="text-2xl font-medium tracking-wide">
-        ₹{product.price.toFixed(2)}
+        ₹{(product.discountPrice || product.price).toFixed(2)}
       </div>
 
       {/* Description */}
@@ -35,7 +56,7 @@ const ProductDetails = ({ product }) => {
       {/* Options Container */}
       <div className="space-y-4">
         {/* Sizes */}
-        {product.sizes && (
+        {product.sizes && product.sizes.length > 0 && (
           <div className="flex items-center gap-4">
             <span className="text-lg font-medium">Size:</span>
             <div className="flex gap-2">
@@ -43,11 +64,10 @@ const ProductDetails = ({ product }) => {
                 <button
                   key={size}
                   onClick={() => setSelectedSize(size)}
-                  className={`w-8 h-8 flex items-center justify-center text-sm border rounded hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors ${
-                    selectedSize === size
+                  className={`w-8 h-8 flex items-center justify-center text-sm border rounded hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors ${selectedSize === size
                       ? "bg-red-500 text-white border-red-500"
                       : "border-gray-300 text-black"
-                  }`}
+                    }`}
                 >
                   {size}
                 </button>
@@ -78,9 +98,12 @@ const ProductDetails = ({ product }) => {
           </button>
         </div>
 
-        {/* Buy Button */}
-        <button className="flex-1 bg-red-500 text-white h-10 rounded font-medium hover:bg-red-600 transition shadow-sm">
-          Buy Now
+        {/* Add to Cart Button */}
+        <button
+          onClick={handleAddToCart}
+          className="flex-1 bg-red-500 text-white h-10 rounded font-medium hover:bg-red-600 transition shadow-sm"
+        >
+          Add to Cart
         </button>
 
         {/* Wishlist */}
@@ -113,6 +136,17 @@ const ProductDetails = ({ product }) => {
           </div>
         </div>
       </div>
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={() => setOpenSnackbar(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setOpenSnackbar(false)} severity="success" sx={{ width: '100%' }}>
+          Item added to cart!
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
