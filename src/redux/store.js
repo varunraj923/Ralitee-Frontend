@@ -9,6 +9,8 @@ import bestSellingReducer from "./slices/bestSellingSlice"
 import allProductsReducer from "./slices/productSlice"
 
 
+import cartReducer from "./slices/cartSlice";
+
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -17,5 +19,6 @@ export const store = configureStore({
     flashSales: flashSalesReducer,
     bestSelling: bestSellingReducer,
     allProducts: allProductsReducer,
+    cart: cartReducer,
   },
 });

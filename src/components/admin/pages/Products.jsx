@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Search } from "lucide-react";
+import { CircularProgress } from "@mui/material";
 import AdminLayout from "../layout/adminlayout";
 import ProductTable from "../components/ProductTable";
 import EditProductDialog from "../components/EditProductDilog";
@@ -135,9 +136,11 @@ const Products = () => {
           </div>
         </div>
 
+        {/* ... inside component ... */}
+
         {loading ? (
-          <div className="bg-white p-12 text-center">
-            Loading products...
+          <div className="flex justify-center items-center h-64">
+            <CircularProgress />
           </div>
         ) : (
           <ProductTable
