@@ -6,6 +6,8 @@ import categoryReducer from "./slices/categorySlice";
 import exploreReducer from "./slices/exploreSlice";
 import flashSalesReducer from "./slices/flashSalesSlice";
 import bestSellingReducer from "./slices/bestSellingSlice"
+import allProductsReducer from "./slices/productSlice"
+
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +16,6 @@ export const store = configureStore({
     explore: exploreReducer,
     flashSales: flashSalesReducer,
     bestSelling: bestSellingReducer,
+    allProducts: allProductsReducer,
   },
 });

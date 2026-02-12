@@ -1,7 +1,7 @@
 // HomePage.jsx
 import React from "react";
 import { Box, styled, useTheme } from "@mui/material";
-import Navbar from "./Navbar";
+// import Navbar from "./Navbar";
 import HeroSection from "./HeroSection";
 import StatsSection from "./StatsSection";
 import TestimonialsSection from "./TestimonialsSection";
@@ -64,10 +64,10 @@ const HomePage = () => {
 
   return (
     <PageContainer>
-      {/* Navbar */}
+      {/* Navbar
       <Box component="header">
         <Navbar />
-      </Box>
+      </Box> */}
 
       {/* Main Content */}
       <MainContent component="main">

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchExploreProducts } from "../../../redux/slices/exploreSlice";
+import { useNavigate } from "react-router-dom";
 
 const productsPerPage = 8;
 
@@ -12,8 +13,8 @@ const ExploreProduct = () => {
   const { exploreProducts, loading, error } = useSelector(
     (state) => state.explore
   );
-
   const [page, setPage] = useState(0);
+  const navigate = useNavigate();
 
    
   useEffect(() => {
@@ -31,6 +32,11 @@ const ExploreProduct = () => {
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
+
+  const handleViewAllProducts = () =>{
+ navigate('/products')
+
+  }
 
   return (
     <section className="max-w-[1170px] mx-auto px-4 py-16 font-sans">
@@ -103,7 +109,7 @@ const ExploreProduct = () => {
 
       {/* FOOTER */}
       <div className="flex justify-center mt-10 border-b border-gray-200 pb-16">
-        <button className="bg-[#DB4444] text-white px-12 py-4 rounded-[4px] font-medium hover:bg-red-600 transition">
+        <button onClick={handleViewAllProducts} className="bg-[#DB4444] text-white px-12 py-4 rounded-[4px] font-medium hover:bg-red-600 transition">
           View All Products
         </button>
       </div>

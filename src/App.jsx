@@ -17,24 +17,26 @@ import AdminRoute from "./routes/AdminRoute";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import ProductPage from "./features/product/ProductPage";
 import BrowsebyCategory from "./features/Browsecategories/BrowsebyCategory";
+import Navbar from "./components/homepage/Navbar";
+import AllProducts from "./features/allProducts/AllProducts";
 
 const App = () => {
   return (
     <Provider store={store}>
-
+      <Navbar />
       <Routes>
         {/* PUBLIC ROUTES */}
         <Route path="/" element={<HomePage />} />
         <Route path="/homepage" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forgot" element={<ForgotPasswordPage />} />
-        {/* <Route path="/product" element={< ProductPage />} /> */}
 
         {/* 🔐 PROTECTED USER ROUTES */}
         <Route element={<ProtectedRoute />}>
+          <Route path="/products" element={< AllProducts />} />
           <Route path="/user/dashboard" element={<UserDashboard />} />
           <Route path="/product/:id" element={< ProductPage />} />
-          <Route path="/category/:id" element={< BrowsebyCategory/>} />
+          <Route path="/category/:id" element={< BrowsebyCategory />} />
         </Route>
 
         {/* 🔐 PROTECTED ADMIN ROUTES */}
