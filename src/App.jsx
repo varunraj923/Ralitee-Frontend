@@ -12,6 +12,7 @@ import AddProduct from "./components/admin/pages/AddProduct";
 import Categories from "./components/admin/pages/Categories";
 import AddCategory from "./components/admin/pages/AddCategory";
 import ForgotPasswordPage from "./components/auth/ForgotPasswordPage";
+import ResetPasswordPage from "./components/auth/ResetPasswordPage";
 import UserDashboard from "./components/User/UserDashboard";
 
 import AdminRoute from "./routes/AdminRoute";
@@ -35,6 +36,7 @@ const App = () => {
           <Route path="/homepage" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/forgot" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
           {/* 🔐 PROTECTED USER ROUTES */}
           <Route element={<ProtectedRoute />}>
