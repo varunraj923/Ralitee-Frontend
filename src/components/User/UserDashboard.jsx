@@ -5,14 +5,15 @@ import ExploreProduct from './ExploreFeature/ExploreProduct'
 import Footer from './Footer/Footer'
 import CategorySection from './categories/CategorySection'
 
+
 const UserDashboard = () => {
   return (
-    <div>
-    <CategorySection/>
-    <FlashSalesSection/>
-    <BestSelling/>
-    <ExploreProduct/>
-    <Footer/>
+    <div >
+      <CategorySection />
+      <FlashSalesSection />
+      <BestSelling />
+      <ExploreProduct />
+      <Footer />
     </div>
   )
 }

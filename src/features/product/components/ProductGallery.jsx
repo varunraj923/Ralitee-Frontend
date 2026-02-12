@@ -11,7 +11,7 @@ const ProductGallery = ({ images }) => {
           <button
             key={idx}
             onClick={() => setActiveImg(idx)}
-            className={`flex-shrink-0 w-24 h-24 bg-gray-100 rounded flex items-center justify-center p-2 border-2 transition-all ${
+            className={`flex-shrink-0 w-24 h-24 rounded flex items-center justify-center p-2 border-2 transition-all ${
               activeImg === idx ? 'border-black' : 'border-transparent'
             }`}
           >
@@ -21,7 +21,7 @@ const ProductGallery = ({ images }) => {
         ))}
       </div>
 
-      <div className="flex-1 bg-gray-200 rounded flex items-center justify-center p-8 min-h-[400px] md:min-h-[600px] relative">
+      <div className="flex-1 rounded md:bg-white  bg-gray-200  flex items-center justify-center   md:bg-white p-8 pt-0 min-h-[400px] lg:min-h-[400px] relative">
          <img 
             src={images[activeImg]} 
             alt="Product Main" 

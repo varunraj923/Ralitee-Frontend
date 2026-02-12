@@ -74,7 +74,7 @@ export const ProductCard = ({
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="flex">{RenderStars(ratingAvg)}</div>
+          <div className="flex">{RenderStars(product.rating.average)}</div>
           <span className="text-gray-400 text-sm">({ratingCount})</span>
         </div>
       </div>
