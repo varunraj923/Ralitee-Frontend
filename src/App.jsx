@@ -18,7 +18,6 @@ import UserDashboard from "./components/User/UserDashboard";
 import AdminRoute from "./routes/AdminRoute";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import ProductPage from "./features/product/ProductPage";
-import BrowsebyCategory from "./features/Browsecategories/BrowsebyCategory";
 import Navbar from "./components/homepage/Navbar";
 import AllProducts from "./features/allProducts/AllProducts";
 import CartPage from "./features/cart/CartPage";
@@ -28,7 +27,10 @@ import OrderSuccessPage from "./features/checkout/OrderSuccessPage";
 const App = () => {
   return (
     <Provider store={store}>
-      <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: "top", horizontal: "right" }}>
+      <SnackbarProvider
+        maxSnack={3}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
         <Navbar />
         <Routes>
           {/* PUBLIC ROUTES */}
@@ -40,10 +42,10 @@ const App = () => {
 
           {/* 🔐 PROTECTED USER ROUTES */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/products" element={< AllProducts />} />
+            <Route path="/products" element={<AllProducts />} />
             <Route path="/user/dashboard" element={<UserDashboard />} />
-            <Route path="/product/:id" element={< ProductPage />} />
-            <Route path="/category/:id" element={< BrowsebyCategory />} />
+            <Route path="/product/:id" element={<ProductPage />} />
+
             <Route path="/cart" element={<CartPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/order-success" element={<OrderSuccessPage />} />

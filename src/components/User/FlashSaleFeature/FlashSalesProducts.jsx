@@ -1,14 +1,8 @@
 import React from "react";
 import { ProductCard } from "./ProductCard";
 
-const FlashSalesProducts = React.memo(({ products, loading, error }) => {
-  if (loading) {
-    return <p className="text-gray-500">Loading...</p>;
-  }
+const FlashSalesProducts = React.memo(({ products}) => {
 
-  if (error) {
-    return <p className="text-red-500">Something went wrong</p>;
-  }
   return (
     <>
       {products.map((product) => (

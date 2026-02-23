@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCart, updateCartQuantity, removeCartItem } from "../../redux/slices/cartSlice";
 import { Trash2, Plus, Minus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 
 const CartPage = () => {
     const dispatch = useDispatch();
@@ -22,7 +24,15 @@ const CartPage = () => {
     };
 
 
-    if (loading) return <div className="text-center mt-20">Loading Cart...</div>;
+     if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Box sx={{ display: "flex" }}>
+          <CircularProgress />
+        </Box>
+      </div>
+    );
+  }
     if (error) return <div className="text-center mt-20 text-red-500">{error}</div>;
 
     if (!cart || cart.items.length === 0) {

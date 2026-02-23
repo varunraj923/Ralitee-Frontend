@@ -12,10 +12,10 @@ const CategorySection = () => {
   const { categories, loading } = useSelector((state) => state.category);
 
   useEffect(() => {
-    if(categories.length === 0 ){
-    dispatch(fetchCategories());
+    if (categories.length === 0) {
+      dispatch(fetchCategories());
     }
-  }, [dispatch,categories.length]);
+  }, [dispatch, categories.length]);
 
   const scroll = (direction) => {
     const container = scrollContainerRef.current;
@@ -26,7 +26,11 @@ const CategorySection = () => {
   };
 
   const handleCategoryClick = (category) => {
-    navigate(`/category/${category._id}`);
+    navigate(
+      `/products?category=${encodeURIComponent(
+        category.name,
+      )}&id=${category._id}&page=1`,
+    );
   };
 
   return (
@@ -60,12 +64,7 @@ const CategorySection = () => {
         </div>
       </div>
 
-     
-      {loading ? (
-        <div className="flex justify-center items-center h-[200px]">
-          <p className="text-gray-500">Loading...</p>
-        </div>
-      ) : (
+      {
         <div
           ref={scrollContainerRef}
           className="flex overflow-x-auto gap-6 pb-8 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide snap-x snap-mandatory"
@@ -82,15 +81,14 @@ const CategorySection = () => {
                   h-[180px] w-full rounded-lg mb-4 
                   flex items-center justify-center p-4 
                   transition-all duration-300 
-                  group-hover:-translate-y-1 group-hover:shadow-lg
-                  border border-transparent group-hover:border-gray-100
+                 
                   ${category?.color || ""}
                 `}
               >
                 <img
                   src={category.image}
                   alt={category.name}
-                  className="w-full h-full object-cover rounded-lg shadow-sm transition-all duration-500 ease-out group-hover:scale-105 group-hover:shadow-md"
+                  className="w-full h-full object-cover rounded-lg  transition-all duration-500 ease-out group-hover:scale-105 "
                 />
               </div>
 
@@ -100,7 +98,7 @@ const CategorySection = () => {
             </div>
           ))}
         </div>
-      )}
+      }
     </section>
   );
 };

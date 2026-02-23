@@ -51,16 +51,8 @@ const BestSelling = () => {
           {showAll ? "Show Less" : "View All"}
         </button>
       </div>
-
-      {/* LOADING */}
-      {loading && (
-        <p className="text-center py-10 text-gray-500">
-          Loading best selling products...
-        </p>
-      )}
-
       {/* PRODUCTS */}
-      {!loading && (
+      {
         <>
           <div
             className="flex gap-8 overflow-x-auto scroll-smooth pb-8 no-scrollbar"
@@ -92,7 +84,7 @@ const BestSelling = () => {
             </div>
           )}
         </>
-      )}
+      }
     </section>
   );
 };

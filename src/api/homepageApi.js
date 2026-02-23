@@ -4,13 +4,12 @@ export const categoryApi = async () => {
   return api.get("/categories");
 };
 
-export const  bestSellingProductApi = async () => {
+export const bestSellingProductApi = async () => {
   return api.get("/products?section=bestSelling");
 };
-export const  exploreProductApi = async () => {
+export const exploreProductApi = async () => {
   return api.get("/products?section=explore");
 };
-export const  flashSalesApi = async () => {
-  return api.get("/products?section=explore");
+export const flashSalesApi = async (page,limit) => {
+  return api.get(`/products?section=flashSales&page=${page}&limit=${limit}`);
 };
-

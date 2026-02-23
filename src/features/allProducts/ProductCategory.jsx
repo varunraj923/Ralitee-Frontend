@@ -1,27 +1,51 @@
+import React from "react";
+import { useSearchParams } from "react-router-dom";
 
-import React from 'react'
+const ProductCategory = ({
+  categories,
+  category,
+}) => {
+  const [, setSearchParams] = useSearchParams();
 
-const ProductCategory = ({categories}) => {
-const handleShowCategory = () =>{
-    
-}
+  const handleShowCategory = (name = "allproducts", _id = null) => {
+    // Reset page to 1 whenever category changes
+    setSearchParams({ category: name, id: _id, page: 1 });
+  };
 
   return (
- <>
-    {/* Sidebar */}
-          <aside className="hidden lg:block w-64">
-            <h3 className="font-semibold text-lg mb-4">Categories</h3>
-            <ul className="space-y-3">
-              {categories.map((category) => (
-                <li key={category._id}>
-                  <button className="text-gray-600 hover:text-black" onClick={handleShowCategory}>
-                    {category.name}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </aside></>
-  )
-}
+    <aside className="hidden lg:flex pl-4 hover:pl-6 w-64 hover:shadow-xl transition-all ease-in-out duration-500 hover:text-[1.03rem] py-4 ">
+      <ul className="space-y-3">
+        <h3 className="font-semibold text-lg mb-4 px-3 py-1">Categories</h3>
+        <button
+          className={`cursor-pointer hover:text-black px-3 py-1 rounded ${
+            category === "allproducts"
+              ? "bg-gray-200 text-black"
+              : "text-gray-600"
+          }`}
+          onClick={() => handleShowCategory()}
+        >
+          All Products
+        </button>
 
-export default ProductCategory
+        {categories.map((currCategory) => (
+          <li key={currCategory._id}>
+            <button
+              className={`hover:text-black px-3 py-1 rounded cursor-pointer ${
+                currCategory.name === category
+                  ? "bg-gray-200 text-black"
+                  : "text-gray-600"
+              }`}
+              onClick={() =>
+                handleShowCategory(currCategory.name, currCategory._id)
+              }
+            >
+              {currCategory.name}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  );
+};
+
+export default ProductCategory;
