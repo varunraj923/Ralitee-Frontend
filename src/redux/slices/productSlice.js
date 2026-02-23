@@ -1,27 +1,48 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchAllProductsApi } from "../../api/product";
+import {
+  fetchAllProductsApi,
+  getCategoriesProductApi,
+} from "../../api/product";
+import { flashSalesApi } from "../../api/homepageApi";
+
 
 export const fetchAllProducts = createAsyncThunk(
   "allProducts/fetchAllProducts",
-  async ({ page = 1, limit = 12 }, { rejectWithValue }) => {
+  async (
+    { page = 1, limit = 12, category = "allproducts", id },
+    { rejectWithValue },
+  ) => {
     try {
-      const response = await fetchAllProductsApi(page, limit);
+      let response;
+
+      if (category === "allproducts") {
+        response = await fetchAllProductsApi(page, limit);
+      } 
+      else if(category === 'flashsaleproducts')
+      {
+        response = await flashSalesApi(page,limit)
+      }
+
+      else {
+        response = await getCategoriesProductApi(id, page, limit);
+      }
 
       return {
+        category,
+        page, 
         products: response.data.products,
         totalPages: response.data.totalPages,
-        page,
       };
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }
-  }
+  },
 );
 
 const allProductsSlice = createSlice({
   name: "allProducts",
   initialState: {
-    productsByPage: {}, // caching
+    productsByPage: {},
     totalPages: 1,
     loading: false,
     error: null,
@@ -36,9 +57,16 @@ const allProductsSlice = createSlice({
       .addCase(fetchAllProducts.fulfilled, (state, action) => {
         state.loading = false;
 
-        const { products, page, totalPages } = action.payload;
+        const { category, page, products, totalPages } = action.payload;
 
-        state.productsByPage[page] = products; // cache by page
+        // create category object if not exists
+        if (!state.productsByPage[category]) {
+          state.productsByPage[category] = {};
+        }
+
+        // store products under category and page
+        state.productsByPage[category][page] = products;
+        state.productsByPage[category].total= totalPages;
         state.totalPages = totalPages;
       })
       .addCase(fetchAllProducts.rejected, (state, action) => {

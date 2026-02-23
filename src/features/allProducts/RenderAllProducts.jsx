@@ -1,9 +1,12 @@
 import React from "react";
 import { Heart, ShoppingCart } from "lucide-react";
 import { RenderStars } from "../../components/User/FlashSaleFeature/RenderStars";
+import { useNavigate } from "react-router-dom";
 
 const RenderAllProducts = ({ products = [] }) => {
   // Safety: if not array
+const navigate = useNavigate();
+
   if (!Array.isArray(products)) {
     return null;
   }
@@ -11,7 +14,7 @@ const RenderAllProducts = ({ products = [] }) => {
   // Empty state
   if (products.length === 0) {
     return (
-      <div className="flex justify-center items-center py-20 text-gray-500">
+      <div className="flex justify-center items-center py-20 text-gray-500 min-h-[calc(100vh-25vh)]">
         No products found.
       </div>
     );
@@ -23,7 +26,7 @@ const RenderAllProducts = ({ products = [] }) => {
         if (!product) return null;
 
         const {
-          _id,
+          _id ,
           name,
           images,
           price,
@@ -31,13 +34,18 @@ const RenderAllProducts = ({ products = [] }) => {
           rating,
         } = product;
 
+        const handleSingleProduct = (_id)=> {
+          navigate(`/product/${_id}`)
+        }
+        
+
         return (
           <div
-            key={_id || Math.random()}
-            className="group bg-white rounded-xl overflow-hidden hover:shadow-lg transition-shadow duration-300"
+            key={_id ||category._id || Math.random()}
+            className="group bg-white rounded-xl overflow-hidden hover:shadow-lg transition-shadow duration-300" onClick={()=>handleSingleProduct(_id)}
           >
             {/* Image */}
-            <div className="relative h-64 p-4 flex items-center justify-center ">
+            <div className="relative h-64 p-4 flex items-center justify-center " >
               <img
                 src={images?.[0] || "/placeholder.png"}
                 alt={name || "Product"}
@@ -59,7 +67,7 @@ const RenderAllProducts = ({ products = [] }) => {
               </div>
 
               <h3 className="font-semibold text-gray-900 text-lg mb-1 truncate">
-                {name || "No Name"}
+                {category.category || name || "No Name"}
               </h3>
 
               {/* Rating */}

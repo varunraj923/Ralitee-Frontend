@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import ProductDetails from "./components/ProductDetails";
 import ProductGallery from "./components/ProductGallery";
 import { getProductById } from "../../api/product.js";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -25,7 +27,15 @@ const ProductPage = () => {
     fetchProduct();
   }, [id]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Box sx={{ display: "flex" }}>
+          <CircularProgress />
+        </Box>
+      </div>
+    );
+  }
   if (error) return <div>Error: {error}</div>;
   if (!product) return <div>No product found</div>;
 

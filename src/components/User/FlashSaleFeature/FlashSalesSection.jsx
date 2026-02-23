@@ -4,10 +4,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchFlashSales } from "../../../redux/slices/flashSalesSlice";
 import FlashSalesTimer from "./FlashSalesTimer";
 import FlashSalesProducts from "./FlashSalesProducts";
-
+import { useNavigate } from "react-router-dom";
 const FlashSalesSection = () => {
   const scrollRef = useRef(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { flashSalesProducts, loading, error } = useSelector(
     (state) => state.flashSales
@@ -27,6 +28,14 @@ const FlashSalesSection = () => {
       behavior: "smooth",
     });
   };
+
+const handleViewAllProducts = ()  => {
+ navigate(
+    `/products?category=${encodeURIComponent(
+      'flashsaleproducts'
+    )}&page=1`
+  );
+}
 
   return (
     <section className="max-w-[1170px] mx-auto px-4 py-16 font-sans">
@@ -78,7 +87,7 @@ const FlashSalesSection = () => {
 
       {/* FOOTER */}
       <div className="flex justify-center mt-10 border-b border-gray-200 pb-16">
-        <button className="bg-[#DB4444] text-white px-12 py-4 rounded-[4px] font-medium hover:bg-red-600 transition">
+        <button className="bg-[#DB4444] text-white px-12 py-4 rounded-[4px] font-medium hover:bg-red-600 transition" onClick={()=>handleViewAllProducts()}>
           View All Products
         </button>
       </div>

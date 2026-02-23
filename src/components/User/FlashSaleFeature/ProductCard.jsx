@@ -10,8 +10,19 @@ export const ProductCard = ({
 }) => {
   const navigate = useNavigate();
 
-  const handleProduct = () => {
+  const handleProduct = (e) => {
+    // If click came from a button, do NOT navigate
+    if (e.target.closest("button")) return;
+
     navigate(`/product/${product._id}`);
+  };
+
+  const handleWishlist = () => {
+    console.log("wishlist clicked");
+  };
+
+  const handleQuickView = () => {
+    console.log("quick view clicked");
   };
 
   // ---- Adaptation Logic ONLY ----
@@ -21,11 +32,17 @@ export const ProductCard = ({
   const ratingCount = product.rating?.count || 0;
 
   return (
-    <div className="w-[261px] flex-shrink-0 group cursor-pointer">
+  <div
+  className={`w-[261px] flex-shrink-0 group cursor-pointer
+  transition-transform transition-shadow duration-[400ms] ease-out
+   p-2 rounded-lg
+  hover:shadow-[0_8px_12px_-6px_rgba(0,0,0,0.25)] ${showAddToCart ? "" : " hover:scale-[1.04]"}`}    
+  onClick={handleProduct}
+>
       <div
-        className="relative h-[250px] bg-[#F5F5F5] rounded-[4px] p-4 flex items-center justify-center overflow-hidden mb-4 transition-all duration-300 ease-in-out
-        hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg"
-        onClick={handleProduct}
+        className={`relative h-[250px] rounded-[4px] p-4 flex items-center justify-center overflow-hidden mb-4
+      transition-transform  duration-300 ease-out 
+     ${showAddToCart?' hover:-translate-y-1':''} `}
       >
         {/* Discount Badge */}
         {showDiscount && discount > 0 && (
@@ -34,22 +51,37 @@ export const ProductCard = ({
           </div>
         )}
 
-        {/* Action Icons */}
-        <div className="absolute top-3 right-3 flex flex-col gap-2">
-          <button className="bg-white p-2 rounded-full hover:bg-gray-100 transition">
-            <Heart size={20} className="text-black" />
-          </button>
-          <button className="bg-white p-2 rounded-full hover:bg-gray-100 transition">
-            <Eye size={20} className="text-black" />
-          </button>
-        </div>
-
         {/* Product Image */}
         <img
           src={image}
           alt={product.name}
-          className="max-h-full max-w-full object-contain mix-blend-multiply"
+          className={`max-h-full max-w-full object-contain`}
         />
+
+        {/* Action Icons */}
+        <div className="absolute top-3 right-3 flex flex-col gap-2">
+          <button
+            type="button"
+            className="bg-white p-2 rounded-full hover:bg-gray-100 transition cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleWishlist();
+            }}
+          >
+            <Heart size={20} className="text-black pointer-events-none" />
+          </button>
+
+          <button
+            type="button"
+            className="bg-white p-2 rounded-full hover:bg-gray-100 transition cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleQuickView();
+            }}
+          >
+            <Eye size={20} className="text-black pointer-events-none" />
+          </button>
+        </div>
 
         {/* Add To Cart */}
         {showAddToCart && (
@@ -74,7 +106,7 @@ export const ProductCard = ({
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="flex">{RenderStars(product.rating.average)}</div>
+          <div className="flex">{RenderStars(ratingAvg)}</div>
           <span className="text-gray-400 text-sm">({ratingCount})</span>
         </div>
       </div>

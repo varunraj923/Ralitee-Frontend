@@ -1,12 +1,12 @@
 import React from "react";
 import { useSearchParams } from "react-router-dom";
 
-const Pagination = ({ page, totalPages }) => {
+const Pagination = ({ page, totalPages, category, categoryId }) => {
   const [, setSearchParams] = useSearchParams();
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= totalPages) {
-      setSearchParams({ page: newPage });
+      setSearchParams({ category, id: categoryId, page: newPage});
     }
   };
 
@@ -30,9 +30,7 @@ const Pagination = ({ page, totalPages }) => {
             key={pageNumber}
             onClick={() => handlePageChange(pageNumber)}
             className={`px-4 py-2 rounded ${
-              page === pageNumber
-                ? "bg-black text-white"
-                : "border"
+              page === pageNumber ? "bg-black text-white" : "border"
             }`}
           >
             {pageNumber}
