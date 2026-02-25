@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AdminLayout from "../layout/adminlayout";
+import AdminLayout from "../layout/AdminLayout";
 import CategoryForm from "../components/CategoryForm";
 import { createCategory } from "../../../api/adminApi";
 
@@ -16,35 +16,35 @@ const AddCategory = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  // 🔴 HARD BLOCK
-  if (!category.imageFile) {
-    setError("Category image is required");
-    return;
-  }
+    // 🔴 HARD BLOCK
+    if (!category.imageFile) {
+      setError("Category image is required");
+      return;
+    }
 
-  setLoading(true);
-  setError(null);
+    setLoading(true);
+    setError(null);
 
-  try {
-    const formData = new FormData();
-    formData.append("name", category.name.trim());
-    formData.append("image", category.imageFile); // 🔴 REQUIRED
+    try {
+      const formData = new FormData();
+      formData.append("name", category.name.trim());
+      formData.append("image", category.imageFile); // 🔴 REQUIRED
 
-    await createCategory(formData);
+      await createCategory(formData);
 
-    navigate("/admin/categories");
-  } catch (err) {
-    setError(
-      err.response?.data?.error ||
-      "Failed to add category"
-    );
-  } finally {
-    setLoading(false);
-  }
-};
+      navigate("/admin/categories");
+    } catch (err) {
+      setError(
+        err.response?.data?.error ||
+        "Failed to add category"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
   return (

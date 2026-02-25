@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import AdminLayout from "../layout/adminlayout";
+import AdminLayout from "../layout/AdminLayout";
 import ProductForm from "../components/ProductForm";
 import {
   createProduct,
@@ -83,7 +83,7 @@ const AddProduct = () => {
       console.error("Error adding product:", err);
       setError(
         err.response?.data?.message ||
-          "Failed to add product. Please try again."
+        "Failed to add product. Please try again."
       );
     } finally {
       setLoading(false);

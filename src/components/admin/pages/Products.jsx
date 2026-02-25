@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Search } from "lucide-react";
 import { CircularProgress } from "@mui/material";
-import AdminLayout from "../layout/adminlayout";
+import AdminLayout from "../layout/AdminLayout";
 import ProductTable from "../components/ProductTable";
 import EditProductDialog from "../components/EditProductDilog";
 import {
