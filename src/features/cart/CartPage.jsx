@@ -5,6 +5,7 @@ import { Trash2, Plus, Minus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+import BackButton from "../../components/common/BackButton";
 
 const CartPage = () => {
     const dispatch = useDispatch();
@@ -50,8 +51,9 @@ const CartPage = () => {
     }
 
     return (
-        <div className="container mx-auto px-4 py-8 mt-20">
-            <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
+        <div className="container mx-auto px-4 py-8 ">
+            <div className="class"><BackButton/> <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1></div>
+            
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Cart Items List */}

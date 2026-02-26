@@ -1,20 +1,22 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect,useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchFlashSales } from "../../../redux/slices/flashSalesSlice";
 import FlashSalesTimer from "./FlashSalesTimer";
 import FlashSalesProducts from "./FlashSalesProducts";
 import { useNavigate } from "react-router-dom";
+import { Alert, Snackbar } from "@mui/material";
+
 const FlashSalesSection = () => {
   const scrollRef = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const { flashSalesProducts, loading, error } = useSelector(
-    (state) => state.flashSales
+    (state) => state.flashSales,
   );
 
-  
   useEffect(() => {
     if (flashSalesProducts.length === 0) {
       dispatch(fetchFlashSales());
@@ -29,13 +31,11 @@ const FlashSalesSection = () => {
     });
   };
 
-const handleViewAllProducts = ()  => {
- navigate(
-    `/products?category=${encodeURIComponent(
-      'flashsaleproducts'
-    )}&page=1`
-  );
-}
+  const handleViewAllProducts = () => {
+    navigate(
+      `/products?category=${encodeURIComponent("flashsaleproducts")}&page=1`,
+    );
+  };
 
   return (
     <section className="max-w-[1170px] mx-auto px-4 py-16 font-sans">
@@ -82,15 +82,33 @@ const handleViewAllProducts = ()  => {
           products={flashSalesProducts}
           loading={loading}
           error={error}
+          setOpenSnackbar={setOpenSnackbar}
         />
       </div>
 
       {/* FOOTER */}
       <div className="flex justify-center mt-10 border-b border-gray-200 pb-16">
-        <button className="bg-[#DB4444] text-white px-12 py-4 rounded-[4px] font-medium hover:bg-red-600 transition" onClick={()=>handleViewAllProducts()}>
+        <button
+          className="bg-[#DB4444] text-white px-12 py-4 rounded-[4px] font-medium hover:bg-red-600 transition"
+          onClick={() => handleViewAllProducts()}
+        >
           View All Products
         </button>
       </div>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={() => setOpenSnackbar(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setOpenSnackbar(false)}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Item added to cart!
+        </Alert>
+      </Snackbar>
     </section>
   );
 };

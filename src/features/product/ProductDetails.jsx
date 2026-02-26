@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addToCart } from "../../../redux/slices/cartSlice";
-import { RenderStars } from "../../../components/User/FlashSaleFeature/RenderStars";
+import { addToCart } from "../../redux/slices/cartSlice";
+import { RenderStars } from "../../components/User/FlashSaleFeature/RenderStars";
 import { Heart, Minus, Plus, Truck, RotateCcw } from "lucide-react";
 import { Alert, Snackbar } from "@mui/material";
 

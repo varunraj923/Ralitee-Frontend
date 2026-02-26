@@ -7,6 +7,7 @@ import { useSnackbar } from "notistack";
 import { CircularProgress, Radio, RadioGroup, FormControlLabel, Button, IconButton, Checkbox } from "@mui/material";
 import { Trash2, Plus, MapPin } from "lucide-react";
 import { addAddressApi, getAddressesApi, deleteAddressApi } from "../../api/auth";
+import BackButton from "../../components/common/BackButton";
 
 const CheckoutPage = () => {
     const dispatch = useDispatch();
@@ -34,6 +35,7 @@ const CheckoutPage = () => {
 
     useEffect(() => {
         loadAddresses();
+         window.scrollTo(0, 0);
     }, []);
 
     const loadAddresses = async () => {
@@ -153,7 +155,8 @@ const CheckoutPage = () => {
     }
 
     return (
-        <div className="container mx-auto px-4 py-8 mt-20">
+        <div className="container mx-auto px-4 py-8 ">
+            <BackButton/>
             <h1 className="text-3xl font-bold mb-8">Checkout</h1>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
