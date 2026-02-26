@@ -1,11 +1,14 @@
 import React from "react";
 import { useSearchParams } from "react-router-dom";
 
+
 const ProductCategory = ({
   categories,
   category,
 }) => {
   const [, setSearchParams] = useSearchParams();
+  
+  
 
   const handleShowCategory = (name = "allproducts", _id = null) => {
     // Reset page to 1 whenever category changes

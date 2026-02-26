@@ -11,8 +11,9 @@ const ProductGallery = ({ images }) => {
           <button
             key={idx}
             onClick={() => setActiveImg(idx)}
-            className={`flex-shrink-0 w-24 h-24 rounded flex items-center justify-center p-2 border-2 transition-all ${
-              activeImg === idx ? 'border-black' : 'border-transparent'
+            className={`flex-shrink-0 w-24 h-24 rounded flex items-center justify-center p-2  
+               border-2 transition-all ${
+              activeImg === idx ? 'border-gray-400' : 'border-transparent'
             }`}
           >
              {/* Using a placeholder SVG for demo purposes if no actual image */}
