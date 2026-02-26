@@ -20,6 +20,7 @@ const AllProducts = () => {
 
   const category = searchParams.get("category") || "allproducts";
   const categoryId = searchParams.get("id") || null;
+  const search = searchParams.get("search");
   const page = parseInt(searchParams.get("page")) || 1;
 
   const { categories, loading: categoryLoading } = useSelector(
@@ -41,26 +42,26 @@ const AllProducts = () => {
     }
   }, [categories, dispatch]);
 
-  // Fetch products for current category & page
+  // Fetch products for current category & page (or search)
   useEffect(() => {
-    const pageData = productsByPage[category]?.[page];
-
-    if (!pageData) {
-      dispatch(
-        fetchAllProducts({
-          page,
-          limit: LIMIT,
-          category,
-          id: categoryId,
-        }),
-      );
-    }
-
+    // If it's a search, we might not use cache productsByPage nicely without modifying Redux more.
+    // For simplicity, we just dispatch the fetch manually so it executes the API call.
+    dispatch(
+      fetchAllProducts({
+        page,
+        limit: LIMIT,
+        category: search ? "search" : category,
+        id: categoryId,
+        search,
+      })
+    );
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [category, categoryId, page, dispatch, productsByPage]);
+  }, [category, categoryId, page, search, dispatch]);
 
-  const productsForCurrentPage = productsByPage[category]?.[page] || [];
-  const totalProductsPages = productsByPage[category]?.total || 1;
+  // Use "search" as the category key in Redux if we are searching
+  const reduxCategoryKey = search ? "search" : category;
+  const productsForCurrentPage = productsByPage[reduxCategoryKey]?.[page] || [];
+  const totalProductsPages = productsByPage[reduxCategoryKey]?.total || 1;
 
   if (isLoading) {
     return (
@@ -91,8 +92,8 @@ const AllProducts = () => {
         )}
 
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Category sidebar */}
-          {category !== "flashsaleproducts" && (
+          {/* Category sidebar - Hide during search */}
+          {!search && category !== "flashsaleproducts" && (
             <ProductCategory
               categories={categories}
               selectedCategory={category}
@@ -103,11 +104,24 @@ const AllProducts = () => {
 
           {/* Products list */}
           <div className="flex-1">
+            {search && (
+              <h2 className="text-2xl font-semibold mb-6">
+                Search Results for: <span className="text-red-600">"{search}"</span>
+              </h2>
+            )}
+
+            {productsForCurrentPage.length === 0 && !isLoading && (
+              <div className="text-center py-10 text-gray-500">
+                No products found.
+              </div>
+            )}
+
             <RenderAllProducts products={productsForCurrentPage} />
             {totalProductsPages > 1 && (
               <Pagination
                 category={category}
                 categoryId={categoryId}
+                search={search}
                 page={page}
                 totalPages={totalProductsPages}
               />

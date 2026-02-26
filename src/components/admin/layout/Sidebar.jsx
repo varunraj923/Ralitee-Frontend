@@ -40,6 +40,11 @@ const Sidebar = () => {
       label: "Add Category",
       to: "/admin/add-category",
     },
+    {
+      icon: <LayoutDashboard className="h-5 w-5" />,
+      label: "Manage Homepage",
+      to: "/admin/homepage",
+    },
   ];
 
   return (

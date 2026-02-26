@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { addToCart } from "../../redux/slices/cartSlice";
 import { RenderStars } from "../../components/User/FlashSaleFeature/RenderStars";
 import { Heart, Minus, Plus, Truck, RotateCcw } from "lucide-react";
@@ -7,12 +8,19 @@ import { Alert, Snackbar } from "@mui/material";
 
 const ProductDetails = ({ product }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { token, user } = useSelector((state) => state.auth);
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState(product.colors?.[0]?.name);
   const [selectedSize, setSelectedSize] = useState(product.sizes?.[0]); // Default to first size if available
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const handleAddToCart = () => {
+    if (!token || !user) {
+      alert("Please login first to add items to the cart.");
+      navigate("/login");
+      return;
+    }
     dispatch(addToCart({
       productId: product._id,
       quantity,
@@ -65,8 +73,8 @@ const ProductDetails = ({ product }) => {
                   key={size}
                   onClick={() => setSelectedSize(size)}
                   className={`w-8 h-8 flex items-center justify-center text-sm border rounded hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors ${selectedSize === size
-                      ? "bg-red-500 text-white border-red-500"
-                      : "border-gray-300 text-black"
+                    ? "bg-red-500 text-white border-red-500"
+                    : "border-gray-300 text-black"
                     }`}
                 >
                   {size}

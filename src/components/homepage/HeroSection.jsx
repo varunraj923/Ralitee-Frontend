@@ -1,273 +1,170 @@
-// HeroSection.jsx
-import React from "react";
-import { Box, Container, Typography, Button, Stack, styled, useTheme } from "@mui/material";
-import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Box, styled, IconButton } from "@mui/material";
+import { useSwipeable } from "react-swipeable";
+import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 
-const Hero = styled(Box)(({ theme }) => ({
-  paddingTop: theme.spacing(6),
-  paddingBottom: theme.spacing(6),
-  background: `linear-gradient(120deg, ${theme.palette.primary.main}11 0%, ${theme.palette.primary.main}05 100%)`,
-  minHeight: '70vh',
-  display: 'flex',
-  alignItems: 'center',
-  
-  [theme.breakpoints.up('sm')]: {
-    paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(8),
-    minHeight: '75vh',
+const MainWrapper = styled(Box)(({ theme }) => ({
+  width: "100%",
+  display: "flex",
+  flexDirection: "column",
+}));
+
+const CarouselContainer = styled(Box)(({ theme }) => ({
+  position: "relative",
+  width: "100%",
+  height: "40vh",
+  overflow: "hidden",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  backgroundColor: "#f5f0e1",
+  [theme.breakpoints.up("sm")]: {
+    height: "50vh",
   },
-  [theme.breakpoints.up('md')]: {
-    paddingTop: theme.spacing(10),
-    paddingBottom: theme.spacing(10),
-    minHeight: '80vh',
-  },
-  [theme.breakpoints.up('lg')]: {
-    minHeight: '85vh',
+  [theme.breakpoints.up("md")]: {
+    height: "60vh",
   },
 }));
 
-const HeroContent = styled(Box)(({ theme }) => ({
-  textAlign: "center",
-  maxWidth: '100%',
-  
-  [theme.breakpoints.up('sm')]: {
-    maxWidth: '90%',
-    margin: '0 auto',
-  },
-  [theme.breakpoints.up('md')]: {
-    maxWidth: '85%',
-  },
-  [theme.breakpoints.up('lg')]: {
-    maxWidth: '80%',
-  },
+const PosterImage = styled("img")(({ active }) => ({
+  position: "absolute",
+  width: "100%",
+  height: "100%",
+  objectFit: "fill", // To stretch across full width like a banner
+  opacity: active ? 1 : 0,
+  transition: "opacity 0.6s ease-in-out",
+  pointerEvents: active ? "auto" : "none",
 }));
 
-const MainTitle = styled(Typography)(({ theme }) => ({
-  fontWeight: 700,
-  color: theme.palette.text.primary,
-  marginBottom: theme.spacing(2),
-  lineHeight: 1.1,
-  fontSize: '2rem',
-  
-  [theme.breakpoints.up('sm')]: {
-    fontSize: '2.5rem',
-    lineHeight: 1.15,
-  },
-  [theme.breakpoints.up('md')]: {
-    fontSize: '3rem',
-    lineHeight: 1.2,
-  },
-  [theme.breakpoints.up('lg')]: {
-    fontSize: '3.5rem',
-  },
-  [theme.breakpoints.up('xl')]: {
-    fontSize: '4rem',
-  },
-  
-  // Better text wrapping on smaller screens
-  wordBreak: 'break-word',
-  hyphens: 'auto',
-  
-  [theme.breakpoints.down('sm')]: {
-    // Ensure readability on very small screens
-    fontSize: '1.75rem',
-  },
+const ControlsBar = styled(Box)(({ theme }) => ({
+  width: "100%",
+  height: "48px",
+  backgroundColor: "#f5f0e1",
+  borderTop: "1px solid rgba(0,0,0,0.05)",
+  borderBottom: "1px solid #e0dcd3",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: theme.spacing(3),
 }));
 
-const Subtitle = styled(Typography)(({ theme }) => ({
-  color: theme.palette.text.secondary,
-  marginBottom: theme.spacing(3),
-  maxWidth: 700,
-  margin: `0 auto ${theme.spacing(3)}px auto`,
-  lineHeight: 1.5,
-  fontSize: '1rem',
-  padding: `0 ${theme.spacing(2)}`,
-  
-  [theme.breakpoints.up('sm')]: {
-    fontSize: '1.125rem',
-    marginBottom: theme.spacing(4),
-    margin: `0 auto ${theme.spacing(4)}px auto`,
-    padding: `0 ${theme.spacing(3)}`,
-  },
-  [theme.breakpoints.up('md')]: {
-    fontSize: '1.25rem',
-    maxWidth: 800,
-    padding: 0,
-  },
-  [theme.breakpoints.up('lg')]: {
-    fontSize: '1.375rem',
-  },
+const Dot = styled("div")(({ active, theme }) => ({
+  width: "10px",
+  height: "10px",
+  borderRadius: "50%",
+  backgroundColor: active ? "#3e2723" : "transparent",
+  border: `2px solid #3e2723`,
+  cursor: "pointer",
+  transition: "all 0.3s ease",
+  "&:hover": {
+    backgroundColor: active ? "#3e2723" : "rgba(62, 39, 35, 0.2)",
+  }
 }));
 
-const ButtonStack = styled(Stack)(({ theme }) => ({
-  justifyContent: 'center',
-  alignItems: 'center',
-  gap: theme.spacing(2),
-  
-  [theme.breakpoints.down('sm')]: {
-    '& .MuiButton-root': {
-      width: '100%',
-      maxWidth: '280px',
+const ControlBtn = styled(IconButton)(({ theme }) => ({
+  color: "#3e2723",
+  padding: "4px",
+  "&:hover": {
+    backgroundColor: "rgba(62, 39, 35, 0.1)",
+  }
+}));
+
+const HeroSection = ({ posters = [] }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+
+  const nextSlide = () => {
+    setCurrentIndex((prev) => (prev + 1) % posters.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentIndex((prev) => (prev - 1 + posters.length) % posters.length);
+  };
+
+  // Setup auto-play
+  useEffect(() => {
+    if (posters.length <= 1 || !isPlaying) return;
+
+    const interval = setInterval(nextSlide, 4000);
+
+    return () => clearInterval(interval);
+  }, [posters.length, isPlaying, currentIndex]);
+
+  // Setup swipe handlers
+  const handlers = useSwipeable({
+    onSwipedLeft: () => {
+      setIsPlaying(false);
+      nextSlide();
     },
-  },
-  [theme.breakpoints.up('sm')]: {
-    gap: theme.spacing(2.5),
-  },
-}));
+    onSwipedRight: () => {
+      setIsPlaying(false);
+      prevSlide();
+    },
+    preventScrollOnSwipe: true,
+    trackMouse: true,
+  });
 
-const PrimaryButton = styled(Button)(({ theme }) => ({
-  paddingLeft: theme.spacing(3),
-  paddingRight: theme.spacing(3),
-  paddingTop: theme.spacing(1.5),
-  paddingBottom: theme.spacing(1.5),
-  borderRadius: '999px',
-  backgroundColor: theme.palette.primary.main,
-  fontWeight: 700,
-  fontSize: '1rem',
-  textTransform: 'none',
-  boxShadow: `0 4px 12px ${theme.palette.primary.main}40`,
-  transition: 'all 0.3s ease',
-  
-  '&:hover': {
-    backgroundColor: theme.palette.primary.dark,
-    transform: 'translateY(-2px)',
-    boxShadow: `0 6px 16px ${theme.palette.primary.main}50`,
-  },
-  
-  [theme.breakpoints.up('sm')]: {
-    paddingLeft: theme.spacing(4),
-    paddingRight: theme.spacing(4),
-    fontSize: '1.1rem',
-  },
-  [theme.breakpoints.up('md')]: {
-    paddingLeft: theme.spacing(5),
-    paddingRight: theme.spacing(5),
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-  },
-}));
-
-const SecondaryButton = styled(Button)(({ theme }) => ({
-  paddingLeft: theme.spacing(3),
-  paddingRight: theme.spacing(3),
-  paddingTop: theme.spacing(1.5),
-  paddingBottom: theme.spacing(1.5),
-  borderRadius: '999px',
-  borderColor: theme.palette.primary.main,
-  color: theme.palette.primary.main,
-  fontWeight: 700,
-  fontSize: '1rem',
-  textTransform: 'none',
-  borderWidth: '2px',
-  transition: 'all 0.3s ease',
-  
-  '&:hover': {
-    backgroundColor: `${theme.palette.primary.main}15`,
-    borderColor: theme.palette.primary.dark,
-    color: theme.palette.primary.dark,
-    transform: 'translateY(-2px)',
-    borderWidth: '2px',
-  },
-  
-  [theme.breakpoints.up('sm')]: {
-    paddingLeft: theme.spacing(4),
-    paddingRight: theme.spacing(4),
-    fontSize: '1.1rem',
-  },
-  [theme.breakpoints.up('md')]: {
-    paddingLeft: theme.spacing(5),
-    paddingRight: theme.spacing(5),
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-  },
-  
-  '& .MuiButton-endIcon': {
-    marginLeft: theme.spacing(1),
-    transition: 'transform 0.3s ease',
-  },
-  
-  '&:hover .MuiButton-endIcon': {
-    transform: 'translateX(4px)',
-  },
-}));
-
-const HeroSection = () => {
-  const theme = useTheme();
-  const navigate = useNavigate();
-
-  const handleShopClick = () => {
-    try {
-      navigate("/user/dashboard");
-    } catch (error) {
-      console.warn("Navigation not available:", error);
-      // Fallback for when router is not available
-      window.location.href = "/user/dashboard";
-    }
+  const togglePlayPause = () => {
+    setIsPlaying(!isPlaying);
   };
 
-  const handleCategoriesClick = () => {
-    const categoriesElement = document.getElementById("categories");
-    if (categoriesElement) {
-      categoriesElement.scrollIntoView({ 
-        behavior: "smooth",
-        block: "start"
-      });
-    } else {
-      window.location.hash = "#categories";
-    }
-  };
+  if (!posters || posters.length === 0) {
+    return (
+      <CarouselContainer>
+        <Box sx={{ textAlign: "center", p: 4, bgcolor: "#fff", borderRadius: 2 }}>
+          <h2>Welcome to Ralitee</h2>
+          <p>Admin: Please upload a poster in the dashboard.</p>
+        </Box>
+      </CarouselContainer>
+    );
+  }
 
   return (
-    <Hero>
-      <Container 
-        maxWidth="lg" 
-        sx={{
-          px: { xs: 2, sm: 3, md: 4 }, // Responsive horizontal padding
-          width: '100%',
-        }}
-      >
-        <HeroContent>
-          <MainTitle
-            variant="h1"
-            component="h1"
-          >
-            Ralitee — Fresh produce, straight from trusted farms.
-          </MainTitle>
+    <MainWrapper>
+      {/* Image Carousel */}
+      <CarouselContainer {...handlers}>
+        {posters.map((poster, index) => (
+          <PosterImage
+            key={index}
+            src={poster.image}
+            alt={poster.caption || `Poster ${index}`}
+            active={index === currentIndex ? 1 : 0}
+          />
+        ))}
+      </CarouselContainer>
 
-          <Subtitle
-            variant="h6"
-            component="p"
-          >
-            Hand-picked, organic selections delivered quickly. Browse seasonal boxes, bundles and weekly subscriptions.
-          </Subtitle>
+      {/* Dedicated Controls Bar */}
+      {posters.length > 1 && (
+        <ControlsBar>
+          <ControlBtn onClick={() => { setIsPlaying(false); prevSlide(); }} size="small">
+            <ChevronLeft size={20} />
+          </ControlBtn>
 
-          <ButtonStack
-            direction={{ xs: "column", sm: "row" }}
-            spacing={{ xs: 2, sm: 2.5 }}
-          >
-            <PrimaryButton
-              variant="contained"
-              size="large"
-              onClick={handleShopClick}
-              aria-label="Shop fresh produce now"
-            >
-              Shop Fresh Now
-            </PrimaryButton>
+          <Box sx={{ display: "flex", gap: "10px", alignItems: "center" }}>
+            {posters.map((_, index) => (
+              <Dot
+                key={index}
+                active={index === currentIndex ? 1 : 0}
+                onClick={() => {
+                  setIsPlaying(false);
+                  setCurrentIndex(index);
+                }}
+              />
+            ))}
+          </Box>
 
-            <SecondaryButton
-              variant="outlined"
-              size="large"
-              endIcon={<ArrowRightAltIcon />}
-              onClick={handleCategoriesClick}
-              aria-label="Browse product categories"
-            >
-              Browse Categories
-            </SecondaryButton>
-          </ButtonStack>
-        </HeroContent>
-      </Container>
-    </Hero>
+          <ControlBtn onClick={() => { setIsPlaying(false); nextSlide(); }} size="small">
+            <ChevronRight size={20} />
+          </ControlBtn>
+
+          <Box sx={{ width: "1px", height: "20px", backgroundColor: "rgba(0,0,0,0.2)", mx: 1 }} />
+
+          <ControlBtn onClick={togglePlayPause} size="small">
+            {isPlaying ? <Pause size={18} /> : <Play size={18} />}
+          </ControlBtn>
+        </ControlsBar>
+      )}
+    </MainWrapper>
   );
 };
 

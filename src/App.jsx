@@ -11,6 +11,7 @@ import Products from "./components/admin/pages/Products";
 import AddProduct from "./components/admin/pages/AddProduct";
 import Categories from "./components/admin/pages/Categories";
 import AddCategory from "./components/admin/pages/AddCategory";
+import ManageHomepage from "./components/admin/pages/ManageHomepage";
 import ForgotPasswordPage from "./components/auth/ForgotPasswordPage";
 import ResetPasswordPage from "./components/auth/ResetPasswordPage";
 import UserDashboard from "./components/User/UserDashboard";
@@ -36,15 +37,15 @@ const App = () => {
           {/* PUBLIC ROUTES */}
           <Route path="/" element={<HomePage />} />
           <Route path="/homepage" element={<HomePage />} />
+          <Route path="/products" element={<AllProducts />} />
+          <Route path="/product/:id" element={<ProductPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/forgot" element={<ForgotPasswordPage />} />
           <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
           {/* 🔐 PROTECTED USER ROUTES */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/products" element={<AllProducts />} />
             <Route path="/user/dashboard" element={<UserDashboard />} />
-            <Route path="/product/:id" element={<ProductPage />} />
 
             <Route path="/cart" element={<CartPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
@@ -58,6 +59,7 @@ const App = () => {
             <Route path="/admin/add-product" element={<AddProduct />} />
             <Route path="/admin/categories" element={<Categories />} />
             <Route path="/admin/add-category" element={<AddCategory />} />
+            <Route path="/admin/homepage" element={<ManageHomepage />} />
           </Route>
         </Routes>
       </SnackbarProvider>

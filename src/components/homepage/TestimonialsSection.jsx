@@ -1,14 +1,14 @@
 // TestimonialsSection.jsx
 import React, { useState, useEffect } from "react";
-import { 
-  Box, 
-  Container, 
-  Grid, 
-  Paper, 
-  Avatar, 
-  Typography, 
-  Rating, 
-  Stack, 
+import {
+  Box,
+  Container,
+  Grid,
+  Paper,
+  Avatar,
+  Typography,
+  Rating,
+  Stack,
   useTheme,
   styled,
   useMediaQuery
@@ -16,35 +16,35 @@ import {
 import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
 
 const testimonials = [
-  { 
-    name: "Asha", 
-    role: "Home Chef", 
-    review: "Freshest produce, always on time! The quality is exceptional and my family loves everything.", 
-    rating: 5, 
+  {
+    name: "Asha",
+    role: "Home Chef",
+    review: "Freshest produce, always on time! The quality is exceptional and my family loves everything.",
+    rating: 5,
     avatar: "/avatars/avatar1.png",
     initials: "AS"
   },
-  { 
-    name: "Vikram", 
-    role: "Cafe Owner", 
-    review: "Reliable weekly deliveries and great quality. My customers can taste the difference!", 
-    rating: 5, 
+  {
+    name: "Vikram",
+    role: "Cafe Owner",
+    review: "Reliable weekly deliveries and great quality. My customers can taste the difference!",
+    rating: 5,
     avatar: "/avatars/avatar2.png",
     initials: "VK"
   },
-  { 
-    name: "Neha", 
-    role: "Mother", 
-    review: "My family loves the subscription boxes — so convenient and always fresh produce!", 
-    rating: 4.5, 
+  {
+    name: "Neha",
+    role: "Mother",
+    review: "My family loves the subscription boxes — so convenient and always fresh produce!",
+    rating: 4.5,
     avatar: "/avatars/avatar3.png",
     initials: "NH"
   },
-  { 
-    name: "Varun Raj", 
-    role: "Software Developer", 
-    review: "Perfect for my busy lifestyle. Fresh, organic produce delivered right to my door!", 
-    rating: 5, 
+  {
+    name: "Varun Raj",
+    role: "Software Developer",
+    review: "Perfect for my busy lifestyle. Fresh, organic produce delivered right to my door!",
+    rating: 5,
     avatar: "/avatars/avatar4.png",
     initials: "VR"
   },
@@ -56,7 +56,7 @@ const Section = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
   position: 'relative',
   overflow: 'hidden',
-  
+
   [theme.breakpoints.up('sm')]: {
     paddingTop: theme.spacing(6),
     paddingBottom: theme.spacing(6),
@@ -77,7 +77,7 @@ const SectionTitle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(3),
   fontSize: '1.75rem',
   color: theme.palette.text.primary,
-  
+
   [theme.breakpoints.up('sm')]: {
     fontSize: '2rem',
     marginBottom: theme.spacing(4),
@@ -92,14 +92,14 @@ const TestimonialsContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
   width: '100%',
   margin: '0 auto',
-  
+
   [theme.breakpoints.down('lg')]: {
     overflow: 'hidden',
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
     marginLeft: `-${theme.spacing(3)}`,
     marginRight: `-${theme.spacing(3)}`,
-    
+
     '&::before, &::after': {
       content: '""',
       position: 'absolute',
@@ -127,27 +127,27 @@ const ScrollingGrid = styled(Box, {
   gap: theme.spacing(3),
   position: 'relative',
   zIndex: 1,
-  
+
   [theme.breakpoints.up('lg')]: {
     display: 'grid',
     gridTemplateColumns: 'repeat(4, 1fr)',
     gap: theme.spacing(3),
     position: 'static',
   },
-  
+
   [theme.breakpoints.down('lg')]: {
     width: 'max-content',
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
-    
+
     ...(shouldScroll && {
       animation: 'scroll-testimonials 25s linear infinite',
     }),
-    
+
     '&:hover': {
       animationPlayState: 'paused',
     },
-    
+
     '@keyframes scroll-testimonials': {
       '0%': {
         transform: 'translateX(50px)',
@@ -157,14 +157,14 @@ const ScrollingGrid = styled(Box, {
       },
     },
   },
-  
+
   [theme.breakpoints.down('md')]: {
     gap: theme.spacing(2.5),
     ...(shouldScroll && {
       animation: 'scroll-testimonials 30s linear infinite',
     }),
   },
-  
+
   [theme.breakpoints.down('sm')]: {
     gap: theme.spacing(2),
     paddingLeft: theme.spacing(2),
@@ -184,14 +184,14 @@ const TestimonialCard = styled(Paper)(({ theme }) => ({
   zIndex: 2,
   display: 'flex',
   flexDirection: 'column',
-  
+
   '&:hover': {
     transform: 'translateY(-4px)',
     boxShadow: theme.shadows[8],
     borderColor: theme.palette.primary.main,
     zIndex: 5,
   },
-  
+
   [theme.breakpoints.up('sm')]: {
     padding: theme.spacing(2.5),
     minHeight: '260px',
@@ -207,7 +207,7 @@ const TestimonialCard = styled(Paper)(({ theme }) => ({
       transform: 'translateY(-6px)',
     },
   },
-  
+
   [theme.breakpoints.down('lg')]: {
     flexShrink: 0,
     cursor: 'pointer',
@@ -215,7 +215,7 @@ const TestimonialCard = styled(Paper)(({ theme }) => ({
     maxWidth: '85vw',
     boxShadow: theme.shadows[2],
   },
-  
+
   [theme.breakpoints.down('sm')]: {
     width: '250px',
     padding: theme.spacing(2),
@@ -248,7 +248,7 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
   fontWeight: 600,
   border: `3px solid ${theme.palette.background.paper}`,
   boxShadow: theme.shadows[4],
-  
+
   [theme.breakpoints.up('sm')]: {
     width: 70,
     height: 70,
@@ -264,12 +264,12 @@ const ReviewText = styled(Typography)(({ theme }) => ({
   flex: 1,
   textAlign: 'center',
   fontStyle: 'italic',
-  
+
   [theme.breakpoints.up('sm')]: {
     fontSize: '0.95rem',
     marginBottom: theme.spacing(2.5),
   },
-  
+
   [theme.breakpoints.up('md')]: {
     fontSize: '1rem',
   },
@@ -278,14 +278,14 @@ const ReviewText = styled(Typography)(({ theme }) => ({
 const StyledRating = styled(Rating)(({ theme }) => ({
   marginBottom: theme.spacing(1.5),
   justifyContent: 'center',
-  
+
   '& .MuiRating-iconFilled': {
     color: '#ffc107',
   },
   '& .MuiRating-iconEmpty': {
     color: theme.palette.grey[300],
   },
-  
+
   [theme.breakpoints.down('sm')]: {
     '& .MuiRating-icon': {
       fontSize: '1.2rem',
@@ -303,7 +303,7 @@ const AuthorName = styled(Typography)(({ theme }) => ({
   fontSize: '1rem',
   color: theme.palette.text.primary,
   marginBottom: theme.spacing(0.5),
-  
+
   [theme.breakpoints.up('sm')]: {
     fontSize: '1.1rem',
   },
@@ -313,36 +313,39 @@ const AuthorRole = styled(Typography)(({ theme }) => ({
   fontSize: '0.875rem',
   color: theme.palette.text.secondary,
   fontWeight: 500,
-  
+
   [theme.breakpoints.up('sm')]: {
     fontSize: '0.9rem',
   },
 }));
 
-const TestimonialsSection = () => {
+const TestimonialsSection = ({ testimonialsData = [] }) => {
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
   const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
-  
+
+  // Use dynamic data if available, else static
+  const displayTestimonials = testimonialsData.length > 0 ? testimonialsData : testimonials;
+
   // Force auto-scroll to be true initially on mount
   useEffect(() => {
     setShouldAutoScroll(true);
   }, []);
-  
+
   // Duplicate testimonials for seamless infinite scroll
-  const scrollingTestimonials = !isLargeScreen ? [...testimonials, ...testimonials, ...testimonials] : testimonials;
-  
+  const scrollingTestimonials = !isLargeScreen ? [...displayTestimonials, ...displayTestimonials, ...displayTestimonials] : displayTestimonials;
+
   useEffect(() => {
     const handleUserInteraction = () => {
       setShouldAutoScroll(false);
       // Resume scrolling after 4 seconds
       setTimeout(() => setShouldAutoScroll(true), 4000);
     };
-    
+
     if (!isLargeScreen) {
       document.addEventListener('touchstart', handleUserInteraction, { passive: true });
       document.addEventListener('scroll', handleUserInteraction, { passive: true });
-      
+
       return () => {
         document.removeEventListener('touchstart', handleUserInteraction);
         document.removeEventListener('scroll', handleUserInteraction);
@@ -356,7 +359,7 @@ const TestimonialsSection = () => {
 
   return (
     <Section component="section" aria-label="Customer Testimonials">
-      <Container 
+      <Container
         maxWidth="lg"
         sx={{
           px: { xs: 2, sm: 3, md: 4 },
@@ -365,15 +368,15 @@ const TestimonialsSection = () => {
         <SectionTitle variant="h4" component="h2">
           Customer Stories
         </SectionTitle>
-        
+
         <TestimonialsContainer>
           <ScrollingGrid shouldScroll={shouldAutoScroll && !isLargeScreen}>
-            {(isLargeScreen ? testimonials : scrollingTestimonials).map((testimonial, index) => (
+            {(isLargeScreen ? displayTestimonials : scrollingTestimonials).map((testimonial, index) => (
               <TestimonialCard key={`${testimonial.name}-${index}`} elevation={2}>
                 <QuoteIcon />
-                
+
                 <AvatarContainer>
-                  <StyledAvatar 
+                  <StyledAvatar
                     src={testimonial.avatar}
                     alt={testimonial.name}
                     onError={handleImageError}
@@ -388,19 +391,19 @@ const TestimonialsSection = () => {
 
                 <Stack alignItems="center" spacing={1.5}>
                   <StyledRating
-                    value={testimonial.rating}
+                    value={testimonial.rating || 5}
                     precision={0.5}
                     readOnly
                     size="small"
-                    aria-label={`Rating: ${testimonial.rating} out of 5 stars`}
+                    aria-label={`Rating: ${testimonial.rating || 5} out of 5 stars`}
                   />
-                  
+
                   <AuthorInfo>
                     <AuthorName>
                       {testimonial.name}
                     </AuthorName>
                     <AuthorRole>
-                      {testimonial.role}
+                      {testimonial.role || "Customer"}
                     </AuthorRole>
                   </AuthorInfo>
                 </Stack>
@@ -408,14 +411,14 @@ const TestimonialsSection = () => {
             ))}
           </ScrollingGrid>
         </TestimonialsContainer>
-        
+
         {/* Mobile instruction */}
         {!isLargeScreen && (
           <Box sx={{ textAlign: 'center', mt: 2.5 }}>
-            <Typography 
-              variant="caption" 
+            <Typography
+              variant="caption"
               color="text.secondary"
-              sx={{ 
+              sx={{
                 opacity: 0.7,
                 fontSize: { xs: '0.75rem', sm: '0.8rem' },
               }}

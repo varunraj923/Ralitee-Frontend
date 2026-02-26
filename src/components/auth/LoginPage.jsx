@@ -9,16 +9,17 @@ import { createAppTheme } from "../../constants/theme";
 import { loginApi, registerApi } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
+import { Box } from "@mui/material";
 
 
 
 /* -------------------- Shared Styling -------------------- */
 const InputStyling =
-  "w-full pl-11 pr-12 py-3 border border-border rounded-xl bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all duration-300";
+  "w-full pl-11 pr-12 py-3 border border-gray-300 rounded-xl bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#8B0000] focus:border-transparent transition-all duration-300";
 
 const RequiredLabel = ({ text }) => (
-  <label className="block text-sm font-semibold text-foreground mb-2.5">
-    {text} <span className="text-red-500">*</span>
+  <label className="block text-sm font-semibold text-[#3e2723] mb-2.5">
+    {text} <span className="text-[#8B0000]">*</span>
   </label>
 );
 
@@ -73,7 +74,6 @@ const LoginPage = () => {
     if (loading) return;
     setLoading(true);
 
-    setLoading(true);
     try {
       if (isLogin) {
         const response = await loginApi({
@@ -136,33 +136,31 @@ const LoginPage = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
-      <div className="min-h-screen flex bg-background overflow-hidden">
-        {/* LEFT SIDE */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-6">
-          <div className="w-full max-w-md">
+      {/* Main Container - Beige Background */}
+      <div className="min-h-screen flex bg-[#f5f0e1] overflow-hidden">
+
+        {/* LEFT SIDE - Forms */}
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-[#f5f0e1] z-10">
+          <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl shadow-[#cd9141]/20">
             {/* Logo */}
-            <div className="mb-8 sm:mb-12 animate-fade-in">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">R</span>
-                </div>
-                <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                  Relitee
+            <div className="mb-8 sm:mb-10 text-center flex flex-col items-center">
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
+                <h1 className="text-3xl sm:text-4xl font-extrabold text-[#8B0000] tracking-wide" style={{ fontFamily: "'Inter', sans-serif" }}>
+                  Ralitee
                 </h1>
-              </div>
-              <p className="text-sm text-muted-foreground mt-2">
+              </Box>
+              <p className="text-sm font-medium text-[#c08d4b]">
                 Welcome back to your fresh produce store
               </p>
             </div>
-            {/* Logo */}
 
-            {/* Heading with gradient */}
-            <div className="mb-8 sm:mb-10">
-              <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-2">
+            {/* Heading */}
+            <div className="mb-6 text-center">
+              <h2 className="text-2xl font-bold text-[#3e2723] mb-1">
                 {isLogin ? "Sign in" : "Create account"}
               </h2>
-              <p className="text-sm text-muted-foreground">
-                {isLogin ? "Access your account" : "Join our community"}
+              <p className="text-sm text-gray-500">
+                {isLogin ? "Access your account to continue" : "Join our community today"}
               </p>
             </div>
 
@@ -175,7 +173,7 @@ const LoginPage = () => {
                 >
                   <RequiredLabel text="Username" />
                   <div className="relative">
-                    <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
                       type="text"
                       name="username"
@@ -194,7 +192,7 @@ const LoginPage = () => {
                 <div className="animate-in fade-in slide-in-from-top-2 duration-500">
                   <RequiredLabel text="Full Name" />
                   <div className="relative">
-                    <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                     <input
                       type="text"
                       name="name"
@@ -215,7 +213,7 @@ const LoginPage = () => {
               >
                 <RequiredLabel text="Email Address" />
                 <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type="email"
                     name="email"
@@ -235,7 +233,7 @@ const LoginPage = () => {
               >
                 <RequiredLabel text=" Password" />
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type={showPassword ? "text" : "password"}
                     name="password"
@@ -248,7 +246,7 @@ const LoginPage = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition"
                   >
                     {showPassword ? (
                       <EyeOff className="w-5 h-5" />
@@ -264,7 +262,7 @@ const LoginPage = () => {
                   <button
                     type="button"
                     onClick={() => navigate("/forgot")}
-                    className="text-sm font-medium text-primary hover:text-primary/80 transition-colors duration-200"
+                    className="text-sm font-semibold text-[#8B0000] hover:text-[#5a0000] transition-colors duration-200"
                   >
                     Forgot password?
                   </button>
@@ -274,26 +272,26 @@ const LoginPage = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-blue-600 text-white font-semibold py-3.5 rounded-xl hover:bg-blue-700 transition-all"
+                className="w-full bg-[#8B0000] text-white font-bold py-3.5 rounded-xl hover:bg-[#5a0000] active:scale-[0.98] transition-all shadow-md mt-4"
               >
                 {loading ? (
                   <CircularProgress size={24} sx={{ color: "white" }} />
                 ) : isLogin ? (
-                  "Sign in"
+                  "Sign In"
                 ) : (
-                  "Create account"
+                  "Create Account"
                 )}
               </button>
             </form>
 
             {/* Toggle Auth Mode */}
-            <p className="text-center text-sm text-muted-foreground mt-8 pt-6 border-t border-border">
+            <p className="text-center text-sm text-gray-600 mt-6 pt-6 border-t border-gray-100">
               {isLogin
                 ? "Don't have an account? "
                 : "Already have an account? "}
               <button
                 onClick={() => setIsLogin(!isLogin)}
-                className="ml-2 text-blue-600 font-semibold"
+                className="ml-1 text-[#c08d4b] font-bold hover:underline"
               >
                 {isLogin ? "Sign up" : "Sign in"}
               </button>
@@ -301,78 +299,58 @@ const LoginPage = () => {
           </div>
         </div>
 
-        {/* Right Side - Beautiful Gradient Illustration Section (Hidden on mobile) */}
-        <div className="hidden lg:flex w-1/2 relative overflow-hidden items-center justify-center">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-blue-50 to-primary/5 dark:from-primary/20 dark:via-slate-900 dark:to-primary/10"></div>
+        {/* RIGHT SIDE - Beautiful Warm Theme Illustration Section (Hidden on mobile) */}
+        <div className="hidden lg:flex w-1/2 relative overflow-hidden items-center justify-center bg-[#cd9141]">
+          {/* Base gradient layer mimicking spices/sunsets */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#cd9141] via-[#8B0000]/80 to-[#5a1820]"></div>
 
-          {/* Animated gradient blobs */}
-          <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+          {/* Animated decorative blobs */}
+          <div className="absolute top-10 right-10 w-96 h-96 bg-[#ffdb58]/20 rounded-full blur-3xl animate-pulse"></div>
           <div
-            className="absolute bottom-0 left-1/4 w-72 h-72 bg-primary/20 rounded-full blur-3xl animate-pulse"
-            style={{ animationDelay: "1s" }}
+            className="absolute bottom-20 left-10 w-80 h-80 bg-[#f5f0e1]/20 rounded-full blur-3xl animate-pulse"
+            style={{ animationDelay: "1.5s" }}
           ></div>
           <div
-            className="absolute top-1/2 left-0 w-80 h-80 bg-blue-400/10 rounded-full blur-3xl animate-pulse"
-            style={{ animationDelay: "2s" }}
+            className="absolute top-1/2 right-1/4 w-72 h-72 bg-[#5a1820]/30 rounded-full blur-3xl animate-pulse"
+            style={{ animationDelay: "3s" }}
           ></div>
 
           {/* Content */}
-          <div className="relative z-10 flex flex-col items-center justify-center text-center px-8">
-            {/* Shopping illustration container */}
-            <div className="mb-8 relative">
-              <div className="w-40 h-40 rounded-3xl bg-white/50 dark:bg-slate-800/50 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-2xl animate-float">
-                {/* Shopping cart with gradient */}
-                <svg
-                  className="w-28 h-28 text-primary"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m10 0a2 2 0 100 4 2 2 0 000-4m0 0l1.9-11h3.6"
-                  />
-                </svg>
-
-                {/* Floating badge */}
-                <div className="absolute -top-3 -right-3 bg-primary rounded-full w-14 h-14 flex items-center justify-center text-white font-bold shadow-lg animate-bounce">
-                  <span className="text-xl">✓</span>
+          <div className="relative z-10 flex flex-col items-center justify-center text-center px-10">
+            {/* Visual Icon */}
+            <div className="mb-10 relative">
+              <div className="w-48 h-48 rounded-[2rem] bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl flex items-center justify-center transform rotate-3 animate-float transition-all hover:rotate-0">
+                <div className="relative">
+                  <span className="text-7xl">🌾</span>
+                  <div className="absolute -bottom-4 -right-4 bg-[#f5f0e1] rounded-full w-14 h-14 flex items-center justify-center shadow-lg border-4 border-[#8B0000]">
+                    <span className="text-[#8B0000] font-bold text-xl">✓</span>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Text content */}
-            <h3 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-              Fresh & Organic
+            <h3 className="text-4xl sm:text-5xl font-extrabold text-[#f5f0e1] mb-6 drop-shadow-md" style={{ fontFamily: "'Georgia', serif" }}>
+              Pure & Authentic
             </h3>
-            <p className="text-muted-foreground max-w-sm text-base leading-relaxed mb-8">
-              Quality produce delivered fresh to your doorstep. Shop from
-              trusted farms and support sustainable agriculture.
+            <p className="text-[#f5f0e1]/90 max-w-md text-lg leading-relaxed mb-10 font-medium drop-shadow">
+              Experience the true taste of tradition with our hand-picked, organic produce delivered straight from the farms to your kitchen.
             </p>
 
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 w-full mt-8 pt-8 border-t border-white/20">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary mb-1">
-                  500k+
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  Happy Customers
-                </div>
+            {/* Stats Bar */}
+            <div className="grid grid-cols-3 gap-6 w-full max-w-lg mt-4 pt-8 border-t border-white/20">
+              <div className="text-center group">
+                <div className="text-3xl font-black text-white mb-1 group-hover:scale-110 transition-transform">100%</div>
+                <div className="text-sm font-semibold text-[#f5f0e1]/80 uppercase tracking-wider">Organic</div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary mb-1">24/7</div>
-                <div className="text-xs text-muted-foreground">
-                  Fast Delivery
-                </div>
+              <div className="text-center group">
+                <div className="text-3xl font-black text-white mb-1 group-hover:scale-110 transition-transform">24h</div>
+                <div className="text-sm font-semibold text-[#f5f0e1]/80 uppercase tracking-wider">Fresh Delivery</div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary mb-1">100%</div>
-                <div className="text-xs text-muted-foreground">Organic</div>
+              <div className="text-center group">
+                <div className="text-3xl font-black text-white mb-1 group-hover:scale-110 transition-transform">50k+</div>
+                <div className="text-sm font-semibold text-[#f5f0e1]/80 uppercase tracking-wider">Happy Homes</div>
               </div>
-              {/* Stats */}
             </div>
           </div>
         </div>

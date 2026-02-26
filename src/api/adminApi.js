@@ -32,6 +32,10 @@ export const getDashboardData = () => {
   return api.get("/admin/dashboard");
 };
 
+/* HOMEPAGE */
+export const getHomepageData = () => api.get("/homepage");
+export const updateHomepageData = (data) => api.put("/homepage", data);
+
 /* AUTH */
 export const logout = () => api.post("/auth/logout");
 

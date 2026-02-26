@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   fetchAllProductsApi,
   getCategoriesProductApi,
+  searchProductsApi,
 } from "../../api/product";
 import { flashSalesApi } from "../../api/homepageApi";
 
@@ -9,27 +10,27 @@ import { flashSalesApi } from "../../api/homepageApi";
 export const fetchAllProducts = createAsyncThunk(
   "allProducts/fetchAllProducts",
   async (
-    { page = 1, limit = 12, category = "allproducts", id },
+    { page = 1, limit = 12, category = "allproducts", id, search },
     { rejectWithValue },
   ) => {
     try {
       let response;
 
-      if (category === "allproducts") {
+      if (search) {
+        response = await searchProductsApi(search, page, limit);
+      } else if (category === "allproducts") {
         response = await fetchAllProductsApi(page, limit);
-      } 
-      else if(category === 'flashsaleproducts')
-      {
-        response = await flashSalesApi(page,limit)
       }
-
+      else if (category === 'flashsaleproducts') {
+        response = await flashSalesApi(page, limit)
+      }
       else {
         response = await getCategoriesProductApi(id, page, limit);
       }
 
       return {
         category,
-        page, 
+        page,
         products: response.data.products,
         totalPages: response.data.totalPages,
       };
@@ -66,7 +67,7 @@ const allProductsSlice = createSlice({
 
         // store products under category and page
         state.productsByPage[category][page] = products;
-        state.productsByPage[category].total= totalPages;
+        state.productsByPage[category].total = totalPages;
         state.totalPages = totalPages;
       })
       .addCase(fetchAllProducts.rejected, (state, action) => {
