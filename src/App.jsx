@@ -19,7 +19,7 @@ import UserDashboard from "./components/User/UserDashboard";
 import AdminRoute from "./routes/AdminRoute";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import ProductPage from "./features/product/ProductPage";
-import Navbar from "./components/homepage/Navbar";
+import Navbar from "./components/homepage/Navbar/Navbar";
 import AllProducts from "./features/allProducts/AllProducts";
 import CartPage from "./features/cart/CartPage";
 import CheckoutPage from "./features/checkout/CheckoutPage";

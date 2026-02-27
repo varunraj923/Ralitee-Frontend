@@ -41,9 +41,11 @@ const navigate = useNavigate();
 
         return (
           <div
+           
             key={_id ||category._id || Math.random()}
             className="group bg-white rounded-xl overflow-hidden hover:shadow-lg transition-shadow duration-300" onClick={()=>handleSingleProduct(_id)}
           >
+             {console.log(name , category)}
             {/* Image */}
             <div className="relative h-64 p-4 flex items-center justify-center " >
               <img
