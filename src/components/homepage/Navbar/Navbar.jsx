@@ -22,7 +22,7 @@ import { SearchAndProfile } from "./SearchAndProfile";
 const NavBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const isMobile = useMediaQuery("(max-width:900px)");
+  const isMobile = useMediaQuery("(max-width:1100px)");
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const { user } = useSelector((state) => state.auth);
@@ -43,10 +43,10 @@ const NavBar = () => {
   return (
     <>
       <AppBar position="sticky" elevation={0} sx={{ backgroundColor: "#fefdfa" }}>
-        <Container maxWidth="xl">
-          <Toolbar disableGutters sx={{ justifyContent: "space-between", alignItems: "center", height: { xs: 56, md: 68 } }}>
+        <Container maxWidth={false} sx={{maxWidth:'1350px' ,margin:'0 auto',}}>
+          <Toolbar disableGutters sx={{ justifyContent: "space-between", alignItems: "center", height: { xs: 56, md: 60 } }}>
             
-            <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: '5vw' }}>
               {isMobile && <IconButton onClick={() => setDrawerOpen(true)}><MenuIcon /></IconButton>}
               <Box component="img" src={logo} alt="Ralitee Logo" onClick={() => navigate("/")} sx={{ height: { xs: 35, sm: 40, md: 50 }, cursor: "pointer" }} />
               {!isMobile && <NavLinks navigate={navigate} isMobile={false} displayCartCount={displayCartCount} />}

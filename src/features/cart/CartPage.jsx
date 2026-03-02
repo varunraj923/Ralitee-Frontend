@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import BackButton from "../../components/common/BackButton";
+import NavBar from "../../components/homepage/Navbar/Navbar";
 
 const CartPage = () => {
     const dispatch = useDispatch();
@@ -51,6 +52,8 @@ const CartPage = () => {
     }
 
     return (
+        <>
+        <NavBar/>
         <div className="container mx-auto px-4 py-8 ">
             <div className="class"><BackButton/> <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1></div>
             
@@ -141,6 +144,7 @@ const CartPage = () => {
                 </div>
             </div>
         </div>
+        </>
     );
 };
 

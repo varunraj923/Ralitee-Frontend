@@ -8,6 +8,7 @@ import { createAppTheme } from "../../constants/theme";
 import forgetpassword from "../../assets/images/forgetpassword2.png";
 import { useNavigate } from "react-router-dom";
 import { forgotPasswordApi } from "../../api/auth";
+import NavBar from "../homepage/Navbar/Navbar";
 
 const InputStyling =
   "w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#8B0000] focus:border-transparent transition-all duration-300";
@@ -64,9 +65,10 @@ const ForgotPasswordPage = () => {
   };
 
   return (
+
     <ThemeProvider theme={theme}>
       <CssBaseline />
-
+    <NavBar/>
       <div className="min-h-screen flex flex-col lg:flex-row bg-[#f5f0e1] overflow-hidden">
         {/* Left Side (Form) */}
         <div className="w-full lg:w-1/2 flex items-center justify-center p-6 relative z-10 bg-[#f5f0e1]">

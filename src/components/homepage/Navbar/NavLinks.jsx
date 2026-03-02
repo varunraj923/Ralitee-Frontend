@@ -48,10 +48,11 @@ export const NavLinks = ({ navigate, isMobile, displayCartCount, closeDrawer }) 
 
   // Desktop links
   return (
-    <Box className="flex items-center gap-8 ml-6">
+    <Box className="flex items-center gap-12 ml-6">
       <button onClick={() => navigate("/")} className={buttonstyle}>Home</button>
       <button onClick={() => navigate("/user/dashboard")} className={buttonstyle}>Shop</button>
-      <button onClick={() => navigate("/contact")} className={buttonstyle}>Contact</button>
+      
+      <button onClick={() => navigate("/aboutus")} className={buttonstyle}>About us</button>
     </Box>
   );
 };

@@ -10,6 +10,7 @@ import { loginApi, registerApi } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Box } from "@mui/material";
+import NavBar from "../homepage/Navbar/Navbar";
 
 
 
@@ -133,9 +134,11 @@ const LoginPage = () => {
   };
 
   return (
+    <>
+    <NavBar/>
     <ThemeProvider theme={theme}>
+   
       <CssBaseline />
-
       {/* Main Container - Beige Background */}
       <div className="min-h-screen flex bg-[#f5f0e1] overflow-hidden">
 
@@ -363,6 +366,7 @@ const LoginPage = () => {
         onClose={handleToastClose}
       />
     </ThemeProvider>
+    </>
   );
 };
 

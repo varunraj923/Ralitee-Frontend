@@ -93,8 +93,8 @@ const ExploreProduct = () => {
       {/* PRODUCTS */}
       <div
         className={`
-          flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide
-          md:grid md:grid-cols-4 md:gap-8 md:overflow-visible transition-all ease-out duration-200
+          flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide md:grid md:grid-cols-3 md:gap-8
+          lg:grid lg:grid-cols-4 lg:gap-8 md:overflow-visible transition-all ease-out duration-200
           ${animate? 'opacity-0':'opacity-100'}
         `}
       >
@@ -126,7 +126,7 @@ const ExploreProduct = () => {
       </div>
 
       {/* FOOTER */}
-      <div className="flex justify-center mt-10 border-b border-gray-200 pb-16">
+      <div className="flex justify-center mt-10  pb-16">
         <button onClick={handleViewAllProducts} className="bg-[#DB4444] text-white px-12 py-4 rounded-[4px] font-medium hover:bg-red-600 transition">
           View All Products
         </button>

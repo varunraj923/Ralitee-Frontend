@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { CheckCircle } from "lucide-react";
+import NavBar from "../../components/homepage/Navbar/Navbar";
 
 const OrderSuccessPage = () => {
     useEffect(() => {
@@ -9,6 +10,8 @@ const OrderSuccessPage = () => {
     }, []);
 
     return (
+        <>
+        <NavBar/>
         <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4">
             <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -42,6 +45,7 @@ const OrderSuccessPage = () => {
                 </Link>
             </motion.div>
         </div>
+        </>
     );
 };
 

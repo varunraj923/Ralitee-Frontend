@@ -1,5 +1,6 @@
 import React from "react";
 import { useSearchParams } from "react-router-dom";
+import BackButton from "../../components/common/BackButton";
 
 
 const ProductCategory = ({
@@ -18,7 +19,8 @@ const ProductCategory = ({
   return (
     <aside className="hidden lg:flex pl-4 hover:pl-6 w-64 hover:shadow-xl transition-all ease-in-out duration-500 hover:text-[1.03rem] py-4 ">
       <ul className="space-y-3">
-        <h3 className="font-semibold text-lg mb-4 px-3 py-1">Categories</h3>
+        <BackButton />
+        <h3 className="font-semibold text-lg mb-4 px-3 ">Categories</h3>
         <button
           className={`cursor-pointer hover:text-black px-3 py-1 rounded ${
             category === "allproducts"
