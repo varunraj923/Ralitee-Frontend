@@ -32,7 +32,7 @@ const App = () => {
         maxSnack={3}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <Navbar />
+       
         <Routes>
           {/* PUBLIC ROUTES */}
           <Route path="/" element={<HomePage />} />

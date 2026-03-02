@@ -7,6 +7,7 @@ import CategorySection from "./categories/CategorySection";
 import { useSelector } from "react-redux";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+import NavBar from "../homepage/Navbar/Navbar";
 
 const UserDashboard = () => {
  const categoryLoading = useSelector((state) => state.category.loading);
@@ -27,6 +28,7 @@ const loading = categoryLoading||exploreLoading||flashSalesLoading||bestSellingL
   }
   return (
     <div>
+      <NavBar/>
       <CategorySection />
       <FlashSalesSection />
       <BestSelling />

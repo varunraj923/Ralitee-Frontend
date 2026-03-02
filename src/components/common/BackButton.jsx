@@ -1,17 +1,25 @@
-
 import { IoIosArrowRoundBack } from "react-icons/io";
-const BackButton = () => {
 
-    const handleBackButton =()=>{
-window.history.back()
-    }
+const BackButton = ({
+  className = "",
+  textSize = "text-lg",   
+  iconSize = "text-2xl"     
+}) => {
+
+  const handleBackButton = () => {
+    window.history.back();
+  };
+
   return (
-    <div className="w-24 flex justify-center mb-4">
+    <div className={`w-24 flex justify-center mb-3 ${className}`}>
       <button
-        className=" cursor-pointer p-3 rounded text-slate-700 hover:text-black transition"
+        className="cursor-pointer p-1 rounded text-slate-700 hover:text-black transition"
         onClick={handleBackButton}
       >
-        <span className="flex text-xl flex-row items-center"> <IoIosArrowRoundBack className="text-2xl"/>Back</span> 
+        <span className={`flex items-center gap-1 ${textSize}`}>
+          <IoIosArrowRoundBack className={iconSize} />
+          Back
+        </span>
       </button>
     </div>
   );

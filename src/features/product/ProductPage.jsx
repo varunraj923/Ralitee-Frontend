@@ -7,6 +7,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 
 import BackButton from "../../components/common/BackButton.jsx";
+import NavBar from "../../components/homepage/Navbar/Navbar.jsx";
 
 const ProductPage = () => {
   const { id } = useParams();
@@ -46,6 +47,8 @@ const ProductPage = () => {
 
 
   return (
+    <>
+    <NavBar/>
     <div className="min-h-screen bg-white font-sans text-black mt-8">
       <main className="container mx-auto px-4 pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
@@ -75,6 +78,7 @@ const ProductPage = () => {
         </div>
       </main>
     </div>
+    </>
   );
 };
 

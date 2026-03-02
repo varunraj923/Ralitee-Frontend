@@ -11,6 +11,8 @@ import Pagination from "./Pagination";
 import RenderAllProducts from "./RenderAllProducts";
 import ProductCategory from "./ProductCategory";
 import FlashSalesTimer from "../../components/User/FlashSaleFeature/FlashSalesTimer";
+import BackButton from "../../components/common/BackButton";
+import NavBar from "../../components/homepage/Navbar/Navbar";
 
 const LIMIT = 12;
 
@@ -53,7 +55,7 @@ const AllProducts = () => {
         category: search ? "search" : category,
         id: categoryId,
         search,
-      })
+      }),
     );
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [category, categoryId, page, search, dispatch]);
@@ -83,14 +85,23 @@ const AllProducts = () => {
   }
 
   return (
+    <>
+    <NavBar/>
     <div className="min-h-screen font-sans text-gray-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
         {category === "flashsaleproducts" && (
-          <div className="flex justify-center pt-4 pb-11">
-            <FlashSalesTimer />
+          <div className="grid grid-cols-3 items-center pt-4 pb-11">
+            {/* Left */}
+            <div className="justify-self-start">
+              <BackButton />
+            </div>
+
+            {/* Center */}
+            <div className="justify-self-center">
+              <FlashSalesTimer />
+            </div>
           </div>
         )}
-
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Category sidebar - Hide during search */}
           {!search && category !== "flashsaleproducts" && (
@@ -106,7 +117,8 @@ const AllProducts = () => {
           <div className="flex-1">
             {search && (
               <h2 className="text-2xl font-semibold mb-6">
-                Search Results for: <span className="text-red-600">"{search}"</span>
+                Search Results for:{" "}
+                <span className="text-red-600">"{search}"</span>
               </h2>
             )}
 
@@ -130,6 +142,7 @@ const AllProducts = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

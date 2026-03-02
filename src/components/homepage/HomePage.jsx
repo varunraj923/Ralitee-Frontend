@@ -12,6 +12,8 @@ import HomepageProductCard from "./HomepageProductCard";
 import CustomerFeedbackTicker from "./CustomerFeedbackTicker";
 import AvailableAcrossIndia from "./AvailableAcrossIndia";
 import OurCoreValues from "./OurCoreValues";
+import NavBar from "./Navbar/Navbar";
+import ExploreProduct from "../User/ExploreFeature/ExploreProduct";
 
 const NAVBAR_HEIGHT = { xs: 56, sm: 64 }; // adjust based on your Navbar
 
@@ -100,24 +102,31 @@ const HomePage = () => {
   }, []);
 
   return (
-    <PageContainer>
+
+    <>
       {/* Top Banner */}
       {homepageData.bannerText && (
-        <Box sx={{ bgcolor: "#cd9141", color: "white", textAlign: "center", py: 1, fontSize: "0.85rem", fontWeight: "bold" }}>
+        <Box sx={{ bgcolor: "black", color: "white", textAlign: "center", py: 1.2, fontSize: "0.85rem", fontWeight: "bold" ,borderRadius:'3px'}}>
           {homepageData.bannerText}
         </Box>
       )}
 
+      <NavBar />
+    <PageContainer>
+
+
+
       {/* Main Content */}
-      <MainContent component="main" sx={{ bgcolor: "#f5f0e1" }}>
+      <MainContent component="main" >
         {/* Hero */}
         <SectionWrapper component="section" aria-label="Hero" sx={{ p: '0 !important', mt: 0 }}>
           <HeroSection posters={homepageData.posters} />
         </SectionWrapper>
 
         <SectionSpacer />
-
+       <ExploreProduct/>
         {/* Our Products */}
+{/*         
         <SectionWrapper component="section" aria-label="Our Products">
           <Typography variant="h3" align="center" sx={{ color: "#5a1820", fontWeight: "bold", mb: 4, fontFamily: "'Georgia', serif" }}>
             Our Products
@@ -127,7 +136,7 @@ const HomePage = () => {
               <HomepageProductCard key={product._id} product={product} />
             ))}
           </Box>
-        </SectionWrapper>
+        </SectionWrapper> */}
 
         <SectionSpacer />
 
@@ -160,6 +169,7 @@ const HomePage = () => {
         <Footer />
       </Box>
     </PageContainer>
+    </>
   );
 };
 
