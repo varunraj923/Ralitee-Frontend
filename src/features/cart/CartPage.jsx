@@ -54,7 +54,7 @@ const CartPage = () => {
     return (
         <>
         <NavBar/>
-        <div className="container mx-auto px-4 py-8 ">
+        <div className="container mx-auto max-w-300 px-1 py-8 xl:px-0 lg:px-9">
             <div className="class"><BackButton/> <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1></div>
             
 
@@ -62,7 +62,7 @@ const CartPage = () => {
                 {/* Cart Items List */}
                 <div className="lg:col-span-2 space-y-4">
                     {cart.items.map((item) => (
-                        <div key={item._id} className="flex gap-4 p-4 border rounded shadow-sm bg-white items-center">
+                        <div key={item._id} className="flex gap-4 p-4  shadow-sm bg-white items-center">
                             {/* Image */}
                             <div className="w-24 h-24 flex-shrink-0">
                                 <img
@@ -78,7 +78,7 @@ const CartPage = () => {
                                 <p className="text-gray-500 text-sm">
                                     {item.size && `Size: ${item.size}`} {item.color && ` | Color: ${item.color}`}
                                 </p>
-                                <div className="mt-2 font-medium text-red-500">
+                                <div className="mt-2 font-medium text-slate-700">
                                     ₹{(item.product?.discountPrice || item.product?.price).toFixed(2)}
                                 </div>
                             </div>

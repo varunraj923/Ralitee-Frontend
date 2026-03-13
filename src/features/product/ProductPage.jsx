@@ -49,7 +49,7 @@ const ProductPage = () => {
   return (
     <>
     <NavBar/>
-    <div className="min-h-screen bg-white font-sans text-black mt-8">
+    <div className="min-h-screen bg-white font-sans text-black mt-8 max-w-300 m-auto">
       <main className="container mx-auto px-4 pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           

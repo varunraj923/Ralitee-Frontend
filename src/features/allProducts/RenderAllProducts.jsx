@@ -57,8 +57,8 @@ const navigate = useNavigate();
                 className="max-h-full object-contain group-hover:scale-105 transition-transform duration-500 rounded-lg"
               />
 
-              <button className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-sm text-gray-400 hover:text-red-500">
-                <Heart size={18} />
+              <button onClick={(e)=>{e.stopPropagation(); console.log("hello")}} className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-sm  ">
+                <Heart size={18} className="fill-[#e63835] text-[#e63835]" />
               </button>
             </div>
 

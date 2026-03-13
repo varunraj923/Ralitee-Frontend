@@ -5,7 +5,7 @@ import { CheckCircle2, Award, Heart, Users } from "lucide-react";
 const SectionContainer = styled(Box)(({ theme }) => ({
     width: "100%",
     padding: theme.spacing(6, 2),
-    backgroundColor: "#f5f0e1",
+    // backgroundColor: "#f5f0e1",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -42,6 +42,7 @@ const CardsContainer = styled(Box)(({ theme }) => ({
 
 const ValueCard = styled(Box)(({ theme }) => ({
     backgroundColor: "#ffffff",
+    boxShadow: "0 8px 24px rgba(0,0,0,0.06)",
     borderRadius: "16px",
     padding: theme.spacing(4, 3),
     display: "flex",
@@ -50,7 +51,7 @@ const ValueCard = styled(Box)(({ theme }) => ({
     textAlign: "center",
     width: "calc(25% - 24px)", // 4 cards per row
     minWidth: "220px",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.03)",
+    // boxShadow: "0 4px 12px rgba(0,0,0,0.03)",
     transition: "transform 0.3s ease, box-shadow 0.3s ease",
 
     "&:hover": {

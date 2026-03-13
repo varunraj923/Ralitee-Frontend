@@ -2,7 +2,8 @@ import React from "react";
 import FlashSalesSection from "./FlashSaleFeature/FlashSalesSection";
 import BestSelling from "./BestSellingProductFeature/BestSelling";
 import ExploreProduct from "./ExploreFeature/ExploreProduct";
-import Footer from "./Footer/Footer";
+// import Footer from "./Footer/Footer";
+import Footer from "../homepage/Footer"
 import CategorySection from "./categories/CategorySection";
 import { useSelector } from "react-redux";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -33,7 +34,7 @@ const loading = categoryLoading||exploreLoading||flashSalesLoading||bestSellingL
       <FlashSalesSection />
       <BestSelling />
       <ExploreProduct />
-      <Footer />
+      <Footer/>
     </div>
   );
 };

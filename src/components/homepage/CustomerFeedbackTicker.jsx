@@ -5,7 +5,8 @@ import Marquee from "react-fast-marquee";
 const TickerContainer = styled(Box)(({ theme }) => ({
     width: "100%",
     padding: theme.spacing(4, 0),
-    backgroundColor: "#f5f0e1",
+    marginBottom:"15px",
+    // backgroundColor: "#f5f0e1",
     overflow: "hidden",
 }));
 
@@ -14,7 +15,7 @@ const Title = styled(Typography)(({ theme }) => ({
     fontWeight: "600",
     fontSize: "1.5rem",
     color: "#2e2e2e",
-    marginBottom: theme.spacing(4),
+    marginBottom: theme.spacing(9),
     [theme.breakpoints.up("md")]: {
         fontSize: "2rem",
     },
@@ -22,7 +23,7 @@ const Title = styled(Typography)(({ theme }) => ({
 
 const ScriptText = styled("span")({
     fontFamily: "'Dancing Script', 'Brush Script MT', cursive",
-    color: "#b07d35", // A golden/brownish red matching the screenshot's 'love' text
+    color: "red", // A golden/brownish red matching the screenshot's 'love' text
     fontSize: "2rem",
     margin: "0 8px",
     fontWeight: "bold",
@@ -31,7 +32,7 @@ const ScriptText = styled("span")({
 const FeedbackCard = styled(Box)(({ theme }) => ({
     display: "flex",
     alignItems: "center",
-    backgroundColor: "#ffffff",
+    backgroundColor: "white",
     borderRadius: "50px",
     padding: "8px 24px 8px 8px",
     margin: "0 16px",

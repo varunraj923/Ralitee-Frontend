@@ -20,7 +20,7 @@ const CarouselContainer = styled(Box)(({ theme }) => ({
   position: "relative",
   width: "100%",           // Always fills the MainWrapper
   height: "40vh",
-  minHeight: "350px", 
+  minHeight: "450px", 
   backgroundColor: "#121212", 
   [theme.breakpoints.up("sm")]: { height: "40vh" },
   [theme.breakpoints.up("md")]: { height: "45vh" }, // Adjusted height for smaller width

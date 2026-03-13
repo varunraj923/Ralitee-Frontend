@@ -42,7 +42,7 @@ const NavBar = () => {
 
   return (
     <>
-      <AppBar position="sticky" elevation={0} sx={{ backgroundColor: "#fefdfa" }}>
+      <AppBar position="sticky" elevation={0} sx={{ backgroundColor: "#fefdfa", }}>
         <Container maxWidth={false} sx={{maxWidth:'1350px' ,margin:'0 auto',}}>
           <Toolbar disableGutters sx={{ justifyContent: "space-between", alignItems: "center", height: { xs: 56, md: 60 } }}>
             
