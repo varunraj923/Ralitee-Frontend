@@ -30,7 +30,7 @@ const FooterLink = styled(Link)(({ theme }) => ({
   },
 }));
 
-const ContactText = styled(Typography)(({ theme }) => ({
+const ContactText = styled(Box)(({ theme }) => ({
   color: "#cccccc",
   fontSize: "0.9rem",
   marginBottom: theme.spacing(2),
@@ -38,7 +38,6 @@ const ContactText = styled(Typography)(({ theme }) => ({
   alignItems: "flex-start",
   gap: theme.spacing(1.5),
 }));
-
 const SocialIconLink = styled(Link)(({ theme }) => ({
   color: "#cccccc",
   transition: "color 0.2s ease",
@@ -89,7 +88,7 @@ const Footer = () => {
         <Container maxWidth="lg">
           <Grid container spacing={4} justifyContent="space-between">
             {/* Column 1: Brand Info */}
-            <Grid item xs={12} sm={6} md={3}>
+           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
               <SectionTitle>Ralitee</SectionTitle>
               <Typography variant="body2" sx={{ color: "#cccccc", mb: 3, lineHeight: 1.6, fontSize: "0.85rem" }}>
                 Authentic and pure products delivered to your doorstep. Experience the true taste of tradition.
@@ -106,9 +105,9 @@ const Footer = () => {
                 </SocialIconLink>
               </Stack>
             </Grid>
-
+ 
             {/* Column 2: Quick Links */}
-            <Grid item xs={12} sm={6} md={2}>
+           <Grid size={{ xs: 12, sm: 6, md: 2 }}>
               <SectionTitle>Quick Links</SectionTitle>
               <FooterLink href="#">Track Order</FooterLink>
               <FooterLink href="#">Return & Refund Policy</FooterLink>
@@ -117,14 +116,14 @@ const Footer = () => {
             </Grid>
 
             {/* Column 3: Company */}
-            <Grid item xs={12} sm={6} md={2}>
+            <Grid size={{ xs: 12, sm: 6, md: 2 }}>
               <SectionTitle>Company</SectionTitle>
               <FooterLink href="#">Our Story</FooterLink>
               <FooterLink href="#">Contact Us</FooterLink>
             </Grid>
 
             {/* Column 4: Get in Touch */}
-            <Grid item xs={12} sm={6} md={4}>
+           <Grid size={{ xs: 12, sm: 6, md: 4 }}>
               <SectionTitle>Get in Touch</SectionTitle>
 
               <ContactText>

@@ -8,7 +8,7 @@ import Footer from "./Footer";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import api from "../../api/index";
-import HomepageProductCard from "./HomepageProductCard";
+
 import CustomerFeedbackTicker from "./CustomerFeedbackTicker";
 import AvailableAcrossIndia from "./AvailableAcrossIndia";
 import OurCoreValues from "./OurCoreValues";
@@ -100,7 +100,7 @@ const HomePage = () => {
     fetchHomepage();
     fetchProducts();
   }, []);
-
+  
   return (
 
     <>
@@ -125,18 +125,7 @@ const HomePage = () => {
 
         <SectionSpacer />
        <ExploreProduct/>
-        {/* Our Products */}
-{/*         
-        <SectionWrapper component="section" aria-label="Our Products">
-          <Typography variant="h3" align="center" sx={{ color: "#5a1820", fontWeight: "bold", mb: 4, fontFamily: "'Georgia', serif" }}>
-            Our Products
-          </Typography>
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr 1fr' }, gap: 3 }}>
-            {products.map(product => (
-              <HomepageProductCard key={product._id} product={product} />
-            ))}
-          </Box>
-        </SectionWrapper> */}
+     
 
         <SectionSpacer />
 

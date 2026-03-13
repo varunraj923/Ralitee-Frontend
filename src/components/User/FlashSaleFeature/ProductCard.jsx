@@ -61,7 +61,7 @@ export const ProductCard = ({
       className={`w-[261px] flex-shrink-0 group cursor-pointer
   transition-transform transition-shadow duration-[400ms] ease-out
    p-2 rounded-lg
-  hover:shadow-[0_8px_12px_-6px_rgba(0,0,0,0.25)] ${showAddToCart ? "" : " hover:scale-[1.04]"}`}
+  hover:shadow-[0_8px_12px_-6px_rgba(0,0,0,0.25)] ${showAddToCart ? "" : ""}`}
       onClick={handleProduct}
     >
       <div
@@ -80,7 +80,7 @@ export const ProductCard = ({
         <img
           src={image}
           alt={product.name}
-          className={`max-h-full max-w-full object-contain`}
+           className={`max-h-full object-contain ${showAddToCart? "":'group-hover:scale-106'} transition-transform duration-500 rounded-lg`}
         />
 
         {/* Action Icons */}
@@ -93,19 +93,10 @@ export const ProductCard = ({
               handleWishlist();
             }}
           >
-            <Heart size={20} className="text-black pointer-events-none" />
+            <Heart size={20} className=" text-[#e53935] fill-[#e53935]"  />
           </button>
 
-          <button
-            type="button"
-            className="bg-white p-2 rounded-full hover:bg-gray-100 transition cursor-pointer"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleQuickView();
-            }}
-          >
-            <Eye size={20} className="text-black pointer-events-none" />
-          </button>
+          
         </div>
 
         {/* Add To Cart */}
@@ -127,10 +118,10 @@ export const ProductCard = ({
         <h3 className="font-medium text-base truncate">{product.name}</h3>
 
         <div className="flex gap-3 font-medium">
-          <span className="text-[#DB4444]">₹{product.price}</span>
+          <span className="text-black">₹{product.price}</span>
 
           {showOriginalPrice && discount > 0 && (
-            <span className="text-gray-400 line-through">
+            <span className="text-[#50a541] line-through">
               ₹{Math.round((product.price * 100) / (100 - discount))}
             </span>
           )}

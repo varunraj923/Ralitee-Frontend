@@ -4,7 +4,7 @@ import { Box, Typography, styled } from "@mui/material";
 const SectionContainer = styled(Box)(({ theme }) => ({
     width: "100%",
     padding: theme.spacing(6, 2),
-    backgroundColor: "#f5f0e1",
+    // backgroundColor: "#f5f0e1",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -29,6 +29,7 @@ const LogosContainer = styled(Box)(({ theme }) => ({
     display: "flex",
     flexwrap: "wrap",
     justifyContent: "center",
+    alignItems:"center",
     gap: theme.spacing(3),
     width: "100%",
     maxWidth: "900px",
@@ -40,11 +41,12 @@ const LogosContainer = styled(Box)(({ theme }) => ({
 }));
 
 const LogoCard = styled(Box)(({ theme }) => ({
-    backgroundColor: "#ffffff",
+    backgroundColor: "",
     borderRadius: "16px",
     padding: theme.spacing(3, 4),
     display: "flex",
-    alignItems: "center",
+  
+    alignItems:"center",
     justifyContent: "center",
     minWidth: "250px",
     height: "100px",
@@ -77,11 +79,26 @@ const FlipkartLogo = () => (
 );
 
 const BlinkitLogo = () => (
-    <svg viewBox="0 0 100 100" width="120" height="40">
-        <text x="50" y="30" fontFamily="Arial, sans-serif" fontSize="32" fontWeight="900" fill="#F8CB46" textAnchor="middle" letterSpacing="-1">blinkit</text>
+    <svg viewBox="0 0 100 100" width="60" height="60">
+
+        {/* Background */}
+        <circle cx="50" cy="50" r="50" fill="" />
+    
+        <text
+            x="50"
+            y="55"
+            fontFamily="Arial, sans-serif"
+            fontSize="22"
+            fontWeight="900"
+            fill="#F8CB46"
+            textAnchor="middle"
+            letterSpacing="-1"
+        >
+            blinkit
+        </text>
+
     </svg>
 );
-
 const AvailableAcrossIndia = () => {
     return (
         <SectionContainer>
