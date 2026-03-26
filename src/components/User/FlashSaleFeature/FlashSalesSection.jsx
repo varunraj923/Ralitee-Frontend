@@ -1,7 +1,7 @@
 import React, { useRef, useEffect,useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchFlashSales } from "../../../redux/slices/flashSalesSlice";
+
 import FlashSalesTimer from "./FlashSalesTimer";
 import FlashSalesProducts from "./FlashSalesProducts";
 import { useNavigate } from "react-router-dom";
@@ -9,19 +9,15 @@ import { Alert, Snackbar } from "@mui/material";
 
 const FlashSalesSection = () => {
   const scrollRef = useRef(null);
-  const dispatch = useDispatch();
+ 
   const navigate = useNavigate();
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
-  const { flashSalesProducts, loading, error } = useSelector(
-    (state) => state.flashSales,
-  );
+  const { flashSalesProducts } = useSelector(
+     (state) => state.flashSales,
+   );
 
-  useEffect(() => {
-    if (flashSalesProducts.length === 0) {
-      dispatch(fetchFlashSales());
-    }
-  }, [dispatch, flashSalesProducts.length]);
+
 
   const scroll = (direction) => {
     if (!scrollRef.current) return;
@@ -80,8 +76,6 @@ const FlashSalesSection = () => {
       >
         <FlashSalesProducts
           products={flashSalesProducts}
-          loading={loading}
-          error={error}
           setOpenSnackbar={setOpenSnackbar}
         />
       </div>

@@ -1,24 +1,17 @@
 import { useEffect, useState } from "react";
 import { ProductCard } from "../FlashSaleFeature/ProductCard";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBestSelling } from "../../../redux/slices/bestSellingSlice";
+
 
 const BestSelling = () => {
   const [showAll, setShowAll] = useState(false);
 
   const {
     bestSellingProducts = [],
-    loading,
-    error,
   } = useSelector((state) => state.bestSelling);
 
-  const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (bestSellingProducts.length === 0) {
-      dispatch(fetchBestSelling());
-    }
-  }, [dispatch, bestSellingProducts.length]);
+
 
   return (
     <section className="max-w-[1170px] mx-auto px-4 py-16 font-sans border-b border-gray-200">

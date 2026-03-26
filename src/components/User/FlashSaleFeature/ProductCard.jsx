@@ -1,30 +1,35 @@
 import { RenderStars } from "./RenderStars";
 import { Heart, Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../../redux/slices/cartSlice";
-import { useState } from "react";
+import { toggleWishlistProduct } from "../../../redux/slices/wishlistSlice";
+import { useEffect, useState } from "react";
+
 export const ProductCard = ({
   product,
   showAddToCart = true,
   showDiscount = true,
   showOriginalPrice = true,
-  setOpenSnackbar=false,
+  setOpenSnackbar = false,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [selectedColor, setSelectedColor] = useState(product.colors?.[0]?.name);
   const [selectedSize, setSelectedSize] = useState(product.sizes?.[0]);
+  
+  // Pull live dictionary from Redux
+  const { wishlistProductss } = useSelector((state) => state.WishlistProduct);
 
   const handleProduct = (e) => {
     // If click came from a button, do NOT navigate
     if (e.target.closest("button")) return;
-
     navigate(`/product/${product._id}`);
   };
 
-  const handleWishlist = () => {
-    console.log("wishlist clicked");
+  // CHANGE: Accept the FULL product object, not just the ID
+  const handleWishlist = (productObj) => {
+    dispatch(toggleWishlistProduct(productObj));
   };
 
   const handleQuickView = () => {
@@ -59,9 +64,9 @@ export const ProductCard = ({
   return (
     <div
       className={`w-[261px] flex-shrink-0 group cursor-pointer
-  transition-transform transition-shadow duration-[400ms] ease-out
+ transition-transform transition-shadow duration-[400ms] ease-out
    p-2 rounded-lg
-  hover:shadow-[0_8px_12px_-6px_rgba(0,0,0,0.25)] ${showAddToCart ? "" : ""}`}
+ hover:shadow-[0_8px_12px_-6px_rgba(0,0,0,0.25)] ${showAddToCart ? "" : ""}`}
       onClick={handleProduct}
     >
       <div
@@ -80,7 +85,7 @@ export const ProductCard = ({
         <img
           src={image}
           alt={product.name}
-           className={`max-h-full object-contain ${showAddToCart? "":'group-hover:scale-106'} transition-transform duration-500 rounded-lg`}
+          className={`max-h-full object-contain ${showAddToCart ? "" : "group-hover:scale-106"} transition-transform duration-500 rounded-lg`}
         />
 
         {/* Action Icons */}
@@ -90,13 +95,16 @@ export const ProductCard = ({
             className="bg-white p-2 rounded-full hover:bg-gray-100 transition cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
-              handleWishlist();
+              // CHANGE: Pass the entire product object here
+              handleWishlist(product);
             }}
           >
-            <Heart size={20} className=" text-[#e53935] fill-[#e53935]"  />
+            <Heart 
+              size={20} 
+              // Checks live state to color the heart instantly
+              className={`${wishlistProductss?.[product._id] ? "fill-[#e63835] text-[#e63835]" : "text-gray-400"} transition-colors duration-200`} 
+            />
           </button>
-
-          
         </div>
 
         {/* Add To Cart */}

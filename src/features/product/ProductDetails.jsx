@@ -5,6 +5,7 @@ import { addToCart } from "../../redux/slices/cartSlice";
 import { RenderStars } from "../../components/User/FlashSaleFeature/RenderStars";
 import { Heart, Minus, Plus, Truck, RotateCcw } from "lucide-react";
 import { Alert, Snackbar } from "@mui/material";
+import { toggleWishlistProduct } from "../../redux/slices/wishlistSlice";
 
 const ProductDetails = ({ product }) => {
   const dispatch = useDispatch();
@@ -14,6 +15,7 @@ const ProductDetails = ({ product }) => {
   const [selectedColor, setSelectedColor] = useState(product.colors?.[0]?.name);
   const [selectedSize, setSelectedSize] = useState(product.sizes?.[0]); // Default to first size if available
   const [openSnackbar, setOpenSnackbar] = useState(false);
+
 
   const handleAddToCart = () => {
     if (!token || !user) {
@@ -35,6 +37,11 @@ const ProductDetails = ({ product }) => {
         alert("Failed to add to cart. Please try again.");
       });
   };
+
+    const { wishlistProductss } = useSelector((state) => state.WishlistProduct);
+  
+ 
+ 
 
   return (
     <div className="flex flex-col gap-6">
@@ -115,8 +122,14 @@ const ProductDetails = ({ product }) => {
         </button>
 
         {/* Wishlist */}
-        <button className="w-10 h-10 border border-gray-300 rounded flex items-center justify-center hover:border-red-500 hover:text-red-500 transition">
-          <Heart className="w-5 h-5" />
+        <button className="w-10 h-10 border border-gray-300 rounded flex items-center justify-center hover:border-red-500 hover:text-red-500 transition"   onClick={(e) => {
+                          e.stopPropagation();
+                          dispatch(toggleWishlistProduct(product));}}>
+          <Heart  className={`${
+                    wishlistProductss[product._id]
+                      ? "fill-[#e63835] text-[#e63835]"
+                      : "text-gray-400"
+                  } transition-colors duration-200 w-5 h-5`} />
         </button>
       </div>
 

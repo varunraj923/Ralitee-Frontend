@@ -3,56 +3,65 @@ import React, { useState, useEffect } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchExploreProducts } from "../../../redux/slices/exploreSlice";
+import { fetchWishlistProduct } from "../../../redux/slices/wishlistSlice";
 import { useNavigate } from "react-router-dom";
-
 
 const productsPerPage = 8;
 
-const ExploreProduct = () => {
+const ExploreProduct = ({ fetchData = true }) => {
   const dispatch = useDispatch();
 
-  const { exploreProducts} = useSelector(
-    (state) => state.explore
+  const { exploreProducts = [], loading: exploreLoading } = useSelector(
+    (state) => state.explore,
+  );
+  const { wishlistProductss = {}, loading: wishlistLoading } = useSelector(
+    (state) => state.WishlistProduct,
   );
   const [page, setPage] = useState(0);
   const navigate = useNavigate();
-  const [animate , setAnimate] = useState(false)
+  const [animate, setAnimate] = useState(false);
 
-   
   useEffect(() => {
-    if(exploreProducts.length === 0){
-      dispatch(fetchExploreProducts());
+   
+    if (fetchData) {
+      if (exploreProducts.length === 0) {
+        dispatch(fetchExploreProducts());
+      }
+
+      // Check if the wishlist object is empty before fetching
+     if (Object.keys(wishlistProductss).length === 0) {
+        dispatch(fetchWishlistProduct());
+      }
     }
-  }, [dispatch,exploreProducts.length]);
+  }, [dispatch, fetchData, exploreProducts.length, wishlistProductss]);
 
   const totalPages = Math.ceil(exploreProducts.length / productsPerPage);
 
   const paginatedProducts = exploreProducts.slice(
     page * productsPerPage,
-    page * productsPerPage + productsPerPage
+    page * productsPerPage + productsPerPage,
   );
 
-  const handleViewAllProducts = () =>{
- navigate('/products')
+  const handleViewAllProducts = () => {
+    navigate("/products");
+  };
 
-  }
+  const handlePageChange = (direction) => {
+    // Step 1: fade out
+    setAnimate(true);
 
- const handlePageChange = (direction) => {
-  // Step 1: fade out
-  setAnimate(true);
+    setTimeout(() => {
+      // Step 2: change page AFTER fade-out
+      setPage((p) =>
+        direction === "next"
+          ? Math.min(p + 1, totalPages - 1)
+          : Math.max(p - 1, 0),
+      );
 
-  setTimeout(() => {
-    // Step 2: change page AFTER fade-out
-    setPage((p) =>
-      direction === "next"
-        ? Math.min(p + 1, totalPages - 1)
-        : Math.max(p - 1, 0)
-    );
-
-    // Step 3: fade back in
-    setAnimate(false);
-  }, 300); // match this with duration
-};
+      // Step 3: fade back in
+      setAnimate(false);
+    }, 300); // match this with duration
+  };
 
   return (
     <section className="max-w-[1170px] mx-auto px-4 py-16 font-sans">
@@ -61,9 +70,7 @@ const ExploreProduct = () => {
         <div>
           <div className="flex items-center gap-4 mb-5">
             <div className="w-5 h-10 bg-[#DB4444] rounded-[4px]" />
-            <span className="text-[#DB4444] font-semibold">
-              Our Products
-            </span>
+            <span className="text-[#DB4444] font-semibold">Our Products</span>
           </div>
           <h2 className="text-4xl font-semibold tracking-[0.04em]">
             Explore our Products
@@ -73,15 +80,14 @@ const ExploreProduct = () => {
         {/* ARROWS (Desktop only) */}
         <div className="hidden md:flex gap-2">
           <button
-           onClick={() => handlePageChange("prev")}
+            onClick={() => handlePageChange("prev")}
             disabled={page === 0}
             className="bg-gray-100 p-3 rounded-full hover:bg-gray-200 disabled:opacity-50"
           >
             <ArrowLeft size={24} />
           </button>
           <button
-           onClick={() => handlePageChange("next")}
-            
+            onClick={() => handlePageChange("next")}
             disabled={page === totalPages - 1}
             className="bg-gray-100 p-3 rounded-full hover:bg-gray-200 disabled:opacity-50"
           >
@@ -95,7 +101,7 @@ const ExploreProduct = () => {
         className={`
           flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide md:grid md:grid-cols-3 md:gap-8
           lg:grid lg:grid-cols-4 lg:gap-8 md:overflow-visible transition-all ease-out duration-200
-          ${animate? 'opacity-0':'opacity-100'}
+          ${animate ? "opacity-0" : "opacity-100"}
         `}
       >
         {/* MOBILE: show ALL products */}
@@ -127,7 +133,10 @@ const ExploreProduct = () => {
 
       {/* FOOTER */}
       <div className="flex justify-center mt-10  pb-16">
-        <button onClick={handleViewAllProducts} className="bg-[#DB4444] text-white px-12 py-4 rounded-[4px] font-medium hover:bg-red-600 transition">
+        <button
+          onClick={handleViewAllProducts}
+          className="bg-[#DB4444] text-white px-12 py-4 rounded-[4px] font-medium hover:bg-red-600 transition"
+        >
           View All Products
         </button>
       </div>
