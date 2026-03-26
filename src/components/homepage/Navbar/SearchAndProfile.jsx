@@ -4,7 +4,7 @@ import { FiSearch, FiShoppingCart } from "react-icons/fi";
 import { FaRegHeart } from "react-icons/fa";
 import Profile from "./Profile";
 
-export const SearchAndProfile = ({ navigate, user, cart, handleLogout, isMobile }) => {
+export const SearchAndProfile = ({ navigate, user, cart, handleLogout, isMobile,wishlistlength }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const displayCartCount = cart?.items?.length || 0;
   const firstName = user?.name?.split(" ")[0] || "User";
@@ -78,8 +78,8 @@ export const SearchAndProfile = ({ navigate, user, cart, handleLogout, isMobile 
       </form>
 
       {!isMobile && (
-        <IconButton>
-          <Badge badgeContent={displayCartCount} color="error">
+        <IconButton onClick={()=> navigate("/wishlist")}>
+          <Badge badgeContent={wishlistlength} color="error">
             <FaRegHeart size={20} />
           </Badge>
         </IconButton>

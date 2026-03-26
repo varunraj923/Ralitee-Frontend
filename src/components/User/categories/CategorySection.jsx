@@ -1,21 +1,16 @@
 import React, { useEffect, useRef } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories } from "../../../redux/slices/categorySlice";
+import { useSelector } from "react-redux";
+
 
 const CategorySection = () => {
-  const dispatch = useDispatch();
+  
   const navigate = useNavigate();
   const scrollContainerRef = useRef(null);
 
-  const { categories, loading } = useSelector((state) => state.category);
+  const { categories } = useSelector((state) => state.category);
 
-  useEffect(() => {
-    if (categories.length === 0) {
-      dispatch(fetchCategories());
-    }
-  }, [dispatch, categories.length]);
 
   const scroll = (direction) => {
     const container = scrollContainerRef.current;

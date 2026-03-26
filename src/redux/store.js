@@ -1,14 +1,11 @@
-
-
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/authSlice";
 import categoryReducer from "./slices/categorySlice";
 import exploreReducer from "./slices/exploreSlice";
 import flashSalesReducer from "./slices/flashSalesSlice";
-import bestSellingReducer from "./slices/bestSellingSlice"
-import allProductsReducer from "./slices/productSlice"
-
-
+import bestSellingReducer from "./slices/bestSellingSlice";
+import allProductsReducer from "./slices/productSlice";
+import  AllWishlistProduct from "./slices/wishlistSlice";
 import cartReducer from "./slices/cartSlice";
 
 export const store = configureStore({
@@ -20,5 +17,6 @@ export const store = configureStore({
     bestSelling: bestSellingReducer,
     allProducts: allProductsReducer,
     cart: cartReducer,
+    WishlistProduct: AllWishlistProduct,
   },
 });

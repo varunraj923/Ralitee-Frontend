@@ -13,9 +13,11 @@ const CartPage = () => {
     const navigate = useNavigate();
     const { cart, totalAmount, loading, error } = useSelector((state) => state.cart);
 
-    useEffect(() => {
-        dispatch(fetchCart());
-    }, [dispatch]);
+useEffect(() => {
+  if ((!cart || cart.items.length === 0) && !loading) {
+    dispatch(fetchCart());
+  }
+}, [dispatch, cart, loading]);
 
     const handleUpdateQuantity = (itemId, quantity) => {
         dispatch(updateCartQuantity({ itemId, quantity }));

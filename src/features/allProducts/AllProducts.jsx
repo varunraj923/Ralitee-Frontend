@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useLocation } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 
 import { fetchCategories } from "../../redux/slices/categorySlice";
 import { fetchAllProducts } from "../../redux/slices/productSlice";
+import { fetchWishlistProduct } from "../../redux/slices/wishlistSlice";
 
 import Pagination from "./Pagination";
 import RenderAllProducts from "./RenderAllProducts";
@@ -18,7 +19,11 @@ const LIMIT = 12;
 
 const AllProducts = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
+
+  // 1. Check if we are on the wishlist page
+  const isWishlistPage = location.pathname === "/wishlist";
 
   const category = searchParams.get("category") || "allproducts";
   const categoryId = searchParams.get("id") || null;
@@ -29,13 +34,6 @@ const AllProducts = () => {
     (state) => state.category,
   );
 
-  const {
-    productsByPage,
-    loading: productLoading,
-    error,
-  } = useSelector((state) => state.allProducts);
-
-  const isLoading = categoryLoading || productLoading;
 
   // Fetch categories once
   useEffect(() => {
@@ -44,26 +42,59 @@ const AllProducts = () => {
     }
   }, [categories, dispatch]);
 
-  // Fetch products for current category & page (or search)
-  useEffect(() => {
-    // If it's a search, we might not use cache productsByPage nicely without modifying Redux more.
-    // For simplicity, we just dispatch the fetch manually so it executes the API call.
-    dispatch(
-      fetchAllProducts({
-        page,
-        limit: LIMIT,
-        category: search ? "search" : category,
-        id: categoryId,
-        search,
-      }),
-    );
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [category, categoryId, page, search, dispatch]);
 
-  // Use "search" as the category key in Redux if we are searching
+    // Grab the wishlist states (Make sure to include loading!)
+  const { allWishlistProducts, wishlistProductss, isEmpty, loading: wishlistLoading } = useSelector(
+    (state) => state.WishlistProduct
+  );
+
+  // Fetch wishlist (using our clean 'isEmpty' boolean!)
+  useEffect(() => {
+    if (isWishlistPage && allWishlistProducts.length===0) {
+      dispatch(fetchWishlistProduct());
+    }
+  }, [dispatch, isWishlistPage, allWishlistProducts.length]);
+
+
+  
+  const {
+    productsByPage,
+    loading: productLoading,
+    error,
+  } = useSelector((state) => state.allProducts);
+
+  useEffect(() => {
+    if (!isWishlistPage) {
+      dispatch(
+        fetchAllProducts({
+          page,
+          limit: LIMIT,
+          category: search ? "search" : category,
+          id: categoryId,
+          search,
+        }),
+      );
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [category, categoryId, page, search, dispatch, isWishlistPage]);
+
+
+  // 3. Determine which products and pages to show!
   const reduxCategoryKey = search ? "search" : category;
-  const productsForCurrentPage = productsByPage[reduxCategoryKey]?.[page] || [];
-  const totalProductsPages = productsByPage[reduxCategoryKey]?.total || 1;
+  
+  // If wishlist, use wishlistItems array. Otherwise, use normal pagination data.
+  const productsForCurrentPage = isWishlistPage 
+    ? allWishlistProducts 
+    : (productsByPage[reduxCategoryKey]?.[page] || []);
+
+  const totalProductsPages = isWishlistPage
+    ? 1 
+    : (productsByPage[reduxCategoryKey]?.total || 1);
+
+    
+  // 2. Adjust loading to check the right slice depending on the page
+  const isLoading = categoryLoading || (isWishlistPage ? wishlistLoading : productLoading);
+
 
   if (isLoading) {
     return (
@@ -75,7 +106,6 @@ const AllProducts = () => {
     );
   }
 
-  // Error state
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center text-red-500">
@@ -86,62 +116,77 @@ const AllProducts = () => {
 
   return (
     <>
-    <NavBar/>
-    <div className="min-h-screen font-sans text-gray-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-        {category === "flashsaleproducts" && (
-          <div className="grid grid-cols-3 items-center pt-4 pb-11">
-            {/* Left */}
-            <div className="justify-self-start">
-              <BackButton />
+      <NavBar />
+      <div className="min-h-screen font-sans text-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+          
+          {/* Flash Sales Header */}
+          {category === "flashsaleproducts" && !isWishlistPage && (
+            <div className="grid grid-cols-3 items-center pt-4 pb-11">
+              <div className="justify-self-start">
+                <BackButton />
+              </div>
+              <div className="justify-self-center">
+                <FlashSalesTimer />
+              </div>
             </div>
-
-            {/* Center */}
-            <div className="justify-self-center">
-              <FlashSalesTimer />
-            </div>
-          </div>
-        )}
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Category sidebar - Hide during search */}
-          {!search && category !== "flashsaleproducts" && (
-            <ProductCategory
-              categories={categories}
-              selectedCategory={category}
-              category={category}
-              page={page}
-            />
           )}
 
-          {/* Products list */}
-          <div className="flex-1">
-            {search && (
-              <h2 className="text-2xl font-semibold mb-6">
-                Search Results for:{" "}
-                <span className="text-red-600">"{search}"</span>
-              </h2>
-            )}
-
-            {productsForCurrentPage.length === 0 && !isLoading && (
-              <div className="text-center py-10 text-gray-500">
-                No products found.
-              </div>
-            )}
-
-            <RenderAllProducts products={productsForCurrentPage} />
-            {totalProductsPages > 1 && (
-              <Pagination
+          <div className="flex flex-col lg:flex-row gap-8">
+            
+            {/* Category sidebar - Hide during search OR if on Wishlist page */}
+            {!search && category !== "flashsaleproducts" && !isWishlistPage && (
+              <ProductCategory
+                categories={categories}
+                selectedCategory={category}
                 category={category}
-                categoryId={categoryId}
-                search={search}
                 page={page}
-                totalPages={totalProductsPages}
               />
             )}
+
+            {/* Products list */}
+            <div className="flex-1 mt-4 lg:mt-0">
+              
+              {/* Conditional Title Headers */}
+              {isWishlistPage && (
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-5 h-10 bg-[#DB4444] rounded-[4px]" />
+                  <h2 className="text-3xl font-semibold tracking-[0.04em]">
+                    My Wishlist
+                  </h2>
+                </div>
+              )}
+
+              {search && !isWishlistPage && (
+                <h2 className="text-2xl font-semibold mb-6">
+                  Search Results for:{" "}
+                  <span className="text-red-600">"{search}"</span>
+                </h2>
+              )}
+
+              {productsForCurrentPage.length === 0 && !isLoading && (
+                <div className="text-center py-10 text-gray-500">
+                  {isWishlistPage ? "Your wishlist is empty." : "No products found."}
+                </div>
+              )}
+
+              {/* Render the Grid */}
+              <RenderAllProducts products={productsForCurrentPage} wishlistProductss={wishlistProductss}/>
+              
+              {/* Pagination - Hide on Wishlist page */}
+              {totalProductsPages > 1 && !isWishlistPage && (
+                <Pagination
+                  category={category}
+                  categoryId={categoryId}
+                  search={search}
+                  page={page}
+                  totalPages={totalProductsPages}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </>
   );
 };

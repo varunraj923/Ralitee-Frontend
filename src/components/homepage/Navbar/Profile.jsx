@@ -51,9 +51,9 @@ const Profile = ({ user, firstName, handleLogout }) => {
                   mt: 1.5,
                   width: 240,
                   // Glassmorphism styling
-                  background: "linear-gradient(135deg, rgba(107, 86, 116, 0.9) 0%, rgba(34, 34, 34, 0.95) 100%)",
-                  backdropFilter: "blur(10px)",
-                  borderRadius: "8px",
+                  background: "linear-gradient(135deg, #7b7b7b 0%, rgba(34, 34, 34, 0.95) 100%)",
+                  backdropFilter: "blur(1px)",
+                  borderRadius: "6px",
                   boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.37)",
                   overflow: "hidden",
                   zIndex: 2000,

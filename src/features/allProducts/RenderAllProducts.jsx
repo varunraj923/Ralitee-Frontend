@@ -2,10 +2,17 @@ import React from "react";
 import { Heart, ShoppingCart } from "lucide-react";
 import { RenderStars } from "../../components/User/FlashSaleFeature/RenderStars";
 import { useNavigate } from "react-router-dom";
+// 1. Added Redux imports
+import { useDispatch, useSelector } from "react-redux";
+import { toggleWishlistProduct } from "../../redux/slices/wishlistSlice";
 
+// 2. Removed wishlistProductss from props (we pull it from Redux now)
 const RenderAllProducts = ({ products = [] }) => {
-  // Safety: if not array
-const navigate = useNavigate();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // 3. Pull live state from Redux
+  const { wishlistProductss } = useSelector((state) => state.WishlistProduct);
 
   if (!Array.isArray(products)) {
     return null;
@@ -25,29 +32,20 @@ const navigate = useNavigate();
       {products.map((product) => {
         if (!product) return null;
 
-        const {
-          _id ,
-          name,
-          images,
-          price,
-          category,
-          rating,
-        } = product;
+        const { _id, name, images, price, category, rating } = product;
 
-        const handleSingleProduct = (_id)=> {
-          navigate(`/product/${_id}`)
-        }
-        
+        const handleSingleProduct = (_id) => {
+          navigate(`/product/${_id}`);
+        };
 
         return (
           <div
-           
-            key={_id ||category._id || Math.random()}
-            className="group bg-white rounded-xl overflow-hidden hover:shadow-lg transition-shadow duration-300" onClick={()=>handleSingleProduct(_id)}
+            key={_id || category?._id || Math.random()}
+            className="group bg-white rounded-xl overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+            onClick={() => handleSingleProduct(_id)}
           >
-           
             {/* Image */}
-            <div className="relative h-64 p-4 flex items-center justify-center " >
+            <div className="relative h-64 p-4 flex items-center justify-center ">
               <img
                 src={images?.[0] || "/placeholder.png"}
                 alt={name || "Product"}
@@ -57,8 +55,23 @@ const navigate = useNavigate();
                 className="max-h-full object-contain group-hover:scale-105 transition-transform duration-500 rounded-lg"
               />
 
-              <button onClick={(e)=>{e.stopPropagation(); console.log("hello")}} className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-sm  ">
-                <Heart size={18} className="fill-[#e63835] text-[#e63835]" />
+              {/* WISHIST BUTTON FIX */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevents navigating to product page
+                  dispatch(toggleWishlistProduct(product)); // Dispatch FULL product
+                }}
+                className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-sm"
+              >
+                <Heart
+                  size={18}
+                  // Check Redux dictionary to determine color dynamically
+                  className={`${
+                    wishlistProductss[_id]
+                      ? "fill-[#e63835] text-[#e63835]"
+                      : "text-gray-400"
+                  } transition-colors duration-200`}
+                />
               </button>
             </div>
 
@@ -69,7 +82,7 @@ const navigate = useNavigate();
               </div>
 
               <h3 className="font-semibold text-gray-900 text-lg mb-1 truncate">
-                {category.category || name || "No Name"}
+                {category?.category || name || "No Name"}
               </h3>
 
               {/* Rating */}
@@ -86,10 +99,6 @@ const navigate = useNavigate();
                 <span className="text-xl font-bold text-gray-900">
                   ₹{price}
                 </span>
-
-                {/* <button className="lg:hidden p-2 bg-gray-100 rounded-full">
-                  <ShoppingCart size={20} />
-                </button> */}
               </div>
             </div>
           </div>

@@ -11,7 +11,7 @@ export const fetchFlashSales = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
     }
-  }
+  },
 );
 
 const flashSalesSlice = createSlice({
