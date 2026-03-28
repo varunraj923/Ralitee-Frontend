@@ -27,7 +27,7 @@ const NavBar = () => {
   const isMobile = useMediaQuery("(max-width:1100px)");
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const { user } = useSelector((state) => state.auth);
+ const { token, user } = useSelector((state) => state.auth);
   const { cart ,loading} = useSelector((state) => state.cart);
   const { allWishlistProducts } = useSelector((state) => state.WishlistProduct);
   const displayCartCount = cart?.items?.length || 0;
@@ -43,19 +43,20 @@ const NavBar = () => {
     }
   };
 
+
+
   useEffect(() => {
-    if (allWishlistProducts.length === 0) {
+  if (token && allWishlistProducts.length === 0) {
       dispatch(fetchWishlistProduct());
-    }
-  }, [dispatch, allWishlistProducts.length]);
+  }
+  },[dispatch, token, allWishlistProducts.length])
 
    
 useEffect(() => {
-  if ((!cart || cart.items.length === 0) && !loading) {
-    dispatch(fetchCart());
-  }
-}, [dispatch, cart, loading]);
-
+ if (token && (!cart || cart.items.length === 0) && !loading) {
+      dispatch(fetchCart());
+    }
+  }, [dispatch, token, cart, loading]);
   return (
     <>
       <AppBar
