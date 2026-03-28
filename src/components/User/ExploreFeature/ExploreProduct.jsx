@@ -14,26 +14,27 @@ const ExploreProduct = ({ fetchData = true }) => {
   const { exploreProducts = [], loading: exploreLoading } = useSelector(
     (state) => state.explore,
   );
-  const { wishlistProductss = {}, loading: wishlistLoading } = useSelector(
+  const { allWishlistProducts =[], loading: wishlistLoading } = useSelector(
     (state) => state.WishlistProduct,
   );
   const [page, setPage] = useState(0);
   const navigate = useNavigate();
   const [animate, setAnimate] = useState(false);
-
-  useEffect(() => {
+     const { token, user } = useSelector((state) => state.auth);
+useEffect(() => {
    
     if (fetchData) {
       if (exploreProducts.length === 0) {
         dispatch(fetchExploreProducts());
       }
 
-      // Check if the wishlist object is empty before fetching
-     if (Object.keys(wishlistProductss).length === 0) {
-        dispatch(fetchWishlistProduct());
+
+      if (token && allWishlistProducts.length === 0) {
+          dispatch(fetchWishlistProduct());
       }
+    
     }
-  }, [dispatch, fetchData, exploreProducts.length, wishlistProductss]);
+  }, [dispatch, fetchData, exploreProducts.length, allWishlistProducts]);
 
   const totalPages = Math.ceil(exploreProducts.length / productsPerPage);
 
