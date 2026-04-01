@@ -48,6 +48,15 @@ const testimonials = [
     avatar: "/avatars/avatar4.png",
     initials: "VR"
   },
+    {
+    name: "Babu Sahab",
+    role: "SDE III Google",
+    review: "Freshest produce, always on time! The quality is exceptional and my family loves everything.",
+    rating: 5,
+    avatar: "/avatars/avatar1.png",
+    initials: "AS"
+  },
+  
 ];
 
 const Section = styled(Box)(({ theme }) => ({
