@@ -20,6 +20,7 @@ const flashSalesSlice = createSlice({
     flashSalesProducts: [],
     loading: false,
     error: null,
+    flashSalesLoaded: false,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -31,10 +32,12 @@ const flashSalesSlice = createSlice({
       .addCase(fetchFlashSales.fulfilled, (state, action) => {
         state.loading = false;
         state.flashSalesProducts = action.payload;
+        state.flashSalesLoaded = true;
       })
       .addCase(fetchFlashSales.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.flashSalesLoaded = true;
       });
   },
 });

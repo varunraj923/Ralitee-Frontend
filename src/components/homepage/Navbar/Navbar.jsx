@@ -28,8 +28,8 @@ const NavBar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
  const { token, user } = useSelector((state) => state.auth);
-  const { cart ,loading} = useSelector((state) => state.cart);
-  const { allWishlistProducts } = useSelector((state) => state.WishlistProduct);
+  const { cart, loading, cartLoaded } = useSelector((state) => state.cart);
+  const { allWishlistProducts, loading: wishlistLoading, wishlistLoaded } = useSelector((state) => state.WishlistProduct);
   const displayCartCount = cart?.items?.length || 0;
 
   const handleLogout = async () => {
@@ -46,17 +46,17 @@ const NavBar = () => {
 
 
   useEffect(() => {
-  if (token && allWishlistProducts.length === 0) {
+    if (token && !wishlistLoaded && !wishlistLoading) {
       dispatch(fetchWishlistProduct());
-  }
-  },[dispatch, token, allWishlistProducts.length])
+    }
+  }, [dispatch, token, wishlistLoaded, wishlistLoading]);
 
    
 useEffect(() => {
- if (token && (!cart || cart.items.length === 0) && !loading) {
+    if (token && !cartLoaded && !loading) {
       dispatch(fetchCart());
     }
-  }, [dispatch, token, cart, loading]);
+  }, [dispatch, token, cartLoaded, loading]);
   return (
     <>
       <AppBar

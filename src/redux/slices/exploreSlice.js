@@ -20,6 +20,7 @@ const exploreSlice = createSlice({
     exploreProducts: [],
     loading: false,
     error: null,
+    exploreLoaded: false,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -31,11 +32,12 @@ const exploreSlice = createSlice({
       .addCase(fetchExploreProducts.fulfilled, (state, action) => {
         state.loading = false;
         state.exploreProducts = action.payload;
-      
+        state.exploreLoaded = true;
       })
       .addCase(fetchExploreProducts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.exploreLoaded = true;
       });
   },
 });

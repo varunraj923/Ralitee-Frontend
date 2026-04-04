@@ -11,10 +11,10 @@ const productsPerPage = 8;
 const ExploreProduct = ({ fetchData = true }) => {
   const dispatch = useDispatch();
 
-  const { exploreProducts = [], loading: exploreLoading } = useSelector(
+  const { exploreProducts = [], loading: exploreLoading, exploreLoaded } = useSelector(
     (state) => state.explore,
   );
-  const { allWishlistProducts =[], loading: wishlistLoading } = useSelector(
+  const { allWishlistProducts = [], loading: wishlistLoading, wishlistLoaded } = useSelector(
     (state) => state.WishlistProduct,
   );
   const [page, setPage] = useState(0);
@@ -24,17 +24,16 @@ const ExploreProduct = ({ fetchData = true }) => {
 useEffect(() => {
    
     if (fetchData) {
-      if (exploreProducts.length === 0) {
+      if (!exploreLoaded && !exploreLoading) {
         dispatch(fetchExploreProducts());
       }
 
-
-      if (token && allWishlistProducts.length === 0) {
+      if (token && !wishlistLoaded && !wishlistLoading) {
           dispatch(fetchWishlistProduct());
       }
     
     }
-  }, [dispatch, fetchData, exploreProducts.length, allWishlistProducts]);
+  }, [dispatch, fetchData, exploreLoaded, exploreLoading, wishlistLoaded, wishlistLoading, token]);
 
   const totalPages = Math.ceil(exploreProducts.length / productsPerPage);
 

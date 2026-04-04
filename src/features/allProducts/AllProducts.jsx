@@ -30,30 +30,31 @@ const AllProducts = () => {
   const search = searchParams.get("search");
   const page = parseInt(searchParams.get("page")) || 1;
 
-  const { categories, loading: categoryLoading } = useSelector(
+  const { categories, loading: categoryLoading, categoriesLoaded } = useSelector(
     (state) => state.category,
   );
 
 
   // Fetch categories once
   useEffect(() => {
-    if (!categories || categories.length === 0) {
+    if (!categoriesLoaded && !categoryLoading) {
       dispatch(fetchCategories());
     }
-  }, [categories, dispatch]);
+  }, [categoriesLoaded, categoryLoading, dispatch]);
 
 
     // Grab the wishlist states (Make sure to include loading!)
-  const { allWishlistProducts, wishlistProductss, isEmpty, loading: wishlistLoading } = useSelector(
+  const { allWishlistProducts, wishlistProductss, isEmpty, loading: wishlistLoading, wishlistLoaded } = useSelector(
     (state) => state.WishlistProduct
   );
+  const { token } = useSelector((state) => state.auth);
 
   // Fetch wishlist (using our clean 'isEmpty' boolean!)
   useEffect(() => {
-    if (isWishlistPage && allWishlistProducts.length===0) {
+    if (isWishlistPage && token && !wishlistLoaded && !wishlistLoading) {
       dispatch(fetchWishlistProduct());
     }
-  }, [dispatch, isWishlistPage, allWishlistProducts.length]);
+  }, [dispatch, isWishlistPage, token, wishlistLoaded, wishlistLoading]);
 
 
   

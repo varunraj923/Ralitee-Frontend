@@ -24,6 +24,7 @@ import AllProducts from "./features/allProducts/AllProducts";
 import CartPage from "./features/cart/CartPage";
 import CheckoutPage from "./features/checkout/CheckoutPage";
 import OrderSuccessPage from "./features/checkout/OrderSuccessPage";
+import ChatIcon from "./components/chat/ChatIcon";
 
 const App = () => {
   return (
@@ -63,6 +64,7 @@ const App = () => {
             <Route path="/admin/homepage" element={<ManageHomepage />} />
           </Route>
         </Routes>
+        <ChatIcon />
       </SnackbarProvider>
     </Provider>
   );

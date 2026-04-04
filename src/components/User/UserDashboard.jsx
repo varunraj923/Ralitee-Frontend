@@ -20,64 +20,57 @@ import { fetchExploreProducts } from "../../redux/slices/exploreSlice";
 
 const UserDashboard = () => {
   const dispatch = useDispatch();
-  const exploreLoading = useSelector((state) => state.explore.loading);
-
   // Category Api
-  // Category Api
-  const { categories, loading: categoryLoading } = useSelector(
+  const { categories, loading: categoryLoading, categoriesLoaded } = useSelector(
     (state) => state.category,
   );
   useEffect(() => {
-    if (categories.length === 0) {
+    if (!categoriesLoaded && !categoryLoading) {
       dispatch(fetchCategories());
     }
-  }, [dispatch, categories.length]);
+  }, [dispatch, categoriesLoaded, categoryLoading]);
 
-  // BestSelling Api
   // BestSelling Api
   const {
     bestSellingProducts,
     loading: bestSellingLoading,
-    error,
+    bestSellingLoaded,
   } = useSelector((state) => state.bestSelling);
   useEffect(() => {
-    if (bestSellingProducts.length === 0) {
+    if (!bestSellingLoaded && !bestSellingLoading) {
       dispatch(fetchBestSelling());
     }
-  }, [dispatch, bestSellingProducts.length]);
+  }, [dispatch, bestSellingLoaded, bestSellingLoading]);
 
   // FlashSalesApi
-  // FlashSalesApi
-  const { flashSalesProducts, loading: flashSalesLoading } = useSelector(
+  const { flashSalesProducts, loading: flashSalesLoading, flashSalesLoaded } = useSelector(
     (state) => state.flashSales,
   );
   useEffect(() => {
-    if (flashSalesProducts.length === 0) {
+    if (!flashSalesLoaded && !flashSalesLoading) {
       dispatch(fetchFlashSales());
     }
-  }, [dispatch, flashSalesProducts.length]);
+  }, [dispatch, flashSalesLoaded, flashSalesLoading]);
 
   //ExploreproductApi
-  //ExploreproductApi
-  const { exploreProducts} = useSelector((state) => state.explore);
+  const { exploreProducts, loading: exploreLoading, exploreLoaded } = useSelector((state) => state.explore);
   useEffect(() => {
-    if (exploreProducts.length === 0) {
+    if (!exploreLoaded && !exploreLoading) {
       dispatch(fetchExploreProducts());
     }
-  }, [dispatch]);
-
-
+  }, [dispatch, exploreLoaded, exploreLoading]);
 
   //WishlistProductApi
-  const {wishlistProductss,loading:wishlistLoading} = useSelector(
+  const { wishlistProductss, loading: wishlistLoading, wishlistLoaded } = useSelector(
     (state) => state.WishlistProduct,
   );
+  const { token } = useSelector((state) => state.auth);
 
   useEffect(() => {
-  if (Object.keys(wishlistProductss).length === 0) {
-          dispatch(fetchWishlistProduct());
-        }
-  }, [dispatch,wishlistProductss]);
+    if (token && !wishlistLoaded && !wishlistLoading) {
+      dispatch(fetchWishlistProduct());
+    }
+  }, [dispatch, token, wishlistLoaded, wishlistLoading]);
 
   const loading =
     categoryLoading ||

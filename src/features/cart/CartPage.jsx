@@ -11,13 +11,13 @@ import NavBar from "../../components/homepage/Navbar/Navbar";
 const CartPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { cart, totalAmount, loading, error } = useSelector((state) => state.cart);
+    const { cart, totalAmount, loading, error, cartLoaded } = useSelector((state) => state.cart);
 
 useEffect(() => {
-  if ((!cart || cart.items.length === 0) && !loading) {
+  if (!cartLoaded && !loading) {
     dispatch(fetchCart());
   }
-}, [dispatch, cart, loading]);
+}, [dispatch, cartLoaded, loading]);
 
     const handleUpdateQuantity = (itemId, quantity) => {
         dispatch(updateCartQuantity({ itemId, quantity }));

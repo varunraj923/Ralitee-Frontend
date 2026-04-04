@@ -22,6 +22,7 @@ const bestSellingSlice = createSlice({
     bestSellingProducts: [],
     loading: false,
     error: null,
+    bestSellingLoaded: false,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -33,11 +34,12 @@ const bestSellingSlice = createSlice({
       .addCase(fetchBestSelling.fulfilled, (state, action) => {
         state.loading = false;
         state.bestSellingProducts = action.payload;
-     
+        state.bestSellingLoaded = true;
       })
       .addCase(fetchBestSelling.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.bestSellingLoaded = true;
       });
   },
 });
