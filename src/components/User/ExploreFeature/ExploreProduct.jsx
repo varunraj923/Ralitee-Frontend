@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchExploreProducts } from "../../../redux/slices/exploreSlice";
-import { fetchWishlistProduct } from "../../../redux/slices/wishlistSlice";
 import { useNavigate } from "react-router-dom";
 
 const productsPerPage = 8;
@@ -14,27 +13,18 @@ const ExploreProduct = ({ fetchData = true }) => {
   const { exploreProducts = [], loading: exploreLoading } = useSelector(
     (state) => state.explore,
   );
-  const { allWishlistProducts =[], loading: wishlistLoading } = useSelector(
-    (state) => state.WishlistProduct,
-  );
   const [page, setPage] = useState(0);
   const navigate = useNavigate();
   const [animate, setAnimate] = useState(false);
-     const { token, user } = useSelector((state) => state.auth);
 useEffect(() => {
    
     if (fetchData) {
       if (exploreProducts.length === 0) {
         dispatch(fetchExploreProducts());
       }
-
-
-      if (token && allWishlistProducts.length === 0) {
-          dispatch(fetchWishlistProduct());
-      }
     
     }
-  }, [dispatch, fetchData, exploreProducts.length, allWishlistProducts]);
+  }, [dispatch, fetchData, exploreProducts.length]);
 
   const totalPages = Math.ceil(exploreProducts.length / productsPerPage);
 

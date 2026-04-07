@@ -1,7 +1,10 @@
-import React from "react";
+
 import { Box, Container, Grid, Typography, Link, Stack, styled } from "@mui/material";
 import { Instagram, Youtube, Phone, Mail } from "lucide-react";
+import XIcon from '@mui/icons-material/X';
 import { FaWhatsapp } from "react-icons/fa";
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+
 
 const FooterContainer = styled(Box)(({ theme }) => ({
   backgroundColor: "#333333", // Dark gray background from the mockup
@@ -94,14 +97,14 @@ const Footer = () => {
                 Authentic and pure products delivered to your doorstep. Experience the true taste of tradition.
               </Typography>
               <Stack direction="row" spacing={2.5}>
-                <SocialIconLink href="#" target="_blank" rel="noopener">
+                <SocialIconLink href="https://www.instagram.com/raliteeofficial/" target="_blank" rel="noopener">
                   <Instagram size={20} />
                 </SocialIconLink>
                 <SocialIconLink href="#" target="_blank" rel="noopener">
-                  <Youtube size={20} />
+                  <XIcon sx={{ fontSize: 20 }} />
                 </SocialIconLink>
-                <SocialIconLink href="https://wa.me/919304719373" target="_blank" rel="noopener">
-                  <FaWhatsapp size={20} />
+                <SocialIconLink href="https://www.linkedin.com/company/ralitee-official/about/" target="_blank" rel="noopener">
+                 <LinkedInIcon sx={{fontSize:27}} />
                 </SocialIconLink>
               </Stack>
             </Grid>
