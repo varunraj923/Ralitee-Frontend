@@ -1,0 +1,111 @@
+import React from "react";
+import { Heart, ShoppingCart } from "lucide-react";
+import { RenderStars } from "../../components/User/FlashSaleFeature/RenderStars";
+import { useNavigate } from "react-router-dom";
+// 1. Added Redux imports
+import { useDispatch, useSelector } from "react-redux";
+import { toggleWishlistProduct } from "../../redux/slices/wishlistSlice";
+
+// 2. Removed wishlistProductss from props (we pull it from Redux now)
+const RenderAllProducts = ({ products = [] }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // 3. Pull live state from Redux
+  const { wishlistProductss } = useSelector((state) => state.WishlistProduct);
+
+  if (!Array.isArray(products)) {
+    return null;
+  }
+
+  // Empty state
+  if (products.length === 0) {
+    return (
+      <div className="flex justify-center items-center py-20 text-gray-500 min-h-[calc(100vh-25vh)]">
+        No products found.
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+      {products.map((product) => {
+        if (!product) return null;
+
+        const { _id, name, images, price, category, rating } = product;
+
+        const handleSingleProduct = (_id) => {
+          navigate(`/product/${_id}`);
+        };
+
+        return (
+          <div
+            key={_id || category?._id || Math.random()}
+            className="group bg-white rounded-xl overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+            onClick={() => handleSingleProduct(_id)}
+          >
+            {/* Image */}
+            <div className="relative h-64 p-4 flex items-center justify-center ">
+              <img
+                src={images?.[0] || "/placeholder.png"}
+                alt={name || "Product"}
+                onError={(e) => {
+                  e.target.src = "/placeholder.png";
+                }}
+                className="max-h-full object-contain group-hover:scale-105 transition-transform duration-500 rounded-lg"
+              />
+
+              {/* WISHIST BUTTON FIX */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevents navigating to product page
+                  dispatch(toggleWishlistProduct(product)); // Dispatch FULL product
+                }}
+                className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-sm"
+              >
+                <Heart
+                  size={18}
+                  // Check Redux dictionary to determine color dynamically
+                  className={`${
+                    wishlistProductss[_id]
+                      ? "fill-[#e63835] text-[#e63835]"
+                      : "text-gray-400"
+                  } transition-colors duration-200`}
+                />
+              </button>
+            </div>
+
+            {/* Info */}
+            <div className="p-4">
+              <div className="text-xs text-gray-500 mb-1">
+                {category?.name || "Uncategorized"}
+              </div>
+
+              <h3 className="font-semibold text-gray-900 text-lg mb-1 truncate">
+                {category?.category || name || "No Name"}
+              </h3>
+
+              {/* Rating */}
+              <div className="flex items-center gap-1 mb-3">
+                <div className="flex text-yellow-400">
+                  <RenderStars rating={rating?.average || 0} />
+                </div>
+                <span className="text-xs text-gray-500">
+                  ({rating?.count || 0})
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <span className="text-xl font-bold text-gray-900">
+                  ₹{price}
+                </span>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+export default RenderAllProducts;

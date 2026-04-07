@@ -6,7 +6,7 @@ import {
   Users,
   TrendingUp,
 } from "lucide-react";
-import AdminLayout from "../layout/adminlayout";
+import AdminLayout from "../layout/AdminLayout";
 import StatsCard from "../components/StatsCard";
 import { getDashboardData } from "../../../api/adminApi";
 

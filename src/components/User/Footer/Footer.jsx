@@ -134,7 +134,7 @@ const Footer = () => {
               <a href="https://facebook.com" target="_blank" rel="noreferrer">
                 <Facebook className="w-5 h-5 hover:text-blue-500 transition" />
               </a>
-              <a href="https://twitter.com" target="_blank" rel="noreferrer">
+              <a href="https://x.com/raliteeofficial" target="_blank" rel="noreferrer">
                 <Twitter className="w-5 h-5 hover:text-blue-400 transition" />
               </a>
               <a href="https://www.instagram.com/raliteeofficial/" target="_blank" rel="noreferrer">
@@ -149,7 +149,7 @@ const Footer = () => {
 
         {/* Bottom */}
         <div className="border-t border-gray-800 pt-6 text-center opacity-50 text-sm">
-          © Copyright Rimel 2022. All rights reserved.
+          @ Copyright Ralitee 2026. All rights reserved.
         </div>
       </div>
     </footer>

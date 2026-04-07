@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AdminLayout from "../layout/adminlayout";
+import AdminLayout from "../layout/AdminLayout";
 import CategoryForm from "../components/CategoryForm";
 import { createCategory } from "../../../api/adminApi";
 
@@ -10,7 +10,7 @@ const AddCategory = () => {
   const [category, setCategory] = useState({
     name: "",
     description: "",
-    icon: "",
+    imageFile: null, // ✅ explicit
   });
 
   const [loading, setLoading] = useState(false);
@@ -18,31 +18,34 @@ const AddCategory = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // 🔴 HARD BLOCK
+    if (!category.imageFile) {
+      setError("Category image is required");
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
     try {
       const formData = new FormData();
-      formData.append("name", category.name);
-      formData.append("description", category.description || "");
-
-      if (category.imageFile) {
-        formData.append("image", category.imageFile);
-      }
+      formData.append("name", category.name.trim());
+      formData.append("image", category.imageFile); // 🔴 REQUIRED
 
       await createCategory(formData);
 
       navigate("/admin/categories");
     } catch (err) {
-      console.error("Error adding category:", err);
       setError(
-        err.response?.data?.message ||
-        "Failed to add category. Please try again."
+        err.response?.data?.error ||
+        "Failed to add category"
       );
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <AdminLayout>
@@ -67,6 +70,7 @@ const AddCategory = () => {
           setCategory={setCategory}
           onSubmit={handleSubmit}
           btnText={loading ? "Adding Category..." : "Add Category"}
+          loading={loading}
         />
       </div>
     </AdminLayout>

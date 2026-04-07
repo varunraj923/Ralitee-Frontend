@@ -1,0 +1,326 @@
+/* ============================================
+   Ralitee AI Chat — Styles
+   A sleek, modern chat widget
+   ============================================ */
+
+/* ── Floating Action Button ─────────────────── */
+.ralitee-chat-fab {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 9999;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 24px rgba(15, 52, 96, 0.4), 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.ralitee-chat-fab:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 32px rgba(15, 52, 96, 0.5), 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.ralitee-chat-fab:active {
+  transform: scale(0.95);
+}
+
+/* Pulse animation */
+.ralitee-chat-fab-pulse {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(15, 52, 96, 0.3);
+  animation: ralitee-pulse 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes ralitee-pulse {
+  0% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.35); opacity: 0; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+/* ── Chat Popup ─────────────────────────────── */
+.ralitee-chat-popup {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 10000;
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  height: 560px;
+  max-height: calc(100vh - 60px);
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15), 0 4px 16px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: ralitee-slide-up 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+@keyframes ralitee-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ── Header ─────────────────────────────────── */
+.ralitee-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.ralitee-chat-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ralitee-chat-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ralitee-chat-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.ralitee-chat-subtitle {
+  font-size: 11px;
+  opacity: 0.75;
+  margin-top: 1px;
+}
+
+.ralitee-chat-close {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.ralitee-chat-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ── Messages Area ──────────────────────────── */
+.ralitee-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #f8f9fb;
+}
+
+.ralitee-chat-messages::-webkit-scrollbar {
+  width: 4px;
+}
+
+.ralitee-chat-messages::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+
+/* ── Messages ───────────────────────────────── */
+.ralitee-chat-msg {
+  display: flex;
+  gap: 8px;
+  max-width: 88%;
+}
+
+.ralitee-chat-msg-user {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.ralitee-chat-msg-assistant {
+  align-self: flex-start;
+}
+
+.ralitee-chat-msg-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #1a1a2e, #0f3460);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.ralitee-chat-bubble {
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.ralitee-chat-bubble-assistant {
+  background: #ffffff;
+  color: #1a1a2e;
+  border: 1px solid #e8eaed;
+  border-radius: 4px 16px 16px 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.ralitee-chat-bubble-user {
+  background: linear-gradient(135deg, #1a1a2e, #0f3460);
+  color: #fff;
+  border-radius: 16px 4px 16px 16px;
+}
+
+/* ── Typing Indicator ───────────────────────── */
+.ralitee-chat-typing {
+  display: flex;
+  gap: 4px;
+  padding: 4px 0;
+}
+
+.ralitee-chat-typing span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #9ca3af;
+  animation: ralitee-typing-bounce 1.2s ease-in-out infinite;
+}
+
+.ralitee-chat-typing span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.ralitee-chat-typing span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes ralitee-typing-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-6px); opacity: 1; }
+}
+
+/* ── Input Area ─────────────────────────────── */
+.ralitee-chat-input-area {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-top: 1px solid #eaedf0;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.ralitee-chat-input {
+  flex: 1;
+  border: 1px solid #e2e5e9;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  font-family: inherit;
+  outline: none;
+  background: #f8f9fb;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.ralitee-chat-input:focus {
+  border-color: #0f3460;
+  box-shadow: 0 0 0 3px rgba(15, 52, 96, 0.1);
+  background: #fff;
+}
+
+.ralitee-chat-input::placeholder {
+  color: #9ca3af;
+}
+
+.ralitee-chat-send {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #1a1a2e, #0f3460);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s, transform 0.2s;
+  flex-shrink: 0;
+}
+
+.ralitee-chat-send:hover:not(:disabled) {
+  transform: scale(1.05);
+}
+
+.ralitee-chat-send:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Footer ─────────────────────────────────── */
+.ralitee-chat-footer {
+  text-align: center;
+  padding: 8px;
+  font-size: 10.5px;
+  color: #9ca3af;
+  background: #fff;
+  border-top: 1px solid #f0f1f3;
+  flex-shrink: 0;
+}
+
+/* ── Mobile Responsive ──────────────────────── */
+@media (max-width: 480px) {
+  .ralitee-chat-popup {
+    bottom: 0;
+    right: 0;
+    width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    max-width: 100vw;
+    border-radius: 0;
+  }
+
+  .ralitee-chat-fab {
+    bottom: 20px;
+    right: 20px;
+    width: 54px;
+    height: 54px;
+  }
+}

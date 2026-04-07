@@ -1,273 +1,232 @@
-// HeroSection.jsx
-import React from "react";
-import { Box, Container, Typography, Button, Stack, styled, useTheme } from "@mui/material";
-import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Box, styled, IconButton, Typography } from "@mui/material";
+import { useSwipeable } from "react-swipeable";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const Hero = styled(Box)(({ theme }) => ({
-  paddingTop: theme.spacing(6),
-  paddingBottom: theme.spacing(6),
-  background: `linear-gradient(120deg, ${theme.palette.primary.main}11 0%, ${theme.palette.primary.main}05 100%)`,
-  minHeight: '70vh',
-  display: 'flex',
-  alignItems: 'center',
-  
-  [theme.breakpoints.up('sm')]: {
-    paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(8),
-    minHeight: '75vh',
-  },
-  [theme.breakpoints.up('md')]: {
-    paddingTop: theme.spacing(10),
-    paddingBottom: theme.spacing(10),
-    minHeight: '80vh',
-  },
-  [theme.breakpoints.up('lg')]: {
-    minHeight: '85vh',
+// ----------------------------------------------------------------------
+// STYLED COMPONENTS
+// ----------------------------------------------------------------------
+
+const MainWrapper = styled(Box)(({ theme }) => ({
+  width: "95%",            // Use 95% on mobile to leave a tiny gap
+  maxWidth: "1200px",      // <--- THIS CONTROLS THE WIDTH ON DESKTOP
+  margin: "20px auto",     // Centers the carousel and adds vertical spacing
+  borderRadius: "6px",    // Adds modern rounded corners to the container
+  overflow: "hidden",      // Ensures images don't bleed past rounded corners
+  boxShadow: "0 10px 30px rgba(0,0,0,0.1)", // Adds a soft lift
+}));
+
+const CarouselContainer = styled(Box)(({ theme }) => ({
+  position: "relative",
+  width: "100%",           // Always fills the MainWrapper
+  height: "40vh",
+  minHeight: "450px", 
+  backgroundColor: "#121212", 
+  [theme.breakpoints.up("sm")]: { height: "40vh" },
+  [theme.breakpoints.up("md")]: { height: "45vh" }, // Adjusted height for smaller width
+  "&:hover .nav-arrow": {
+    opacity: 1,
+    transform: "translateY(-50%) scale(1)",
   },
 }));
 
-const HeroContent = styled(Box)(({ theme }) => ({
-  textAlign: "center",
-  maxWidth: '100%',
-  
-  [theme.breakpoints.up('sm')]: {
-    maxWidth: '90%',
-    margin: '0 auto',
+const PosterImage = styled("img")(({ active }) => ({
+  position: "absolute",
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "100%",
+  objectFit: "cover", 
+  opacity: active ? 1 : 0,
+  transform: active ? "scale(1)" : "scale(1.03)", 
+  // Consistent 0.8s transition for every single image
+  transition: "opacity 0.8s ease-in-out, transform 0.8s ease-in-out",
+  pointerEvents: active ? "auto" : "none",
+}));
+
+const GradientOverlay = styled(Box)({
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  width: "100%",
+  height: "40%",
+  background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%)",
+  pointerEvents: "none",
+  zIndex: 1,
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "flex-end",
+  paddingBottom: "40px", 
+  paddingLeft: "5%",
+  paddingRight: "5%",
+});
+
+const ArrowButton = styled(IconButton)(({ theme, direction }) => ({
+  position: "absolute",
+  top: "50%",
+  transform: "translateY(-50%) scale(0.9)",
+  [direction]: "20px", 
+  backgroundColor: "rgba(255, 255, 255, 0.2)",
+  backdropFilter: "blur(8px)",
+  color: "#fff",
+  opacity: 0, 
+  transition: "all 0.3s ease",
+  zIndex: 10,
+  "&:hover": {
+    backgroundColor: "rgba(255, 255, 255, 0.4)",
   },
-  [theme.breakpoints.up('md')]: {
-    maxWidth: '85%',
-  },
-  [theme.breakpoints.up('lg')]: {
-    maxWidth: '80%',
+  [theme.breakpoints.down("sm")]: {
+    opacity: 0.6,
+    transform: "translateY(-50%) scale(0.85)",
+    [direction]: "10px",
+  }
+}));
+
+const DotsContainer = styled(Box)({
+  position: "absolute",
+  bottom: "20px",
+  left: "50%",
+  transform: "translateX(-50%)",
+  display: "flex",
+  gap: "8px",
+  zIndex: 10,
+});
+
+const Dot = styled("div")(({ active }) => ({
+  width: active ? "32px" : "8px", 
+  height: "8px",
+  borderRadius: "4px",
+  backgroundColor: active ? "#fff" : "rgba(255, 255, 255, 0.4)",
+  cursor: "pointer",
+  transition: "all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)", 
+  "&:hover": {
+    backgroundColor: active ? "#fff" : "rgba(255, 255, 255, 0.8)",
   },
 }));
 
-const MainTitle = styled(Typography)(({ theme }) => ({
-  fontWeight: 700,
-  color: theme.palette.text.primary,
-  marginBottom: theme.spacing(2),
-  lineHeight: 1.1,
-  fontSize: '2rem',
-  
-  [theme.breakpoints.up('sm')]: {
-    fontSize: '2.5rem',
-    lineHeight: 1.15,
-  },
-  [theme.breakpoints.up('md')]: {
-    fontSize: '3rem',
-    lineHeight: 1.2,
-  },
-  [theme.breakpoints.up('lg')]: {
-    fontSize: '3.5rem',
-  },
-  [theme.breakpoints.up('xl')]: {
-    fontSize: '4rem',
-  },
-  
-  // Better text wrapping on smaller screens
-  wordBreak: 'break-word',
-  hyphens: 'auto',
-  
-  [theme.breakpoints.down('sm')]: {
-    // Ensure readability on very small screens
-    fontSize: '1.75rem',
-  },
-}));
+// ----------------------------------------------------------------------
+// MAIN COMPONENT
+// ----------------------------------------------------------------------
 
-const Subtitle = styled(Typography)(({ theme }) => ({
-  color: theme.palette.text.secondary,
-  marginBottom: theme.spacing(3),
-  maxWidth: 700,
-  margin: `0 auto ${theme.spacing(3)}px auto`,
-  lineHeight: 1.5,
-  fontSize: '1rem',
-  padding: `0 ${theme.spacing(2)}`,
-  
-  [theme.breakpoints.up('sm')]: {
-    fontSize: '1.125rem',
-    marginBottom: theme.spacing(4),
-    margin: `0 auto ${theme.spacing(4)}px auto`,
-    padding: `0 ${theme.spacing(3)}`,
-  },
-  [theme.breakpoints.up('md')]: {
-    fontSize: '1.25rem',
-    maxWidth: 800,
-    padding: 0,
-  },
-  [theme.breakpoints.up('lg')]: {
-    fontSize: '1.375rem',
-  },
-}));
+const HeroSection = ({ posters = [] }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
 
-const ButtonStack = styled(Stack)(({ theme }) => ({
-  justifyContent: 'center',
-  alignItems: 'center',
-  gap: theme.spacing(2),
-  
-  [theme.breakpoints.down('sm')]: {
-    '& .MuiButton-root': {
-      width: '100%',
-      maxWidth: '280px',
-    },
-  },
-  [theme.breakpoints.up('sm')]: {
-    gap: theme.spacing(2.5),
-  },
-}));
-
-const PrimaryButton = styled(Button)(({ theme }) => ({
-  paddingLeft: theme.spacing(3),
-  paddingRight: theme.spacing(3),
-  paddingTop: theme.spacing(1.5),
-  paddingBottom: theme.spacing(1.5),
-  borderRadius: '999px',
-  backgroundColor: theme.palette.primary.main,
-  fontWeight: 700,
-  fontSize: '1rem',
-  textTransform: 'none',
-  boxShadow: `0 4px 12px ${theme.palette.primary.main}40`,
-  transition: 'all 0.3s ease',
-  
-  '&:hover': {
-    backgroundColor: theme.palette.primary.dark,
-    transform: 'translateY(-2px)',
-    boxShadow: `0 6px 16px ${theme.palette.primary.main}50`,
-  },
-  
-  [theme.breakpoints.up('sm')]: {
-    paddingLeft: theme.spacing(4),
-    paddingRight: theme.spacing(4),
-    fontSize: '1.1rem',
-  },
-  [theme.breakpoints.up('md')]: {
-    paddingLeft: theme.spacing(5),
-    paddingRight: theme.spacing(5),
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-  },
-}));
-
-const SecondaryButton = styled(Button)(({ theme }) => ({
-  paddingLeft: theme.spacing(3),
-  paddingRight: theme.spacing(3),
-  paddingTop: theme.spacing(1.5),
-  paddingBottom: theme.spacing(1.5),
-  borderRadius: '999px',
-  borderColor: theme.palette.primary.main,
-  color: theme.palette.primary.main,
-  fontWeight: 700,
-  fontSize: '1rem',
-  textTransform: 'none',
-  borderWidth: '2px',
-  transition: 'all 0.3s ease',
-  
-  '&:hover': {
-    backgroundColor: `${theme.palette.primary.main}15`,
-    borderColor: theme.palette.primary.dark,
-    color: theme.palette.primary.dark,
-    transform: 'translateY(-2px)',
-    borderWidth: '2px',
-  },
-  
-  [theme.breakpoints.up('sm')]: {
-    paddingLeft: theme.spacing(4),
-    paddingRight: theme.spacing(4),
-    fontSize: '1.1rem',
-  },
-  [theme.breakpoints.up('md')]: {
-    paddingLeft: theme.spacing(5),
-    paddingRight: theme.spacing(5),
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-  },
-  
-  '& .MuiButton-endIcon': {
-    marginLeft: theme.spacing(1),
-    transition: 'transform 0.3s ease',
-  },
-  
-  '&:hover .MuiButton-endIcon': {
-    transform: 'translateX(4px)',
-  },
-}));
-
-const HeroSection = () => {
-  const theme = useTheme();
-  const navigate = useNavigate();
-
-  const handleShopClick = () => {
-    try {
-      navigate("/shop");
-    } catch (error) {
-      console.warn("Navigation not available:", error);
-      // Fallback for when router is not available
-      window.location.href = "/shop";
-    }
+  // Core Navigation Logic
+  const nextSlide = () => {
+    setCurrentIndex((prev) => (prev + 1) % posters.length);
   };
 
-  const handleCategoriesClick = () => {
-    const categoriesElement = document.getElementById("categories");
-    if (categoriesElement) {
-      categoriesElement.scrollIntoView({ 
-        behavior: "smooth",
-        block: "start"
-      });
-    } else {
-      window.location.hash = "#categories";
-    }
+  const prevSlide = () => {
+    setCurrentIndex((prev) => (prev - 1 + posters.length) % posters.length);
   };
+
+  // --- THE TIMING FIX ---
+  // By including 'currentIndex' in the dependency array, we guarantee that 
+  // the 4-second timer perfectly restarts the moment a slide changes.
+  useEffect(() => {
+    if (posters.length <= 1 || isHovered) return;
+
+    // A strict, consistent 4000ms (4 seconds) interval
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % posters.length);
+    }, 3000); 
+
+    // Cleanup ensures old timers don't overlap and cause weird fast-forwarding
+    return () => clearInterval(interval);
+  }, [posters.length, isHovered, currentIndex]);
+
+  // Mobile Swipe Logic
+  const handlers = useSwipeable({
+    onSwipedLeft: nextSlide,
+    onSwipedRight: prevSlide,
+    preventScrollOnSwipe: true,
+    trackMouse: true,
+  });
+
+  if (!posters || posters.length === 0) {
+    return (
+      <CarouselContainer>
+        <Box sx={{ textAlign: "center", p: 4, bgcolor: "#fff", borderRadius: 2, zIndex: 2 }}>
+          <Typography variant="h5" color="textPrimary">Welcome to Ralitee</Typography>
+          <Typography color="textSecondary">Admin: Please upload a poster in the dashboard.</Typography>
+        </Box>
+      </CarouselContainer>
+    );
+  }
 
   return (
-    <Hero>
-      <Container 
-        maxWidth="lg" 
-        sx={{
-          px: { xs: 2, sm: 3, md: 4 }, // Responsive horizontal padding
-          width: '100%',
-        }}
+    <MainWrapper>
+      <CarouselContainer 
+        {...handlers}
+        onMouseEnter={() => setIsHovered(true)} 
+        onMouseLeave={() => setIsHovered(false)} 
       >
-        <HeroContent>
-          <MainTitle
-            variant="h1"
-            component="h1"
-          >
-            Ralitee — Fresh produce, straight from trusted farms.
-          </MainTitle>
+        
+        {/* Render Images */}
+        {posters.map((poster, index) => (
+          <PosterImage
+            key={poster._id} 
+            src={poster.image}
+            alt={poster.caption || `Slide ${index + 1}`}
+            active={index === currentIndex ? 1 : 0}
+            loading="eager" // Tells the browser to load these immediately so the first switch isn't delayed
+          />
+        ))}
 
-          <Subtitle
-            variant="h6"
-            component="p"
-          >
-            Hand-picked, organic selections delivered quickly. Browse seasonal boxes, bundles and weekly subscriptions.
-          </Subtitle>
-
-          <ButtonStack
-            direction={{ xs: "column", sm: "row" }}
-            spacing={{ xs: 2, sm: 2.5 }}
-          >
-            <PrimaryButton
-              variant="contained"
-              size="large"
-              onClick={handleShopClick}
-              aria-label="Shop fresh produce now"
+        {/* Gradient Overlay & Captions */}
+        <GradientOverlay>
+          {posters[currentIndex]?.caption && (
+            <Typography 
+              variant="h4" 
+              sx={{ 
+                color: "#fff", 
+                fontWeight: "bold", 
+                textShadow: "0px 2px 10px rgba(0,0,0,0.5)",
+                mb: 2,
+              }}
             >
-              Shop Fresh Now
-            </PrimaryButton>
+              {posters[currentIndex].caption}
+            </Typography>
+          )}
+        </GradientOverlay>
 
-            <SecondaryButton
-              variant="outlined"
-              size="large"
-              endIcon={<ArrowRightAltIcon />}
-              onClick={handleCategoriesClick}
-              aria-label="Browse product categories"
+        {/* Edge Arrow Controls */}
+        {posters.length > 1 && (
+          <>
+            <ArrowButton 
+              className="nav-arrow" 
+              direction="left" 
+              onClick={prevSlide}
+              aria-label="Previous slide"
             >
-              Browse Categories
-            </SecondaryButton>
-          </ButtonStack>
-        </HeroContent>
-      </Container>
-    </Hero>
+              <ChevronLeft size={28} />
+            </ArrowButton>
+
+            <ArrowButton 
+              className="nav-arrow" 
+              direction="right" 
+              onClick={nextSlide}
+              aria-label="Next slide"
+            >
+              <ChevronRight size={28} />
+            </ArrowButton>
+
+            {/* Bottom Pill Dots */}
+            <DotsContainer>
+              {posters.map((poster, index) => (
+                <Dot
+                  key={`dot-${poster._id}`}
+                  active={index === currentIndex ? 1 : 0}
+                  onClick={() => setCurrentIndex(index)}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </DotsContainer>
+          </>
+        )}
+      </CarouselContainer>
+    </MainWrapper>
   );
 };
 

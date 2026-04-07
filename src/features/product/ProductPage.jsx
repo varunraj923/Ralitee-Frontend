@@ -1,41 +1,84 @@
-import React, { useState } from "react";
-import ProductDetails from "./components/ProductDetails";
-import ProductGallery from "./components/ProductGallery";
+import React, { useEffect, useState } from "react";
+import { useParams,useNavigate } from "react-router-dom";
+import ProductDetails from "./ProductDetails";
+import ProductGallery from "./ProductGallery";
+import { getProductById } from "../../api/product.js";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 
-const productData = {
-  name: "Havic HV G-92 Gamepad",
-  slug: "hv-g92",
-  description:
-    "PlayStation 5 Controller Skin High quality vinyl with air channel adhesive for easy bubble free install & mess free removal Pressure sensitive.",
-  price: 192.0,
-  rating: 4.0,
-  discountPrice: 9,
-  category: "gaming",
-  stock: "In Stock",
-  sizes: ["XS", "S", "M", "L", "XL"],
-  images: [
-    "https://images.unsplash.com/photo-1600080972464-8e5f35f63d08?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3",
-    "https://images.unsplash.com/photo-1587829741301-dc798b83add3?q=80&w=500&auto=format&fit=crop&ixlib=rb-4.0.3",
-    "/api/placeholder/100/100", 
-    "/api/placeholder/100/100", 
-  ],
-  thumbnail: "",
-};
+import BackButton from "../../components/common/BackButton.jsx";
+import NavBar from "../../components/homepage/Navbar/Navbar.jsx";
 
 const ProductPage = () => {
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const fetchProduct = async () => {
+      try {
+        const data = await getProductById(id);
+        setProduct(data);
+      } catch (err) {
+        setError(err.response?.data?.message || err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Box sx={{ display: "flex" }}>
+          <CircularProgress />
+        </Box>
+      </div>
+    );
+  }
+
+  if (error) return <div>Error: {error}</div>;
+  if (!product) return <div>No product found</div>;
+
+
   return (
-    <div className="min-h-screen bg-white font-sans text-black mt-22">
+    <>
+    <NavBar/>
+    <div className="min-h-screen bg-white font-sans text-black mt-8 max-w-300 m-auto">
       <main className="container mx-auto px-4 pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          
+          {/* LEFT SIDE (Gallery + Back Button) */}
           <div className="lg:col-span-7">
-            <ProductGallery images={productData.images} />
+
+            {/* Back Button aligned with thumbnails */}
+            <div className="hidden md:flex gap-4 mb-4">
+              
+              {/* This width matches thumbnail width (w-24) */}
+              
+             <BackButton/>
+
+              {/* Spacer to match gallery structure */}
+              <div className="flex-1"></div>
+            </div>
+
+            <ProductGallery images={product.images} />
           </div>
+
+          {/* RIGHT SIDE (Details) */}
           <div className="lg:col-span-5">
-            <ProductDetails product={productData} />
+            <ProductDetails product={product} />
           </div>
+
         </div>
       </main>
     </div>
+    </>
   );
 };
 

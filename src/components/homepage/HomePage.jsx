@@ -1,11 +1,20 @@
 // HomePage.jsx
 import React from "react";
-import { Box, styled, useTheme } from "@mui/material";
-import Navbar from "./Navbar";
+import { Box, Typography, styled, useTheme } from "@mui/material";
+// import Navbar from "./Navbar";
 import HeroSection from "./HeroSection";
 import StatsSection from "./StatsSection";
-import TestimonialsSection from "./TestimonialsSection";
 import Footer from "./Footer";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import api from "../../api/index";
+import { useDispatch,useSelector } from "react-redux";
+import CustomerFeedbackTicker from "./CustomerFeedbackTicker";
+import AvailableAcrossIndia from "./AvailableAcrossIndia";
+import OurCoreValues from "./OurCoreValues";
+import NavBar from "./Navbar/Navbar";
+import ExploreProduct from "../User/ExploreFeature/ExploreProduct";
+import { fetchWishlistProduct } from "../../redux/slices/wishlistSlice";
 
 const NAVBAR_HEIGHT = { xs: 56, sm: 64 }; // adjust based on your Navbar
 
@@ -61,50 +70,126 @@ const SectionSpacer = styled(Box)(({ theme }) => ({
 
 const HomePage = () => {
   const theme = useTheme();
+  const [homepageData, setHomepageData] = useState({
+    bannerText: "25% Off on Every orders! USE SWAD25 CODE",
+    posters: [],
+    testimonials: [],
+  });
+  const [products, setProducts] = useState([]);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchHomepage = async () => {
+      try {
+        const res = await api.get("/homepage");
+        if (res.data) setHomepageData(res.data);
+      } catch (err) {
+        console.error("Error fetching homepage", err);
+      }
+    };
+
+    const fetchProducts = async () => {
+      try {
+        const res = await api.get("/products?limit=8");
+        if (res.data && res.data.products) {
+          setProducts(res.data.products);
+        }
+      } catch (err) {
+        console.error("Error fetching products", err);
+      }
+    };
+    
+
+    fetchHomepage();
+    fetchProducts();
+  }, []);
+
+   // Fetch wishlist (using our clean 'isEmpty' boolean!)
+     const { allWishlistProducts, wishlistProductss, isEmpty, loading: wishlistLoading } = useSelector(
+       (state) => state.WishlistProduct
+     );
+   
+   
 
   return (
-    <PageContainer>
-      {/* Navbar */}
-      <Box component="header">
-        <Navbar />
-      </Box>
+    <>
+      {/* Top Banner */}
+      {homepageData.bannerText && (
+        <Box
+          sx={{
+            bgcolor: "black",
+            color: "white",
+            textAlign: "center",
+            py: 1.2,
+            fontSize: "0.85rem",
+            fontWeight: "bold",
+            borderRadius: "3px",
+          }}
+        >
+          {homepageData.bannerText}
+        </Box>
+      )}
 
-      {/* Main Content */}
-      <MainContent component="main">
-        {/* Hero */}
-        <SectionWrapper component="section" aria-label="Hero">
-          <HeroSection />
-        </SectionWrapper>
+      <NavBar />
+      <PageContainer>
+        {/* Main Content */}
+        <MainContent component="main">
+          {/* Hero */}
+          <SectionWrapper
+            component="section"
+            aria-label="Hero"
+            sx={{ p: "0 !important", mt: 0 }}
+          >
+            <HeroSection posters={homepageData.posters} />
+          </SectionWrapper>
 
-        <SectionSpacer />
+          <SectionSpacer />
+          <ExploreProduct />
 
-        {/* Stats */}
-        <SectionWrapper component="section" aria-label="Statistics">
-          <StatsSection />
-        </SectionWrapper>
+          <SectionSpacer />
 
-        <SectionSpacer />
+          {/* Customer Feedback Ticker */}
+          <SectionWrapper
+            component="section"
+            aria-label="Customer Feedback"
+            sx={{ p: "0 !important" }}
+          >
+            <CustomerFeedbackTicker />
+          </SectionWrapper>
 
-        {/* Products Preview (future) */}
-        <SectionWrapper component="section" aria-label="Products Preview">
-          {/* Product cards here */}
-        </SectionWrapper>
+          <SectionSpacer />
 
-        <SectionSpacer />
+          {/* Available Across India */}
+          <SectionWrapper
+            component="section"
+            aria-label="Available Across India"
+            sx={{ p: "0 !important" }}
+          >
+            <AvailableAcrossIndia />
+          </SectionWrapper>
 
-        {/* Testimonials */}
-        <SectionWrapper component="section" aria-label="Testimonials">
-          <TestimonialsSection />
-        </SectionWrapper>
+          <SectionSpacer />
 
-        <Box sx={{ height: { xs: 24, sm: 40, md: 64 } }} />
-      </MainContent>
+          {/* Our Core Values */}
+          <SectionWrapper
+            component="section"
+            aria-label="Our Core Values"
+            sx={{ p: "0 !important" }}
+          >
+            <OurCoreValues />
+          </SectionWrapper>
 
-      {/* Footer */}
-      <Box component="footer">
-        <Footer />
-      </Box>
-    </PageContainer>
+          <SectionSpacer />
+
+          <Box sx={{ height: { xs: 24, sm: 40, md: 64 } }} />
+        </MainContent>
+
+        {/* Footer */}
+        <Box component="footer">
+          <Footer />
+        </Box>
+      </PageContainer>
+    </>
   );
 };
 

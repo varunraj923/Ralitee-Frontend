@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, Eye, EyeOff, Lock } from "lucide-react";
+import { ArrowLeft, Mail, CheckCircle } from "lucide-react";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -7,49 +7,17 @@ import Toast from "../Toast";
 import { createAppTheme } from "../../constants/theme";
 import forgetpassword from "../../assets/images/forgetpassword2.png";
 import { useNavigate } from "react-router-dom";
-import { changePasswordApi } from "../../api/auth"; 
+import { forgotPasswordApi } from "../../api/auth";
+import NavBar from "../homepage/Navbar/Navbar";
 
 const InputStyling =
-  "w-full pl-11 pr-15 py-3 border border-border rounded-xl bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all duration-300";
+  "w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl bg-white text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#8B0000] focus:border-transparent transition-all duration-300";
 
-const RequiredLabel = ({ text }) => (
-  <label className="block text-sm font-semibold text-foreground mb-2.5">
-    {text} <span className="text-red-500">*</span>
-  </label>
-);
-
-const KeyIcons = () => (
-  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-);
-
-const EyeIcons = ({ show, onToggle }) => {
-  return (
-    <button
-      type="button"
-      className="absolute right-6.5 top-1/2 -translate-y-1/2 text-muted-foreground"
-      onClick={onToggle}
-    >
-      {show ? <EyeOff fontSize="small" /> : <Eye fontSize="small" />}
-    </button>
-  );
-};
-
-const ChangePasswordPage = () => {
+const ForgotPasswordPage = () => {
   const theme = createAppTheme("light");
-
-  const [passwordData, setPasswordData] = useState({
-    oldPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
-
-  const [showPassword, setShowPassword] = useState({
-    old: false,
-    new: false,
-    confirm: false,
-  });
-
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
 
   const [toast, setToast] = useState({
     open: false,
@@ -61,31 +29,12 @@ const ChangePasswordPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-      if (loading) return;
-    const { oldPassword, newPassword, confirmPassword } = passwordData;
+    if (loading) return;
 
-    if (!oldPassword || !newPassword || !confirmPassword) {
+    if (!email) {
       setToast({
         open: true,
-        message: "All fields are required",
-        severity: "error",
-      });
-      return;
-    }
-
-    if (oldPassword === newPassword) {
-      setToast({
-        open: true,
-        message: "New password should not be same as old password",
-        severity: "error",
-      });
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      setToast({
-        open: true,
-        message: "New password and confirm password must match.",
+        message: "Email is required",
         severity: "error",
       });
       return;
@@ -94,27 +43,20 @@ const ChangePasswordPage = () => {
     setLoading(true);
 
     try {
-      const response = await changePasswordApi({
-        oldPassword,
-        newPassword,
-      });
-
+      const response = await forgotPasswordApi({ email });
       setToast({
         open: true,
-        message: response.data.message || "Password changed successfully",
+        message: response.data.message || "Reset link sent!",
         severity: "success",
       });
-
-      setPasswordData({
-        oldPassword: "",
-        newPassword: "",
-        confirmPassword: "",
-      });
+      setEmailSent(true);
     } catch (error) {
       setToast({
         open: true,
         message:
-          error.response?.data?.message || error.message || "Something went wrong",
+          error.response?.data?.message ||
+          error.message ||
+          "Something went wrong",
         severity: "error",
       });
     } finally {
@@ -123,157 +65,123 @@ const ChangePasswordPage = () => {
   };
 
   return (
+
     <ThemeProvider theme={theme}>
       <CssBaseline />
-
-      <div className="min-h-screen flex flex-col lg:flex-row bg-background overflow-hidden">
+    <NavBar/>
+      <div className="min-h-screen flex flex-col lg:flex-row bg-[#f5f0e1] overflow-hidden">
         {/* Left Side (Form) */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-6 relative z-10">
-          <div className="w-full max-w-md">
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-6 relative z-10 bg-[#f5f0e1]">
+          <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl shadow-[#cd9141]/20">
             {/* Logo */}
-            <div className="mb-10">
+            <div className="mb-10 text-center flex flex-col items-center">
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">R</span>
-                </div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                  Relitee
+                <h1 className="text-3xl font-extrabold text-[#8B0000] tracking-wide" style={{ fontFamily: "'Inter', sans-serif" }}>
+                  Ralitee
                 </h1>
               </div>
             </div>
 
-            {/* Heading */}
-            <div className="mb-8">
-              <h2 className="text-3xl font-bold text-foreground mb-2">
-                Change Password
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                Enter your current password and set a new one
-              </p>
-            </div>
-
-            {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Old Password */}
-              <div>
-                <RequiredLabel text="Old Password" />
-                <div className="relative">
-                  <KeyIcons />
-                  <input
-                    type={showPassword.old ? "text" : "password"}
-                    placeholder="Enter old password"
-                    value={passwordData.oldPassword}
-                    onChange={(e) =>
-                      setPasswordData({
-                        ...passwordData,
-                        oldPassword: e.target.value,
-                      })
-                    }
-                    required
-                    className={InputStyling}
-                  />
-                  <EyeIcons
-                    show={showPassword.old}
-                    onToggle={() =>
-                      setShowPassword({ ...showPassword, old: !showPassword.old })
-                    }
-                  />
+            {!emailSent ? (
+              <>
+                {/* Heading */}
+                <div className="mb-8 text-center">
+                  <h2 className="text-2xl font-bold text-[#3e2723] mb-2">
+                    Forgot Password?
+                  </h2>
+                  <p className="text-sm text-gray-500">
+                    Enter your email address and we'll send you a link to reset
+                    your password.
+                  </p>
                 </div>
-              </div>
 
-              {/* New Password */}
-              <div>
-                <RequiredLabel text="New Password" />
-                <div className="relative">
-                  <KeyIcons />
-                  <input
-                    type={showPassword.new ? "text" : "password"}
-                    placeholder="Enter new password"
-                    value={passwordData.newPassword}
-                    onChange={(e) =>
-                      setPasswordData({
-                        ...passwordData,
-                        newPassword: e.target.value,
-                      })
-                    }
-                    required
-                    className={InputStyling}
-                  />
-                  <EyeIcons
-                    show={showPassword.new}
-                    onToggle={() =>
-                      setShowPassword({ ...showPassword, new: !showPassword.new })
-                    }
-                  />
+                {/* Form */}
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Email */}
+                  <div>
+                    <label className="block text-sm font-semibold text-[#3e2723] mb-2.5">
+                      Email Address{" "}
+                      <span className="text-[#8B0000]">*</span>
+                    </label>
+                    <div className="relative">
+                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input
+                        type="email"
+                        placeholder="Enter your email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        className={InputStyling}
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-[#8B0000] text-white font-bold py-3.5 rounded-xl hover:bg-[#5a0000] active:scale-[0.98] transition-all shadow-md mt-4 disabled:opacity-70"
+                  >
+                    {loading ? (
+                      <CircularProgress size={24} sx={{ color: "white" }} />
+                    ) : (
+                      "Send Reset Link"
+                    )}
+                  </button>
+                </form>
+              </>
+            ) : (
+              /* Success State */
+              <div className="text-center py-8">
+                <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-green-100 flex items-center justify-center">
+                  <CheckCircle className="w-8 h-8 text-green-600" />
                 </div>
+                <h2 className="text-2xl font-bold text-[#3e2723] mb-3">
+                  Check Your Email
+                </h2>
+                <p className="text-gray-600 mb-6 leading-relaxed">
+                  We've sent a password reset link to{" "}
+                  <strong className="text-gray-900">{email}</strong>. Click
+                  the link in the email to create a new password.
+                </p>
+                <p className="text-sm text-gray-500 mb-8">
+                  The link will expire in 15 minutes. If you don't see the
+                  email, check your spam folder.
+                </p>
+                <button
+                  onClick={() => {
+                    setEmailSent(false);
+                    setEmail("");
+                  }}
+                  className="text-sm font-bold text-[#8B0000] hover:text-[#5a0000] underline"
+                >
+                  Didn't receive it? Try again
+                </button>
               </div>
-
-              {/* Confirm Password */}
-              <div>
-                <RequiredLabel text="Confirm Password" />
-                <div className="relative">
-                  <KeyIcons />
-                  <input
-                    type={showPassword.confirm ? "text" : "password"}
-                    placeholder="Confirm new password"
-                    value={passwordData.confirmPassword}
-                    onChange={(e) =>
-                      setPasswordData({
-                        ...passwordData,
-                        confirmPassword: e.target.value,
-                      })
-                    }
-                    required
-                    className={InputStyling}
-                  />
-                  <EyeIcons
-                    show={showPassword.confirm}
-                    onToggle={() =>
-                      setShowPassword({
-                        ...showPassword,
-                        confirm: !showPassword.confirm,
-                      })
-                    }
-                  />
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-blue-600 text-white font-semibold py-3.5 rounded-xl hover:bg-blue-700 transition disabled:opacity-70"
-              >
-                {loading ? (
-                  <CircularProgress size={24} sx={{ color: "white" }} />
-                ) : (
-                  "Change Password"
-                )}
-              </button>
-            </form>
+            )}
 
             {/* Back to login */}
-            <div className="mt-8 text-center">
+            <div className="mt-8 text-center pt-6 border-t border-gray-100">
               <button
                 onClick={() => navigate("/login")}
-                className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary/80"
+                className="inline-flex items-center gap-2 text-sm font-bold text-[#c08d4b] hover:text-[#a0743b] transition-colors"
               >
                 <ArrowLeft size={16} />
-                Back to Sign in
+                Back to Sign In
               </button>
             </div>
           </div>
         </div>
 
-        {/* Right Side (Image) */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-6 relative z-10 order-2 lg:order-none mt-10 lg:mt-0">
+        {/* Right Side (Image - Updated Background) */}
+        <div className="w-full lg:w-1/2 flex items-center justify-center p-6 relative z-10 order-2 lg:order-none mt-10 lg:mt-0 bg-[#f5f0e1]">
           <div className="w-full max-w-md">
             <img
               src={forgetpassword}
               alt="Forgot Password Illustration"
-              className="max-w-full object-contain animate-float"
+              className="max-w-full object-contain animate-float drop-shadow-2xl"
             />
-            <p className="mt-6 text-muted-foreground text-center">
-              We’ll help you regain access to your account quickly and securely.
+            <p className="mt-6 text-gray-600 text-center font-medium">
+              We'll help you regain access to your account quickly and securely.
             </p>
           </div>
         </div>
@@ -289,4 +197,4 @@ const ChangePasswordPage = () => {
   );
 };
 
-export default ChangePasswordPage;
+export default ForgotPasswordPage;

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Edit2, Trash2, Tag } from "lucide-react";
-import AdminLayout from "../layout/adminlayout";
+import AdminLayout from "../layout/AdminLayout";
 import { fetchCategories, deleteCategory } from "../../../api/adminApi";
 
 const Categories = () => {

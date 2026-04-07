@@ -1,5 +1,5 @@
  import { Star } from "lucide-react";
- export const RenderStars = (rating) => {
+ export const RenderStars = ({rating}) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
       stars.push(
