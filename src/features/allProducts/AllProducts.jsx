@@ -43,18 +43,11 @@ const AllProducts = () => {
   }, [categoriesLoaded, categoryLoading, dispatch]);
 
 
-    // Grab the wishlist states (Make sure to include loading!)
-  const { allWishlistProducts, wishlistProductss, isEmpty, loading: wishlistLoading, wishlistLoaded } = useSelector(
+
+  const { allWishlistProducts, wishlistProductss, isEmpty, loading: wishlistLoading } = useSelector(
     (state) => state.WishlistProduct
   );
   const { token } = useSelector((state) => state.auth);
-
-  // Fetch wishlist (using our clean 'isEmpty' boolean!)
-  useEffect(() => {
-    if (isWishlistPage && token && !wishlistLoaded && !wishlistLoading) {
-      dispatch(fetchWishlistProduct());
-    }
-  }, [dispatch, isWishlistPage, token, wishlistLoaded, wishlistLoading]);
 
 
   
@@ -95,7 +88,6 @@ const AllProducts = () => {
     
   // 2. Adjust loading to check the right slice depending on the page
   const isLoading = categoryLoading || (isWishlistPage ? wishlistLoading : productLoading);
-
 
   if (isLoading) {
     return (

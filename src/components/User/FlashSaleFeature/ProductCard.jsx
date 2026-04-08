@@ -17,7 +17,7 @@ export const ProductCard = ({
   const dispatch = useDispatch();
   const [selectedColor, setSelectedColor] = useState(product.colors?.[0]?.name);
   const [selectedSize, setSelectedSize] = useState(product.sizes?.[0]);
-  
+  const {token,user} = useSelector(state=> state.auth)
   // Pull live dictionary from Redux
   const { wishlistProductss } = useSelector((state) => state.WishlistProduct);
 
@@ -29,13 +29,15 @@ export const ProductCard = ({
 
   // CHANGE: Accept the FULL product object, not just the ID
   const handleWishlist = (productObj) => {
+    if(!token)
+    {
+      navigate('./login')
+    }
+
     dispatch(toggleWishlistProduct(productObj));
   };
 
-  const handleQuickView = () => {
-    console.log("quick view clicked");
-  };
-
+ 
   const handleAddToCart = () => {
     dispatch(
       addToCart({

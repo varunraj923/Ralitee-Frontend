@@ -1,11 +1,10 @@
-// HomePage.jsx
+
 import React from "react";
 import { Box, Typography, styled, useTheme } from "@mui/material";
-// import Navbar from "./Navbar";
 import HeroSection from "./HeroSection";
-import StatsSection from "./StatsSection";
+
 import Footer from "./Footer";
-import axios from "axios";
+import StatsSection from "./StatsSection";
 import { useEffect, useState } from "react";
 import api from "../../api/index";
 import { useDispatch,useSelector } from "react-redux";
@@ -14,7 +13,7 @@ import AvailableAcrossIndia from "./AvailableAcrossIndia";
 import OurCoreValues from "./OurCoreValues";
 import NavBar from "./Navbar/Navbar";
 import ExploreProduct from "../User/ExploreFeature/ExploreProduct";
-import { fetchWishlistProduct } from "../../redux/slices/wishlistSlice";
+
 
 const NAVBAR_HEIGHT = { xs: 56, sm: 64 }; // adjust based on your Navbar
 
@@ -75,7 +74,6 @@ const HomePage = () => {
     posters: [],
     testimonials: [],
   });
-  const [products, setProducts] = useState([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -83,33 +81,18 @@ const HomePage = () => {
       try {
         const res = await api.get("/homepage");
         if (res.data) setHomepageData(res.data);
+     
       } catch (err) {
         console.error("Error fetching homepage", err);
       }
     };
 
-    const fetchProducts = async () => {
-      try {
-        const res = await api.get("/products?limit=8");
-        if (res.data && res.data.products) {
-          setProducts(res.data.products);
-        }
-      } catch (err) {
-        console.error("Error fetching products", err);
-      }
-    };
-    
+   
 
     fetchHomepage();
-    fetchProducts();
+
   }, []);
 
-   // Fetch wishlist (using our clean 'isEmpty' boolean!)
-     const { allWishlistProducts, wishlistProductss, isEmpty, loading: wishlistLoading } = useSelector(
-       (state) => state.WishlistProduct
-     );
-   
-   
 
   return (
     <>

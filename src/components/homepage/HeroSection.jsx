@@ -121,9 +121,7 @@ const HeroSection = ({ posters = [] }) => {
     setCurrentIndex((prev) => (prev - 1 + posters.length) % posters.length);
   };
 
-  // --- THE TIMING FIX ---
-  // By including 'currentIndex' in the dependency array, we guarantee that 
-  // the 4-second timer perfectly restarts the moment a slide changes.
+ 
   useEffect(() => {
     if (posters.length <= 1 || isHovered) return;
 
@@ -144,6 +142,7 @@ const HeroSection = ({ posters = [] }) => {
     trackMouse: true,
   });
 
+
   if (!posters || posters.length === 0) {
     return (
       <CarouselContainer>
@@ -163,16 +162,20 @@ const HeroSection = ({ posters = [] }) => {
         onMouseLeave={() => setIsHovered(false)} 
       >
         
+        
         {/* Render Images */}
         {posters.map((poster, index) => (
+         
           <PosterImage
             key={poster._id} 
-            src={poster.image}
+           src={poster.image} 
             alt={poster.caption || `Slide ${index + 1}`}
             active={index === currentIndex ? 1 : 0}
             loading="eager" // Tells the browser to load these immediately so the first switch isn't delayed
           />
+           
         ))}
+       
 
         {/* Gradient Overlay & Captions */}
         <GradientOverlay>

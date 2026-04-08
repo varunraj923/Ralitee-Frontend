@@ -5,7 +5,7 @@ import {
   deleteWishlistProduct,
 } from "../../api/whishlistApi";
 
-// 1. Fetch Wishlist Thunk
+
 export const fetchWishlistProduct = createAsyncThunk(
   "wishlist/fetchWishlistProduct",
   async (_, { rejectWithValue }) => {
@@ -13,14 +13,12 @@ export const fetchWishlistProduct = createAsyncThunk(
       const response = await allWhishlistProductApi();
       const rawWishlistArray = await response.data.products;
 
-      // Create the dictionary for fast O(1) lookups (Heart Icons)
       const dictionary = rawWishlistArray.reduce((acc, item) => {
         const id = item?.product?._id;
         if (id) acc[id] = true;
         return acc;
       }, {});
 
-      // Extract just the product details into a clean array for rendering
       const cleanProductArray = rawWishlistArray
         .map((item) => item.product)
         .filter(Boolean);
@@ -38,10 +36,9 @@ export const fetchWishlistProduct = createAsyncThunk(
 // 2. Toggle Wishlist Thunk
 export const toggleWishlistProduct = createAsyncThunk(
   "wishlist/toggleWishlistProduct",
-  // CHANGE: Accept the FULL product object, not just the ID
   async (product, { getState, rejectWithValue }) => {
     const { wishlistProductss } = getState().WishlistProduct;
-    const productId = product._id; // Extract ID for the API call
+    const productId = product._id;
 
     try {
       if (wishlistProductss?.[productId]) {
@@ -61,11 +58,11 @@ export const WishlistProduct = createSlice({
   name: "wishlist",
   initialState: {
     error: null,
-    wishlistProductss: {}, // The object (for heart icons)
-    allWishlistProducts: [], // The array (for rendering the page)
+    wishlistProductss: {},
+    allWishlistProducts: [],
     loading: false,
-    isEmpty: true, // Clean boolean for our components
-    wishlistLoaded: false,
+    isEmpty: true,
+    hasFetched: false,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -75,6 +72,7 @@ export const WishlistProduct = createSlice({
     });
     builder.addCase(fetchWishlistProduct.fulfilled, (state, action) => {
       state.loading = false;
+      state.hasFetched = true; 
       state.wishlistProductss = action.payload.dictionary;
       state.allWishlistProducts = action.payload.array;
       state.isEmpty = action.payload.array.length === 0;
@@ -82,16 +80,15 @@ export const WishlistProduct = createSlice({
     });
     builder.addCase(fetchWishlistProduct.rejected, (state, action) => {
       state.loading = false;
+      state.hasFetched = true; // 
       state.error = action.payload;
       state.wishlistLoaded = true;
     });
-builder.addCase(toggleWishlistProduct.fulfilled, (state, action) => {
+    builder.addCase(toggleWishlistProduct.fulfilled, (state, action) => {
       const { product, action: type } = action.payload;
       const productId = product._id;
 
       if (type === "add") {
-        // BULLETPROOF FIX 1: Force a brand new object reference 
-        // This guarantees React detects the change and turns the heart red instantly.
         state.wishlistProductss = { 
           ...state.wishlistProductss, 
           [productId]: true 
@@ -99,7 +96,6 @@ builder.addCase(toggleWishlistProduct.fulfilled, (state, action) => {
 
         const exists = state.allWishlistProducts.some((item) => item._id === productId);
         if (!exists) {
-          // BULLETPROOF FIX 2: Spread the product to avoid "Frozen Object" React errors
           state.allWishlistProducts.push({ ...product }); 
         }
 
@@ -107,7 +103,6 @@ builder.addCase(toggleWishlistProduct.fulfilled, (state, action) => {
       }
 
       if (type === "remove") {
-        // Force a brand new object reference for removal as well just to be safe
         const newWishlistProductss = { ...state.wishlistProductss };
         delete newWishlistProductss[productId];
         state.wishlistProductss = newWishlistProductss;

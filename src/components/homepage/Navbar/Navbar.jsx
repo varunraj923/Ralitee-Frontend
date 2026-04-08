@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   AppBar,
   Box,
@@ -27,13 +27,17 @@ const NavBar = () => {
   const isMobile = useMediaQuery("(max-width:1100px)");
   const [drawerOpen, setDrawerOpen] = useState(false);
 
- const { token, user } = useSelector((state) => state.auth);
-  const { cart, loading, cartLoaded } = useSelector((state) => state.cart);
-  const { allWishlistProducts, loading: wishlistLoading, wishlistLoaded } = useSelector((state) => state.WishlistProduct);
+  const { token, user } = useSelector((state) => state.auth);
+  const { cart, loading: cartLoading } = useSelector((state) => state.cart);
+  
+  // Pull in our new 'hasFetched' boolean
+  const { allWishlistProducts, hasFetched: wishlistFetched } = useSelector((state) => state.WishlistProduct);
+  
   const displayCartCount = cart?.items?.length || 0;
 
   const handleLogout = async () => {
     try {
+      dispatch({ type: "auth/clearAuthData" });
       await logoutApi();
     } catch (err) {
       console.error(err);
@@ -43,20 +47,21 @@ const NavBar = () => {
     }
   };
 
+  // --- WISHLIST API CALL ---
+  useEffect(() => {
+  
+    if (user && token && !wishlistFetched) {
+      dispatch(fetchWishlistProduct());
+    }
+  }, [dispatch, user, token, wishlistFetched]);
 
 
   useEffect(() => {
-    if (token && !wishlistLoaded && !wishlistLoading) {
-      dispatch(fetchWishlistProduct());
-    }
-  }, [dispatch, token, wishlistLoaded, wishlistLoading]);
-
-   
-useEffect(() => {
-    if (token && !cartLoaded && !loading) {
+    if (user && token && !cart && !cartLoading) {
       dispatch(fetchCart());
     }
-  }, [dispatch, token, cartLoaded, loading]);
+  }, [dispatch, user, token]);
+
   return (
     <>
       <AppBar
@@ -94,11 +99,10 @@ useEffect(() => {
                   navigate={navigate}
                   isMobile={false}
                   displayCartCount={displayCartCount}
-                  wishlistlength={allWishlistProducts.length}
+                  wishlistlength={allWishlistProducts?.length || 0}
                 />
               )}
             </Box>
-          
 
             <SearchAndProfile
               navigate={navigate}
@@ -106,7 +110,7 @@ useEffect(() => {
               cart={cart}
               handleLogout={handleLogout}
               isMobile={isMobile}
-              wishlistlength={allWishlistProducts.length}
+              wishlistlength={allWishlistProducts?.length || 0}
             />
           </Toolbar>
         </Container>
@@ -128,7 +132,7 @@ useEffect(() => {
               isMobile={true}
               displayCartCount={displayCartCount}
               closeDrawer={() => setDrawerOpen(false)}
-               wishlistlength={allWishlistProducts.length}
+              wishlistlength={allWishlistProducts?.length || 0}
             />
           </Box>
         </Drawer>
