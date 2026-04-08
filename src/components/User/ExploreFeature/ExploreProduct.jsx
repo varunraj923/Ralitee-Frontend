@@ -10,7 +10,7 @@ const productsPerPage = 8;
 const ExploreProduct = ({ fetchData = true }) => {
   const dispatch = useDispatch();
 
-  const { exploreProducts = [], loading: exploreLoading } = useSelector(
+  const { exploreProducts = [], loading: exploreLoading, exploreLoaded } = useSelector(
     (state) => state.explore,
   );
   const [page, setPage] = useState(0);
@@ -19,7 +19,7 @@ const ExploreProduct = ({ fetchData = true }) => {
 useEffect(() => {
    
     if (fetchData) {
-      if (exploreProducts.length === 0) {
+      if (!exploreLoaded && !exploreLoading) {
         dispatch(fetchExploreProducts());
       }
     

@@ -76,11 +76,13 @@ export const WishlistProduct = createSlice({
       state.wishlistProductss = action.payload.dictionary;
       state.allWishlistProducts = action.payload.array;
       state.isEmpty = action.payload.array.length === 0;
+      state.wishlistLoaded = true;
     });
     builder.addCase(fetchWishlistProduct.rejected, (state, action) => {
       state.loading = false;
       state.hasFetched = true; // 
       state.error = action.payload;
+      state.wishlistLoaded = true;
     });
     builder.addCase(toggleWishlistProduct.fulfilled, (state, action) => {
       const { product, action: type } = action.payload;

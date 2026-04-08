@@ -20,6 +20,7 @@ const categorySlice = createSlice({
     categories: [],
     loading: false,
     error: null,
+    categoriesLoaded: false,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -31,10 +32,12 @@ const categorySlice = createSlice({
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.loading = false;
         state.categories = action.payload;
+        state.categoriesLoaded = true;
       })
       .addCase(fetchCategories.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.categoriesLoaded = true;
       });
   },
 });

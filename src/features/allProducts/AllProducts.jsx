@@ -30,23 +30,24 @@ const AllProducts = () => {
   const search = searchParams.get("search");
   const page = parseInt(searchParams.get("page")) || 1;
 
-  const { categories, loading: categoryLoading } = useSelector(
+  const { categories, loading: categoryLoading, categoriesLoaded } = useSelector(
     (state) => state.category,
   );
 
 
   // Fetch categories once
   useEffect(() => {
-    if (!categories || categories.length === 0) {
+    if (!categoriesLoaded && !categoryLoading) {
       dispatch(fetchCategories());
     }
-  }, [categories, dispatch]);
+  }, [categoriesLoaded, categoryLoading, dispatch]);
 
 
 
   const { allWishlistProducts, wishlistProductss, isEmpty, loading: wishlistLoading } = useSelector(
     (state) => state.WishlistProduct
   );
+  const { token } = useSelector((state) => state.auth);
 
 
   

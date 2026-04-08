@@ -46,6 +46,7 @@ const cartSlice = createSlice({
         loading: false,
         error: null,
         successMessage: null,
+        cartLoaded: false,
     },
     reducers: {
         clearCartMessage: (state) => {
@@ -55,6 +56,7 @@ const cartSlice = createSlice({
         clearCart: (state) => {
             state.cart = null;
             state.totalAmount = 0;
+            state.cartLoaded = false;
         }
     },
     extraReducers: (builder) => {
@@ -68,10 +70,12 @@ const cartSlice = createSlice({
                 state.loading = false;
                 state.cart = action.payload.cart;
                 state.totalAmount = action.payload.totalAmount;
+                state.cartLoaded = true;
             })
             .addCase(fetchCart.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+                state.cartLoaded = true;
             })
 
             // Add to Cart
